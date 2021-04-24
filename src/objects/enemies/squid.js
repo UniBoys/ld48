@@ -20,11 +20,11 @@ export default class Squid extends Enemy {
     update(time, delta) {
         const submarine = this.scene.submarine
 
-        console.log(`${submarine.obj.x} - ${this.obj.x} > ${this.attackDistance} ${submarine.obj.x - this.obj.x > this.attackDistance}`)
+        console.log(`${submarine.obj.x} - ${this.obj.x} (${submarine.obj.x - this.obj.x}) > ${-this.attackDistance} ${submarine.obj.x - this.obj.x > -this.attackDistance}`)
         if(submarine.obj.x - this.obj.x < this.attackDistance) {
-            this.obj.body.setVelocityX(this.speed)
-        } else if(submarine.obj.x - this.obj.x > -this.attackDistance) {
             this.obj.body.setVelocityX(-this.speed)
+        } else if(submarine.obj.x - this.obj.x > -this.attackDistance) {
+            this.obj.body.setVelocityX(this.speed)
         } else {
             this.obj.body.setVelocityX(0)
         }

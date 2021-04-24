@@ -28,7 +28,7 @@ export default class Spear1 extends Weapon {
 		this.obj.setAngle(defaultAngle - 90);
 		this.obj.depth = 8;
 
-		this.support = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + (this.left ? -20 : 20), submarine.initY + relativeY + this.height/2, 5, 8, 0x000000);
+		this.support = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + (this.left ? -20 : 20), submarine.initY + relativeY + this.height/2 - 17, 5, 15, 0x000000);
 		this.support.depth = 8;
 
 		this.stabbing = false;
