@@ -5,10 +5,15 @@ import SubmarineStage1 from "@/objects/submarine/stage1";
 import SubmarineStage4 from "@/objects/submarine/stage4";
 import SubmarineStage2 from "@/objects/submarine/stage2";
 import SubmarineStage3 from "@/objects/submarine/stage3";
+import image from "@/../resources/img/Background_3_Layers-1.png";
 
 export default class MainScene extends Scene {
 	constructor() {
 		super({key: 'main'});
+	}
+
+	preload() {
+		this.load.image('Background_3_Layers-1', image);
 	}
 
     create() {
@@ -24,8 +29,20 @@ export default class MainScene extends Scene {
 		this.player = new Player(this)
 		this.submarine = new (stageList[stageIndex])(this);
         
-		this.physics.world.setBounds(0, 0, 2000, 2000);
-        this.cameras.main.setBounds(0, 0, 2000, 2000);
+		this.physics.world.setBounds(0, 0, 5000, 6000);
+        this.cameras.main.setBounds(0, 0, 5000, 6000);
+		const background1 = this.add.image(0, 0, 'Background_3_Layers-1');
+		background1.setSize(5000, 6000);
+		background1.setPosition(2500, 3000);
+		background1.depth = 1;
+
+		const texture = this.textures.get('Background_3_Layers-1');
+
+		for(let i = 0; i < 80; i++) {
+			this.textures.getPixelAlpha(Math.ceil(500 * Math.random()), Math.ceil(500 * Math.random()), );
+		}
+
+		console.log(`It took ${(stopTime-startTime)} ms to find colors 80 times`);
 
 		this.enemies = []
 

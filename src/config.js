@@ -6,7 +6,10 @@ export default {
 	width: 1280,
     height: 720,
 	physics: {
-		default: 'arcade'
+		default: 'arcade',
+		arcade: {
+			debug: true,
+		}
 	},
 	scene: [MainScene]
 }

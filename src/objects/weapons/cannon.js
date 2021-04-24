@@ -27,7 +27,7 @@ export default class Cannon extends Weapon{
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(defaultAngle - 90); 
-		this.obj.depth = 2;
+		this.obj.depth = 7;
 
 		this.reloadStart = 0;
 		this.projectiles = [];

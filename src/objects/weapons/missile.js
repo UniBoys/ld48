@@ -28,13 +28,13 @@ export default class Missile extends Weapon {
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(defaultAngle - 90);
-		this.obj.depth = 3;
+		this.obj.depth = 7;
 
 		this.support1 = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 - 20, submarine.initY + relativeY + this.height/2 - 10, this.supportWidth, this.supportHeight, 0x000000);
-		this.support1.depth = 2;
+		this.support1.depth = 6;
 
 		this.support2 = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + 20, submarine.initY + relativeY + this.height/2 - 10, this.supportWidth, this.supportHeight, 0x000000);
-		this.support2.depth = 2;
+		this.support2.depth = 6;
 
 		this.firing = false;
 		this.fireStart = 0;

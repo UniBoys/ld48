@@ -28,6 +28,7 @@ export default class Squid extends Enemy {
         }
 
         this.obj = scene.add.rectangle(x, y, 30, 80, 0xff00ff);
+        this.obj.depth = 8;
         this.init()
 
         this.acceleration = this.defaultAcceleration;

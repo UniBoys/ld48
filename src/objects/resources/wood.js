@@ -13,6 +13,6 @@ export default class Wood extends Resource {
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(this.rotation - 90);
-		this.obj.depth = 2;
+		this.obj.depth = 8;
 	}
 }

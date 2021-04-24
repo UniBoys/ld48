@@ -26,7 +26,7 @@ export default class Spear1 extends Weapon {
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.body.rotation = defaultAngle + 90;
-		this.obj.depth = 2;
+		this.obj.depth = 7;
 
 		this.stabbing = false;
 		this.stabStart = 0;
@@ -47,6 +47,7 @@ export default class Spear1 extends Weapon {
 		this.stabbing = true;
 
 		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+		this.projectiles[0].depth = 7;
         this.scene.physics.add.existing(this.projectiles[0]);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;  
 		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
