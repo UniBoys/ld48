@@ -36,12 +36,14 @@ export default class Cannon extends Weapon{
 	}
 
 	fire() {
+		const projectile = this.scene.add.circle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 10, 0x000000);
+        this.scene.physics.add.existing(projectile);
+		projectile.body.rotation = this.obj.body.rotation;
+		projectile.body.setVelocityX(Math.cos(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		projectile.body.setVelocityY(Math.sin(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		this.projectiles.push(projectile);
+		
 		this.firing = true;
-		this.projectile = this.scene.add.circle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 10, 0x000000);
-        this.scene.physics.add.existing(this.projectile);
-		this.projectile.body.rotation = this.obj.body.rotation;
-		this.projectile.body.setVelocityX(Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
-		this.projectile.body.setVelocityY(Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 	}
 
 	update(time, delta) {
@@ -53,13 +55,13 @@ export default class Cannon extends Weapon{
 		else if(this.umpTimer <= this.umpFrames) {
 			if(this.reloadStart === 0) this.reloadStart = time;
 
-			this.obj.body.x -= Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * this.umpTimer;
-			this.obj.body.y -= Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * this.umpTimer;
+			this.obj.body.x -= Math.cos(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * this.umpTimer;
+			this.obj.body.y -= Math.sin(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * this.umpTimer;
 			this.umpTimer++;
 		}
-		else if(this.umpTimer <= 2*this.umpFrames) {
-			this.obj.body.x -= Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.umpD - Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * (this.umpTimer - this.umpFrames);
-			this.obj.body.y -= Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.umpD - Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * (this.umpTimer - this.umpFrames);
+		else if(this.umpTimer <= 2*this.umpFrames) { 
+			this.obj.body.x -= Math.cos(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.umpD - Math.cos(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * (this.umpTimer - this.umpFrames);
+			this.obj.body.y -= Math.sin(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.umpD - Math.sin(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * (this.umpD / this.umpFrames) * (this.umpTimer - this.umpFrames);
 			this.umpTimer++;
 		}
 		else if((time-this.reloadStart) > this.reloadTime) {
