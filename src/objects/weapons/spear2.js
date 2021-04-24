@@ -18,18 +18,23 @@ export default class Spear1 extends Weapon {
 
 		this.mayRotate = false;
 		this.reloadTime = 3000;
-		this.reloadFrames = 10;
-		this.reloadY = 30;
+		this.reloadFrames = 15;
+		this.reloadY = 45;
 		this.shootVelocity = 200;
 		this.rotateSpeed = 5;
+
+		this.supportLeft = 15;
+		this.supportWidth = 5;
+		this.supportSpeed = 8;
+		this.supportOffset = 25;
 
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(defaultAngle - 90);
-		this.obj.depth = 8;
+		this.obj.depth = 3; 
 
-		this.support = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + (this.left ? -20 : 20), submarine.initY + relativeY + this.height/2 - 17, 5, 15, 0x000000);
-		this.support.depth = 8;
+		this.support = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft), submarine.initY + relativeY + this.height/2 - this.supportOffset, this.supportWidth, 50, 0x000000);
+		this.support.depth = 2;
 
 		this.stabbing = false;
 		this.stabStart = 0;
@@ -51,8 +56,19 @@ export default class Spear1 extends Weapon {
 	update(time, delta) {
 		super.update(delta);
 
+		this.support.x = this.submarine.initX + this.relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft);
+		this.support.y = this.submarine.initY + this.relativeY + this.height/2 - this.supportOffset;
+
 		if(!this.stabbing) {
 			this.nonStabRotate(time, delta);
+
+			if(this.left) {
+				this.support.y += Math.tan((180 - this.obj.body.rotation) * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.supportSpeed; 
+			}
+			else {
+				this.support.y += Math.tan(this.obj.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.supportSpeed;
+			}
+			
 		}
 		else if(this.stabStart === 0) {
 			this.stabStart = time;
@@ -60,12 +76,8 @@ export default class Spear1 extends Weapon {
 		else if((time-this.stabStart) <= 3000) {
 			this.obj.body.rotation = this.defaultAngle - 90;
 
-			if(this.upIsUp) {
-				this.obj.body.y -= this.reloadY;
-			}
-			else {
-				this.obj.body.y += this.reloadY;
-			}
+			this.obj.body.y -= this.reloadY;
+			this.support.y -= this.reloadY;
 		}
 		else if(this.reloadStep === this.reloadFrames) {
 			this.stabbing = false;
@@ -74,6 +86,7 @@ export default class Spear1 extends Weapon {
 		}
 		else if((time-this.stabStart) > 3000) {
 			this.obj.body.y -= this.reloadY -  this.reloadStep * (this.reloadY/this.reloadFrames);
+			this.support.y -= this.reloadY -  this.reloadStep * (this.reloadY/this.reloadFrames); 
 			this.reloadStep++;
 		}
 	}

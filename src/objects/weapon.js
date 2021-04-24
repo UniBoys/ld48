@@ -1,11 +1,12 @@
 export default class Weapon {
-	constructor({scene, relativeX, relativeY, moveRelative, width, height}) {
+	constructor({scene, submarine, relativeX, relativeY, moveRelative, width, height}) {
 		this.scene = scene;
 		this.relativeX = relativeX;
 		this.relativeY = relativeY;
 		this.moveRelative = moveRelative;
 		this.width = width;
 		this.height = height;
+		this.submarine = submarine;
 	}
 
 	update(delta) {
