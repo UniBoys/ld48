@@ -41,7 +41,7 @@ export default class Spear1 extends Weapon {
 		this.reloadStep = 0;
 	}
 
-	stab() {
+	fire() {
 		if(this.stabbing) return;
 
 		this.stabbing = true;
@@ -56,8 +56,8 @@ export default class Spear1 extends Weapon {
 	update(time, delta) {
 		super.update(delta);
 
-		this.support.x = this.submarine.initX + this.relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft);
-		this.support.y = this.submarine.initY + this.relativeY + this.height/2 - this.supportOffset;
+		this.support.x = this.submarine.obj.body.x + this.relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft);
+		this.support.y = this.submarine.obj.body.y + this.relativeY + this.height/2 - this.supportOffset;
 
 		if(!this.stabbing) {
 			this.nonStabRotate(time, delta);

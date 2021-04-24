@@ -1,4 +1,5 @@
 import Spear2 from "@/objects/weapons/spear2";
+import Cannon from "./weapons/cannon";
 
 export default class Submarine {
 	/**
@@ -30,8 +31,10 @@ export default class Submarine {
 		this.weapons = [
 			//new Spear1({scene, submarine: this, relativeX: 60, relativeY: 100, defaultAngle: 90, minAngle: 80, maxAngle: 140, upIsUp: true}),
 			//new Spear1({scene, submarine: this, relativeX: 190, relativeY: 100, defaultAngle: 90, minAngle: 40, maxAngle: 100, upIsUp: true})
-			new Spear2({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 160, minAngle: 100, maxAngle: 175, left: true}),
-			new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 80, left: false})
+			//new Spear2({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 160, minAngle: 105, maxAngle: 175, left: true}),
+			//new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 75, left: false})
+			new Cannon({scene, submarine: this, relativeX: 60, relativeY: 130, defaultAngle: 90, minAngle: 60, maxAngle: 150}),
+			new Cannon({scene, submarine: this, relativeX: 190, relativeY: 130, defaultAngle: 90, minAngle: 30, maxAngle: 120})
 		];
 
 		this.cooldownStart = 0;
@@ -62,7 +65,7 @@ export default class Submarine {
 		} 
 
 		if(this.scene.keylistener.SPACE.isDown && this.cooldownStart === 0) {
-			closestWeapon.stab();
+			closestWeapon.fire();
 			this.cooldownStart = time;
 		}
 	}
