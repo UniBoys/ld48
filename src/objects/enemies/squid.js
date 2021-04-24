@@ -43,15 +43,12 @@ export default class Squid extends Enemy {
     update(time, delta) {
         const submarine = this.scene.submarine;
         const dist = Math.sqrt((this.obj.x - submarine.obj.x)*(this.obj.x - submarine.obj.x) + (this.obj.y - submarine.obj.y)*(this.obj.y - submarine.obj.y));
-        console.log(this.ultStart === 0, dist < this.ultRange, this.ultCooldownStart === 0);
 
         if((time-this.ultCooldownStart) > this.ultCooldown && this.cooldown) { // Cooldown finished
-            console.log("Cooldown finished");
             this.ultCooldownStart = 0;
             this.cooldown = false;
         }
         else if(!this.cooldown && !this.ulting && dist < this.ultRange && this.ultCooldownStart === 0) { // Ulting
-            console.log("Ulting");
             this.obj.fillColor = 0xff0099
             this.ultStart = time;
             this.acceleration = this.ultAcceleration;
@@ -60,7 +57,6 @@ export default class Squid extends Enemy {
             this.ulting = true;
         }
         else if((time-this.ultStart) > this.ultTime && this.ulting) { // Cooldown starting
-            console.log("Cooldown starting");
             this.obj.fillColor = 0xff00ff
             this.ultStart = 0;
             this.ulting = false;
@@ -71,12 +67,14 @@ export default class Squid extends Enemy {
             this.cooldown = true;
         }
 
+        const inRange = Math.abs(this.obj.x - submarine.obj.x) < this.attackDistance && Math.abs(this.obj.y - submarine.obj.y) < this.attackDistance
+
         // Move x
-        if(this.obj.x - submarine.obj.x < this.attackDistance && submarine.obj.x < this.obj.x) {
+        if(inRange && submarine.obj.x < this.obj.x) {
             this.obj.body.setAccelerationX(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
-        } else if(submarine.obj.x - this.obj.x > -this.attackDistance && submarine.obj.x > this.obj.x) {
+        } else if(inRange && submarine.obj.x > this.obj.x) {
             this.obj.body.setAccelerationX(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
@@ -92,11 +90,11 @@ export default class Squid extends Enemy {
         }
 
         // Move y
-        if(this.obj.y - submarine.obj.y < this.attackDistance && submarine.obj.y < this.obj.y) {
+        if(inRange && submarine.obj.y < this.obj.y) {
             this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
-        } else if(submarine.obj.y - this.obj.y > -this.attackDistance && submarine.obj.y > this.obj.y) {
+        } else if(inRange && submarine.obj.y > this.obj.y) {
             this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
@@ -112,7 +110,7 @@ export default class Squid extends Enemy {
         }
 
         const trueAngle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, this.obj.x + this.obj.body.velocity.x, this.obj.y + this.obj.body.velocity.y)
-        const nextAngle = Phaser.Math.Angle.RotateTo(this.obj.angle, trueAngle, 0.0005)
+        const nextAngle = Phaser.Math.Angle.RotateTo((this.obj.angle - 90) * Phaser.Math.DEG_TO_RAD, trueAngle, 0.01)
 
         this.obj.body.rotation = nextAngle * Phaser.Math.RAD_TO_DEG + 90
 
@@ -120,15 +118,18 @@ export default class Squid extends Enemy {
             this.wiggle.last = time
             this.obj.x += Math.sin(time/this.wiggle.delay) * this.wiggle.multiplier
             this.obj.y += Math.cos(time/this.wiggle.delay) * this.wiggle.multiplier
-
-            console.log(`Change: ${Math.sin(time/this.wiggle.delay) * this.wiggle.multiplier}`)
         }        
     }
 
     limitMaxSpeed() {
 		if(Math.abs(this.obj.body.velocity.x) > this.maxSpeed) {
 			this.obj.body.setAccelerationX(0);
-			this.obj.body.setVelocityX(this.obj.body.velocity.x > 0 ? this.maxSpeed : -this.maxSpeed);
+
+            if(this.obj.body.velocity.x > 0) {
+                this.obj.body.setVelocityX(this.obj.body.velocity.x-0.1)
+            } else {
+                this.obj.body.setVelocityX(this.obj.body.velocity.x+0.1)
+            }
 		} 
 	}
 }
