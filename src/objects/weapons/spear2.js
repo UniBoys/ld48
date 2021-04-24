@@ -39,6 +39,15 @@ export default class Spear1 extends Weapon {
 		this.stabbing = false;
 		this.stabStart = 0;
 		this.reloadStep = 0;
+		this.projectiles = [];
+	}
+
+	destroy() {
+		this.obj.destroy();
+		for(const projectile of this.projectiles) {
+			projectile.destroy();
+		}
+		this.support.destroy();
 	}
 
 	fire() {
@@ -46,11 +55,11 @@ export default class Spear1 extends Weapon {
 
 		this.stabbing = true;
 
-		this.projectile = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
-        this.scene.physics.add.existing(this.projectile);
-		this.projectile.body.rotation = this.obj.body.rotation;  
-		this.projectile.body.setVelocityX(Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
-		this.projectile.body.setVelocityY(Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+        this.scene.physics.add.existing(this.projectiles[0]);
+		this.projectiles[0].body.rotation = this.obj.body.rotation;  
+		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 	}
 
 	update(time, delta) {

@@ -13,7 +13,9 @@ export default class Missile extends Weapon {
 
 		this.missile = {
 			velocity: 200,
-			rotateSpeed: 0.05
+			rotateSpeed: 0.03,
+			rotateLock: 1000,
+			explodeAfter: 10000
 		}
 
 		this.mayRotate = false;
@@ -36,7 +38,9 @@ export default class Missile extends Weapon {
 
 		this.firing = false;
 		this.fireStart = 0;
-		this.reloadFire = 0;
+		this.reloadStart = 0;
+		this.reloadStep = 0;
+		this.projectiles = [];
 	}
 
 	fire() {
@@ -44,12 +48,28 @@ export default class Missile extends Weapon {
 
 		this.firing = true;
 
-		this.projectile = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
-        this.scene.physics.add.existing(this.projectile);
-		this.projectile.body.rotation = this.obj.body.rotation;
-		this.projectile.iAngle = this.obj.body.iAngle;
-		//this.projectile.body.setVelocityX(Math.cos(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
-		//this.projectile.body.setVelocityY(Math.sin(this.projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+        this.scene.physics.add.existing(this.projectiles[0]);
+		this.projectiles[0].body.rotation = this.obj.body.rotation;
+		this.projectiles[0].iAngle = this.obj.body.rotation * Phaser.Math.DEG_TO_RAD;
+	}
+
+	explode() {
+		this.firing = false;
+		this.reloading = true;
+		this.fireStart = 0;
+
+		this.projectiles[0].destroy();
+		this.projectiles.pop();
+	}
+
+	destroy() {
+		this.obj.destroy();
+		for(const projectile of this.projectiles) {
+			projectile.destroy();
+		}
+		this.support1.destroy();
+		this.support2.destroy();
 	}
 
 	update(time, delta) {
@@ -62,17 +82,68 @@ export default class Missile extends Weapon {
 		this.support2.y = this.submarine.obj.body.y + this.relativeY + this.height/2 - 10;
 
 		if(this.firing) {
-			const mousePointer = this.scene.game.input.mousePointer;
-			const mainCamera = this.scene.cameras.main;
-			const trueAngle = Phaser.Math.Angle.Between(this.projectile.body.x, this.projectile.body.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
-			let newAngle = Phaser.Math.Angle.RotateTo(trueAngle, this.projectile.iAngle, 0.05);
-			this.projectile.iAngle = newAngle;
-			console.log(newAngle);
-			//if(newAngle-) 
+			this.obj.body.y -= this.reloadY;
+			this.support1.y -= this.reloadY;
+			this.support2.y -= this.reloadY;
 
-			this.projectile.body.setVelocityX(Math.cos(newAngle) * this.missile.velocity), 
-			this.projectile.body.setVelocityY(Math.sin(newAngle) * this.missile.velocity)
-			//this.projectile.body.rotation = newAngle * Phaser.Math.RAD_TO_DEG + 90;
+			if(this.fireStart === 0) {
+				this.fireStart = time;
+			}
+			else if((time-this.fireStart) < this.missile.rotateLock) {
+				this.projectiles[0].iAngle -= this.missile.rotateSpeed/4;
+
+				this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].iAngle - 3.14/2) * this.missile.velocity)
+				this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].iAngle - 3.14/2) * this.missile.velocity)
+				this.projectiles[0].setAngle(this.projectiles[0].iAngle * Phaser.Math.RAD_TO_DEG);
+			}
+			else if((time-this.fireStart) > this.missile.explodeAfter) {
+				this.explode();
+			}
+			else {
+				const mousePointer = this.scene.game.input.mousePointer;
+				const mainCamera = this.scene.cameras.main;
+				const trueAngle = Phaser.Math.Angle.Between(this.projectiles[0].body.x, this.projectiles[0].body.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
+
+				const normTrueAngle = Phaser.Math.Angle.Normalize(trueAngle);
+				const normIAngle = Phaser.Math.Angle.Normalize(this.projectiles[0].iAngle - 3.14/2);
+				const calc = (normTrueAngle - normIAngle + 2*3.14) % (3.14*2);
+
+				if(calc < 3.14 && calc > 0.1) {
+					this.projectiles[0].iAngle += this.missile.rotateSpeed;
+				}
+				else if(calc < 6.2) {
+					this.projectiles[0].iAngle -= this.missile.rotateSpeed;
+				}
+
+				this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].iAngle - 3.14/2) * this.missile.velocity)
+				this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].iAngle - 3.14/2) * this.missile.velocity)
+				this.projectiles[0].setAngle(this.projectiles[0].iAngle * Phaser.Math.RAD_TO_DEG);
+			}
+		}
+		else if(this.reloading) {
+			
+			if(this.reloadStart === 0) {
+				this.reloadStart = time;
+				this.obj.body.y -= this.reloadY;
+				this.support1.y -= this.reloadY;
+				this.support2.y -= this.reloadY;
+			}
+			else if(this.reloadStep > this.reloadFrames) {
+				this.reloading = false;
+				this.reloadStep = 0;
+				this.reloadStart = 0;
+			}
+			else if((time-this.reloadStart) > this.reloadTime) {
+				this.obj.body.y -= this.reloadY - this.reloadStep * (this.reloadY / this.reloadFrames);
+				this.support1.y -= this.reloadY - this.reloadStep * (this.reloadY / this.reloadFrames);
+				this.support2.y -= this.reloadY - this.reloadStep * (this.reloadY / this.reloadFrames);
+				this.reloadStep++;
+			}
+			else {
+				this.obj.body.y -= this.reloadY;
+				this.support1.y -= this.reloadY;
+				this.support2.y -= this.reloadY;
+			}
 		}
 	}
 }

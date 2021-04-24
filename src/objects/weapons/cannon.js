@@ -35,6 +35,19 @@ export default class Cannon extends Weapon{
 		this.umpTimer = 0;
 	}
 
+	destroy() {
+		this.obj.destroy();
+
+		for(const projectile of this.projectiles) {
+			projectile.destroy();
+		}
+	}
+
+	explode(projectile) {
+		this.projectiles = this.projectiles.filter(projectile_ => projectile_ !== projectile);
+		projectile.destroy();
+	}
+
 	fire() {
 		const projectile = this.scene.add.circle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 10, 0x000000);
         this.scene.physics.add.existing(projectile);

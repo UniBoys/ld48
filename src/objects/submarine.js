@@ -1,8 +1,3 @@
-import Spear1 from "@/objects/weapons/spear1";
-import Spear2 from "@/objects/weapons/spear2";
-import Cannon from "./weapons/cannon";
-import Missile from "./weapons/missile";
-
 export default class Submarine {
 	/**
 	 * @param {Phaser.Scene} scene 
@@ -30,18 +25,16 @@ export default class Submarine {
 		this.initY = 0;
 		this.depth = 4;
 		this.weaponCooldown = 2000;
-		this.weapons = [
-			//new Spear1({scene, submarine: this, relativeX: 60, relativeY: 100, defaultAngle: 90, minAngle: 80, maxAngle: 140, upIsUp: true}),
-			//new Spear1({scene, submarine: this, relativeX: 190, relativeY: 100, defaultAngle: 90, minAngle: 40, maxAngle: 100, upIsUp: true}),
-			//new Spear2({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 160, minAngle: 105, maxAngle: 175, left: true}),
-			//new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 75, left: false}),
-			// new Cannon({scene, submarine: this, relativeX: 60, relativeY: 130, defaultAngle: 90, minAngle: 60, maxAngle: 150}),
-			// new Cannon({scene, submarine: this, relativeX: 190, relativeY: 130, defaultAngle: 90, minAngle: 30, maxAngle: 120}),
-			//new Missile({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 0}),
-			new Missile({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 0}),
-		];
+		this.weapons = [];
 
 		this.cooldownStart = 0;
+	}
+
+	destroy() {
+		this.obj.destroy();
+		for(const weapon of this.weapons) {
+			weapon.destroy();
+		}
 	}
 
 	init() {
@@ -75,7 +68,7 @@ export default class Submarine {
 	}
 
 	canFire() {
-		return this.scene.keylistener.SPACE.isDown && this.cooldownStart === 0;
+		return (this.scene.keylistener.SPACE.isDown || this.scene.input.mousePointer.leftButtonDown()) && this.cooldownStart === 0;
 	}
 
 	findClosestWeaponToCursor() {
