@@ -33,7 +33,7 @@ export default class Spear1 extends Weapon {
 		this.reloadStep = 0;
 	}
 
-	stab() {
+	fire() {
 		if(this.stabbing) return;
 
 		this.stabbing = true;
