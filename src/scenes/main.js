@@ -7,13 +7,17 @@ import SubmarineStage2 from "@/objects/submarine/stage2";
 import SubmarineStage3 from "@/objects/submarine/stage3";
 import image from "@/../resources/img/Background_3_Layers-1.png";
 
+import Sub1Sprite from '@/../resources/sprites/sub-1.png'
+import SquidSprite from '@/../resources/sprites/squid-sprite.png'
+
 export default class MainScene extends Scene {
 	constructor() {
 		super({key: 'main'});
 	}
 
 	preload() {
-		this.load.image('Background_3_Layers-1', image);
+		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
+		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 	}
 
     create() {
@@ -22,6 +26,8 @@ export default class MainScene extends Scene {
         for(var i = 0; i < 10; i++) {
             this.add.rectangle(200 + i*10, 200 + 200*i, 50, 50, 0x00ff00);
 		}
+
+		this.animations()
 
 		const stageList = [SubmarineStage1, SubmarineStage2, SubmarineStage3, SubmarineStage4]
 		let stageIndex = 0;
@@ -63,5 +69,28 @@ export default class MainScene extends Scene {
 		this.submarine.update(time, delta);
 		this.player.update(delta);
 		this.enemies.forEach(enemy => { enemy.update(time, delta) })
+	}
+
+	animations() {
+		this.anims.create({
+            key: 'sub1-idle',
+            frames: this.anims.generateFrameNumbers('sub1', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 7,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'squid-idle',
+            frames: this.anims.generateFrameNumbers('squid', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 7,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'squid-ult',
+            frames: this.anims.generateFrameNumbers('squid', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 11,
+            repeat: -1
+        });
 	}
 }

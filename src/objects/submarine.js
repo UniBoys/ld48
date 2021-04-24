@@ -38,7 +38,6 @@ export default class Submarine {
 	}
 
 	init() {
-		this.obj = this.scene.add.rectangle(this.initX, this.initY, this.width, this.height, this.color);
         this.scene.physics.add.existing(this.obj);
 		this.obj.depth = 9;
 		this.obj.body.setCollideWorldBounds(true);
