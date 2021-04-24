@@ -23,7 +23,10 @@ export default class MainScene extends Scene {
 
 		this.enemies = []
 
-		this.enemies.push(new Squid(this, 300, 200))
+		this.enemies.push(new Squid(this, 800, 800))
+		this.enemies.push(new Squid(this, 1200, 400))
+		this.enemies.push(new Squid(this, 500, 1200))
+		this.enemies.push(new Squid(this, 1800, 300))
 
 		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE");
     }
