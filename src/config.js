@@ -6,7 +6,16 @@ export default {
 	width: 1280,
     height: 720,
 	physics: {
-		default: 'arcade'
+		default: 'arcade',
+		arcade: {
+			debug: true,
+            debugShowBody: true,
+            debugShowStaticBody: true,
+            debugShowVelocity: true,
+            debugVelocityColor: 0xffff00,
+            debugBodyColor: 0x0000ff,
+            debugStaticBodyColor: 0xffffff
+		}
 	},
 	scene: [MainScene]
 }

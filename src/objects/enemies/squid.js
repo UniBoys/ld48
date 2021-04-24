@@ -27,8 +27,14 @@ export default class Squid extends Enemy {
             last: 0,
         }
 
-        this.obj = scene.add.rectangle(x, y, 30, 80, 0xff00ff);
+        this.obj = scene.add.sprite(x, y);
+		this.obj.setScale(0.13)
+		this.obj.play("squid-idle")
+
         this.init()
+
+        this.obj.body.setCircle(400, 50, 500)
+        this.obj.body.setBounce(1)
 
         this.acceleration = this.defaultAcceleration;
 		this.deceleration = this.defaultDeceleration;
@@ -49,7 +55,7 @@ export default class Squid extends Enemy {
             this.cooldown = false;
         }
         else if(!this.cooldown && !this.ulting && dist < this.ultRange && this.ultCooldownStart === 0) { // Ulting
-            this.obj.fillColor = 0xff0099
+            this.obj.play("squid-ult")
             this.ultStart = time;
             this.acceleration = this.ultAcceleration;
             this.deceleration = this.ultDeceleration;
@@ -57,7 +63,7 @@ export default class Squid extends Enemy {
             this.ulting = true;
         }
         else if((time-this.ultStart) > this.ultTime && this.ulting) { // Cooldown starting
-            this.obj.fillColor = 0xff00ff
+            this.obj.play("squid-idle")
             this.ultStart = 0;
             this.ulting = false;
             this.ultCooldownStart = time;
@@ -112,7 +118,7 @@ export default class Squid extends Enemy {
         const trueAngle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, this.obj.x + this.obj.body.velocity.x, this.obj.y + this.obj.body.velocity.y)
         const nextAngle = Phaser.Math.Angle.RotateTo((this.obj.angle - 90) * Phaser.Math.DEG_TO_RAD, trueAngle, 0.01)
 
-        this.obj.body.rotation = nextAngle * Phaser.Math.RAD_TO_DEG + 90
+        this.obj.setAngle(nextAngle * Phaser.Math.RAD_TO_DEG + 90)
 
         if(time - this.wiggle.last - this.wiggle.delay > 0) {
             this.wiggle.last = time

@@ -5,6 +5,8 @@ export default class SubmarineStage4 extends Submarine {
 	constructor(scene) {
 		super(scene);
 
+		this.obj = this.scene.add.rectangle(this.initX, this.initY, this.width, this.height, this.color);
+
 		this.weapons = [
 			new Missile({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 0}),
 			new Missile({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 0})
