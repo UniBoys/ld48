@@ -158,6 +158,7 @@ export default class Spear1 extends Weapon {
 		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.worldX, mousePointer.worldY);
 		const deg = Phaser.Math.RAD_TO_DEG * angle;
 		const oldRotation = this.obj.body.rotation + 90;
+		//console.log(deg > this.minAngle, deg < this.maxAngle, this.mayRotate);
 
 		if(deg > this.minAngle && deg < this.maxAngle && this.mayRotate) {
 			this.aimRight.fillAlpha = this.aimAlpha;

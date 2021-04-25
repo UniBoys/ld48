@@ -5,8 +5,9 @@ export default class Submarine {
 	/**
 	 * @param {Phaser.Scene} scene 
 	 */
-	constructor(scene) {
+	constructor(scene, stage) {
 		this.scene = scene;
+		this.stage = stage;
 
 		this.acceleration = 5;
 		this.deceleration = 3;
@@ -24,9 +25,8 @@ export default class Submarine {
 		this.width = 250;
 		this.height = 150;
 		this.color = 0xff0000;
-		this.initX = 4000;
+		this.initX = 2000;
 		this.initY = 650;
-		this.depth = 4;
 		this.weaponCooldown = 2000;
 		this.hitboxSizeX = 0.8;
 		this.hitboxSizeY = 0.8;
@@ -36,9 +36,7 @@ export default class Submarine {
 		this.inventorySetting = {
 			size: 1000
 		}
-		this.headLights = {
-			
-		}
+		this.headLights = []
 
 		this.cooldownStart = 0;
 	}
@@ -68,6 +66,9 @@ export default class Submarine {
 			for(const weapon of this.weapons) {
 				weapon.flip(this.flipped);
 			}
+			for(const headLight of this.headLights) {
+				headLight.flip(this.flipped);
+			}
 		}
 		else {
 			this.flipped = false;
@@ -75,6 +76,9 @@ export default class Submarine {
 
 			for(const weapon of this.weapons) {
 				weapon.flip(this.flipped);
+			}
+			for(const headLight of this.headLights) {
+				headLight.flip(this.flipped);
 			}
 		}
 	}
@@ -111,6 +115,10 @@ export default class Submarine {
 			closestWeapon.fire();
 			this.cooldownStart = time;
 			this.shot = true;
+		}
+
+		for(const headLight of this.headLights) {
+			headLight.update(time, delta);
 		}
 	}
 

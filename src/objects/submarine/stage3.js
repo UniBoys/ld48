@@ -3,7 +3,7 @@ import Cannon from "@/objects/weapons/cannon";
 
 export default class SubmarineStage3 extends Submarine {
 	constructor(scene) {
-		super(scene);
+		super(scene, 3);
 		
 		this.obj = scene.add.sprite(this.initX, this.initY);
 		this.obj.setScale(0.20)

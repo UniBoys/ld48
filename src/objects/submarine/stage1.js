@@ -6,7 +6,7 @@ export default class SubmarineStage1 extends Submarine {
 	 * @param {Phaser.Scene} scene 
 	 */
 	constructor(scene) {
-		super(scene);
+		super(scene, 1);
 
 		this.obj = scene.add.sprite(this.initX, this.initY);
 		this.obj.setScale(0.27)
@@ -15,8 +15,8 @@ export default class SubmarineStage1 extends Submarine {
 		this.weapons = [
 			new Spear1({
 				scene, submarine: this, 
-				left: {relativeX: 5, relativeY: 90, defaultAngle: 120, minAngle: 90, maxAngle: 170},
-				right: {relativeX: 182, relativeY: 90, defaultAngle: 60, minAngle: 10, maxAngle: 90}
+				left: {relativeX: 2, relativeY: 93, defaultAngle: 120, minAngle: 90, maxAngle: 160},
+				right: {relativeX: 182, relativeY: 93, defaultAngle: 60, minAngle: 20, maxAngle: 90}
 			}),
 			new Spear1({
 				scene, submarine: this, 

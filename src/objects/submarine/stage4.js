@@ -3,7 +3,7 @@ import Missile from "@/objects/weapons/missile";
 
 export default class SubmarineStage4 extends Submarine {
 	constructor(scene) {
-		super(scene);
+		super(scene, 4);
 
 		this.obj = this.scene.add.rectangle(this.initX, this.initY, this.width, this.height, this.color);
 

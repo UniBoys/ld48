@@ -36,6 +36,10 @@ export default class Inventory {
 		return this.map.reduce((sum, next) => sum + next.value, 0);
 	}
 
+	hasItems() {
+		return this.map.find(item => item.value > 0 && ['water', 'oxygen'].includes(item.key)) !== undefined;
+	}
+
 	get(key) {
 		return this.map.find(item => item.key === key).amount;
 	}

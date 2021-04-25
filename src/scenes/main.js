@@ -17,6 +17,7 @@ import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
 import layers from "../layers";
+import House from "../objects/house";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -52,6 +53,7 @@ export default class MainScene extends Scene {
 		let stageIndex = 0;
 
 		this.submarine = new (this.stageList[stageIndex])(this);
+		this.house = new House(this);
         
 		this.physics.world.setBounds(0, 0, 5000, 6000);
         this.cameras.main.setBounds(0, 0, 5000, 6000);
@@ -62,7 +64,6 @@ export default class MainScene extends Scene {
 		this.background1Texture = this.textures.get('background1');
 
 		const graphics = this.add.graphics();
-
    		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.2, 0.2, 0.5, 0.5);
     	graphics.fillRect(0, 620, 5000, 800);
 		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.5, 0.5, 0.8, 0.8);
@@ -79,8 +80,15 @@ export default class MainScene extends Scene {
 
 		this.darkenMask = this.add.graphics();
 
-		graphics.mask = new Phaser.Display.Masks.GeometryMask(this, this.darkenMask);
+		graphics.mask = new Phaser.Display.Masks.BitmapMask(this, this.darkenMask);
 		graphics.mask.invertAlpha = true;
+
+		const emptyGraphics = this.add.graphics();
+		emptyGraphics.fillStyle(0x000000, 0.0);
+    	emptyGraphics.fillRect(0, 620, 5000, 5380);
+
+		this.darkenMask.mask = new Phaser.Display.Masks.GeometryMask(this, emptyGraphics);
+		this.darkenMask.invertAlpha = true;
 
 		this.enemies = [];
 
@@ -107,7 +115,9 @@ export default class MainScene extends Scene {
     }
 
 	update(time, delta) {
+		this.darkenMask.clear();
 		this.submarine.update(time, delta);
+		this.house.update(time, delta);
 
 		if(this.submarine.shot) {
 			const allProjectiles = this.submarine.getAllProjectiles();
@@ -140,7 +150,7 @@ export default class MainScene extends Scene {
 		}
 
 		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
-		this.enemies.forEach(enemy => { enemy.update(time, delta) })
+		this.enemies.forEach(enemy => { enemy.update(time, delta) });
 	}
 
 	updateColliding() {

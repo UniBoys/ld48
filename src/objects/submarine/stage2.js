@@ -4,7 +4,7 @@ import HeadLight from "./headLight";
 
 export default class SubmarineStage2 extends Submarine {
 	constructor(scene) {
-		super(scene);
+		super(scene, 2);
 
 		this.obj = scene.add.sprite(this.initX, this.initY);
 		this.obj.setScale(0.20)
@@ -42,8 +42,8 @@ export default class SubmarineStage2 extends Submarine {
 			new HeadLight({
 				scene,
 				submarine: this,
-				left: {},
-				right: {}
+				left: {relativeX: -8, relativeY: 68, a1: 185, a2: 80},
+				right: {relativeX: 335, relativeY: 68, a1: -5, a2: 110}
 			})
 		]
 
