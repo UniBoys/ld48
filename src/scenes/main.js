@@ -9,6 +9,7 @@ import Iron from "@/objects/resources/iron";
 
 import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
+import Sub2Sprite from '@/../resources/sprites/sub-2.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
@@ -23,6 +24,7 @@ export default class MainScene extends Scene {
 	preload() {
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
+		this.load.spritesheet('sub2', Sub2Sprite, { frameWidth: 1956, frameHeight: 995 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
@@ -32,17 +34,14 @@ export default class MainScene extends Scene {
 
     create() {
         this.cameras.main.setBackgroundColor("#4488AA")
+		this.cameras.main.zoom = 0.6
 
-        for(var i = 0; i < 10; i++) {
-            this.add.rectangle(200 + i*10, 200 + 200*i, 50, 50, 0x00ff00);
-		}
+		this.animations();
 
-		this.animations()
-
-		const stageList = [SubmarineStage1, SubmarineStage2, SubmarineStage3, SubmarineStage4]
+		this.stageList = [SubmarineStage1, SubmarineStage2, SubmarineStage3, SubmarineStage4]
 		let stageIndex = 0;
 
-		this.submarine = new (stageList[stageIndex])(this);
+		this.submarine = new (this.stageList[stageIndex])(this);
         
 		this.physics.world.setBounds(0, 0, 5000, 6000);
         this.cameras.main.setBounds(0, 0, 5000, 6000);
@@ -66,10 +65,10 @@ export default class MainScene extends Scene {
 
 		this.enemies = [];
 
-		this.enemies.push(new Squid(this, 800, 800))
-		this.enemies.push(new Squid(this, 1200, 400))
-		this.enemies.push(new Squid(this, 500, 1200))
-		this.enemies.push(new Squid(this, 1800, 300))
+		// this.enemies.push(new Squid(this, 800, 800))
+		// this.enemies.push(new Squid(this, 1200, 400))
+		// this.enemies.push(new Squid(this, 500, 1200))
+		// this.enemies.push(new Squid(this, 1800, 300))
 
 		this.projectiles = [];
 		this.resources = [];
@@ -81,8 +80,11 @@ export default class MainScene extends Scene {
 		this.keylistener.U.on('down', () => {
 			stageIndex++;
 			this.submarine.destroy();
-			this.submarine = new (stageList[stageIndex%stageList.length])(this);
+			this.submarine = new (this.stageList[stageIndex%this.stageList.length])(this);
+			this.updateColliding()
 		});
+
+		this.updateColliding();
     }
 
 	update(time, delta) {
@@ -122,14 +124,42 @@ export default class MainScene extends Scene {
 		this.enemies.forEach(enemy => { enemy.update(time, delta) })
 	}
 
+	updateColliding() {
+		this.enemies.forEach((enemy) => { this.physics.add.collider(this.submarine.obj, enemy.obj)})
+	}
+
 	animations() {
+		// Sub 1
 		this.anims.create({
             key: 'sub1-idle',
+            frames: this.anims.generateFrameNumbers('sub1', { frames: [ 0, 1, 1, 1, 1,1,1,1, 2, 1, 1, 1, 1,1,1,1 ] }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'sub1-move',
             frames: this.anims.generateFrameNumbers('sub1', { frames: [ 0, 1, 2, 1 ] }),
             frameRate: 7,
             repeat: -1
         });
 
+		// Sub 2
+		this.anims.create({
+            key: 'sub2-idle',
+            frames: this.anims.generateFrameNumbers('sub2', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7 ] }),
+            frameRate: 2,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'sub2-move',
+            frames: this.anims.generateFrameNumbers('sub2', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7 ] }),
+            frameRate: 16,
+            repeat: -1
+        });
+		
+		/// Squid
 		this.anims.create({
             key: 'squid-idle',
             frames: this.anims.generateFrameNumbers('squid', { frames: [ 0, 1, 2, 1 ] }),

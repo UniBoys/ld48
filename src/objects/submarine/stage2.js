@@ -5,13 +5,31 @@ export default class SubmarineStage2 extends Submarine {
 	constructor(scene) {
 		super(scene);
 
-		this.obj = this.scene.add.rectangle(this.initX, this.initY, this.width, this.height, this.color);
+		this.obj = scene.add.sprite(this.initX, this.initY);
+		this.obj.setScale(0.20)
+		this.obj.play("sub2-idle")
+
+		this.hitboxSizeX = 0.93;
+		this.hitboxSizeY = 0.37;
+		this.hitboxOffsetX = 30;
+		this.hitboxOffsetY = 33;
 
 		this.weapons = [
-			new Spear2({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 160, minAngle: 105, maxAngle: 175, left: true}),
-			new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 75, left: false})
+			new Spear2({
+				scene, 
+				submarine: this, 
+				left: {relativeX: 60, relativeY: 55, defaultAngle: 160, minAngle: 105, maxAngle: 175}, 
+				right: {relativeX: 270, relativeY: 55, defaultAngle: 20, minAngle: 5, maxAngle: 75}, 
+				leftSide: true,
+			}),
+			// new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 75, left: false})
 		]
 
 		this.init();
+	}
+
+	updateBobbingX(time) {
+		if(time == 0) this.obj.play("sub2-move")
+		else this.obj.play("sub2-idle")
 	}
 }

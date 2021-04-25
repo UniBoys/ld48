@@ -80,11 +80,13 @@ export default class Submarine {
 			this.shot = false;
 		}
 
-		if(this.obj.body.velocity.x > 1 && !this.flipped) {
-			this.flip();	
-		}
-		else if(this.obj.body.velocity.x < -1 && this.flipped) {
-			this.flip();
+		if(this.bobbing.lastX == 0) {
+			if(this.obj.body.velocity.x > 1 && !this.flipped) {
+				this.flip();	
+			}
+			else if(this.obj.body.velocity.x < -1 && this.flipped) {
+				this.flip();
+			}
 		}
 
 		this.movement(time, delta);
@@ -187,6 +189,9 @@ export default class Submarine {
 			this.obj.body.setAccelerationX(delta * this.deceleration)
 		}
 		else if(time - this.bobbing.lastX - this.bobbing.delayX > 0) {
+			if(this.bobbing.lastX == 0) {
+				this.updateBobbingX(time)
+			}
             this.bobbing.lastX = time
 
             if(this.obj.body.velocity.x > this.bobbing.maxX) {
@@ -229,7 +234,14 @@ export default class Submarine {
 			this.obj.body.setAccelerationY(0);
 			this.obj.body.setVelocityY(this.obj.body.velocity.y > 0 ? this.maxSpeedY : -this.maxSpeedY);
 		}
+
+		if(this.bobbing.lastX != 0) {
+			this.updateBobbingX(0)
+		}
         this.bobbing.lastX = 0
         this.bobbing.lastY = 0
 	}
+
+
+	updateBobbingX(time) {}
 }

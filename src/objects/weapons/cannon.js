@@ -86,7 +86,9 @@ export default class Cannon extends Weapon{
 	nonFireRotate(time, delta) {
 		const mousePointer = this.scene.game.input.mousePointer;
 		const mainCamera = this.scene.cameras.main;
-		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
+		
+		mousePointer.updateWorldPoint(mainCamera)
+		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.worldX, mousePointer.worldY);
 		const deg = Phaser.Math.RAD_TO_DEG * angle; 
 		const oldRotation = this.obj.body.rotation + 90;
 
