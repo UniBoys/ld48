@@ -1,5 +1,6 @@
 import Submarine from "@/objects/submarine";
 import Spear2 from "@/objects/weapons/spear2";
+import HeadLight from "./headLight";
 
 export default class SubmarineStage2 extends Submarine {
 	constructor(scene) {
@@ -23,6 +24,15 @@ export default class SubmarineStage2 extends Submarine {
 				leftSide: true,
 			}),
 			// new Spear2({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 20, minAngle: 5, maxAngle: 75, left: false})
+		]
+
+		this.headLights = [
+			new HeadLight({
+				scene,
+				submarine: this,
+				left: {},
+				right: {}
+			})
 		]
 
 		this.init();

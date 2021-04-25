@@ -1,4 +1,5 @@
 import Enemy from '@/objects/enemy'
+import layers from '../../layers';
 
 export default class Squid extends Enemy {
     /**
@@ -30,6 +31,7 @@ export default class Squid extends Enemy {
         this.obj = scene.add.sprite(x, y);
 		this.obj.setScale(0.13)
 		this.obj.play("squid-idle")
+        this.obj.depth = layers.MOBS;
 
         this.init()
 

@@ -1,4 +1,5 @@
 import Inventory from "@/objects/inventory";
+import layers from "../layers";
 
 export default class Submarine {
 	/**
@@ -23,8 +24,8 @@ export default class Submarine {
 		this.width = 250;
 		this.height = 150;
 		this.color = 0xff0000;
-		this.initX = 0;
-		this.initY = 0;
+		this.initX = 4000;
+		this.initY = 400;
 		this.depth = 4;
 		this.weaponCooldown = 2000;
 		this.hitboxSizeX = 0.8;
@@ -34,6 +35,9 @@ export default class Submarine {
 		this.weapons = [];
 		this.inventorySetting = {
 			size: 1000
+		}
+		this.headLights = {
+			
 		}
 
 		this.cooldownStart = 0;
@@ -48,7 +52,7 @@ export default class Submarine {
 
 	init() {
         this.scene.physics.add.existing(this.obj);
-		this.obj.depth = 9;
+		this.obj.depth = layers.SUBMARINE;
 		this.obj.body.setCollideWorldBounds(true);
 		this.obj.body.setSize(this.obj.width*this.hitboxSizeX, this.obj.height*this.hitboxSizeY)
 		this.obj.body.setOffset(this.obj.body.offset.x + this.hitboxOffsetX, this.obj.body.offset.y + this.hitboxOffsetY);

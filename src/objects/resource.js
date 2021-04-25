@@ -1,3 +1,5 @@
+import layers from "../layers";
+
 export default class Resource {
 	constructor({scene, x, y, width, height}) {
 		this.scene = scene;
@@ -21,7 +23,7 @@ export default class Resource {
         this.scene.physics.add.existing(this.obj);
 		this.obj.setDisplaySize(this.width, this.height)
 		this.obj.setAngle(this.rotation);
-		this.obj.depth = 8;
+		this.obj.depth = layers.BACKGROUND_BEFORE;
 		this.obj.gather = () => this.gather();
 
 		this.gathering = false;
@@ -72,6 +74,7 @@ export default class Resource {
 
 	createPart(index) {
 		const part = this.scene.add.image(this.x, this.y, `part-iron-${index}`);
+		part.depth = layers.ITEMS;
 		part.setDisplaySize(this.partWidth, this.partHeight);
         this.scene.physics.add.existing(part);
 		part.body.rotation = Math.random() * 360;
@@ -79,7 +82,6 @@ export default class Resource {
 		let angleToPlayer = Phaser.Math.Angle.Between(part.body.x, part.body.y, this.scene.submarine.obj.body.x + this.scene.submarine.obj.body.width/2, this.scene.submarine.obj.body.y + this.scene.submarine.obj.body.height/2);
 		angleToPlayer += (3.14/1.5) * (Math.random() - 0.5);
 
-		console.log(Math.cos(angleToPlayer), Math.sin(angleToPlayer));
 		part.body.setVelocityX(Math.cos(angleToPlayer) * this.partSpeed * 10);
 		part.body.setVelocityY(Math.sin(angleToPlayer) * this.partSpeed * 10);
 		part.iAngle = angleToPlayer;

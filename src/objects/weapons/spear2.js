@@ -1,4 +1,5 @@
 import Weapon from "@/objects/weapon";
+import layers from "../../layers";
 
 export default class Spear1 extends Weapon {
 	constructor({scene, submarine, left, right, leftSide}) {
@@ -36,10 +37,10 @@ export default class Spear1 extends Weapon {
 		this.obj = this.scene.add.rectangle(submarine.initX + this.relativeX, submarine.initY + this.relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(this.defaultAngle - 90);
-		this.obj.depth = 7; 
+		this.obj.depth = layers.WEAPONS; 
 
 		this.support = this.scene.add.rectangle(submarine.initX + this.relativeX + this.width/2 + (this.leftSide ? -this.supportLeft : this.supportLeft), submarine.initY + this.relativeY + this.height/2 - this.supportOffset, this.supportWidth, 50, 0x000000);
-		this.support.depth = 6;
+		this.support.depth = layers.CONNECTORS;
 
 		this.aimLeft = this.scene.add.triangle(
 			submarine.initX + this.left.relativeX, submarine.initY + this.left.relativeY, 
@@ -59,8 +60,8 @@ export default class Spear1 extends Weapon {
 
 		this.aimRight.visible = false;
 
-		this.aimLeft.depth = 1;
-		this.aimRight.depth = 1;
+		this.aimLeft.depth = layers.BACKGROUND_UI;
+		this.aimRight.depth = layers.BACKGROUND_UI;
 
 		this.stabbing = false;
 		this.stabStart = 0;
@@ -87,6 +88,7 @@ export default class Spear1 extends Weapon {
 		this.stabbing = true;
 
 		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+		this.projectiles[0].depth = layers.PROJECTILES;
         this.scene.physics.add.existing(this.projectiles[0]);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;  
 		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);

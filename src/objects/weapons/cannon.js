@@ -1,4 +1,5 @@
 import Weapon from "@/objects/weapon";
+import layers from "../../layers";
 
 export default class Cannon extends Weapon{
 	constructor({scene, submarine, relativeX, relativeY, defaultAngle, minAngle, maxAngle}) {
@@ -27,7 +28,7 @@ export default class Cannon extends Weapon{
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(defaultAngle - 90); 
-		this.obj.depth = 7;
+		this.obj.depth = layers.WEAPONS;
 
 		this.reloadStart = 0;
 		this.projectiles = [];
@@ -51,6 +52,7 @@ export default class Cannon extends Weapon{
 	fire() {
 		const projectile = this.scene.add.circle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 10, 0x000000);
         this.scene.physics.add.existing(projectile);
+		projectile.depth = layers.PROJECTILES;
 		projectile.body.rotation = this.obj.body.rotation;
 		projectile.body.setVelocityX(Math.cos(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		projectile.body.setVelocityY(Math.sin(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);

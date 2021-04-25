@@ -1,4 +1,5 @@
 import Weapon from "@/objects/weapon";
+import layers from "../../layers";
 
 export default class Missile extends Weapon {
 	constructor({scene, submarine, relativeX, relativeY, defaultAngle}) {
@@ -28,13 +29,13 @@ export default class Missile extends Weapon {
 		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(defaultAngle - 90);
-		this.obj.depth = 7;
+		this.obj.depth = layers.WEAPONS;
 
 		this.support1 = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 - 20, submarine.initY + relativeY + this.height/2 - 10, this.supportWidth, this.supportHeight, 0x000000);
-		this.support1.depth = 6;
+		this.support1.depth = layers.CONNECTORS;
 
 		this.support2 = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + 20, submarine.initY + relativeY + this.height/2 - 10, this.supportWidth, this.supportHeight, 0x000000);
-		this.support2.depth = 6;
+		this.support2.depth = layers.CONNECTORS;
 
 		this.firing = false;
 		this.fireStart = 0;
@@ -49,6 +50,7 @@ export default class Missile extends Weapon {
 		this.firing = true;
 
 		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+		this.projectiles[0].depth = layers.PROJECTILES;
         this.scene.physics.add.existing(this.projectiles[0]);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;
 		this.projectiles[0].iAngle = this.obj.body.rotation * Phaser.Math.DEG_TO_RAD;

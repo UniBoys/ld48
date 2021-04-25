@@ -15,6 +15,7 @@ import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
+import layers from "../layers";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -48,19 +49,28 @@ export default class MainScene extends Scene {
 		const background1 = this.add.image(0, 0, 'background1');
 		background1.setSize(5000, 6000);
 		background1.setPosition(2500, 3000);
-		background1.depth = 1;
+		background1.depth = layers.BACKGROUND_MAIN;
 		this.background1Texture = this.textures.get('background1');
 
 		const graphics = this.add.graphics();
 
-   		graphics.fillGradientStyle(0xaaaaaa, 0xaaaaaa, 0x000000, 0x000000, 0.5);
-    	graphics.fillRect(100, 100, 256, 256);
+   		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.2, 0.2, 0.5, 0.5);
+    	graphics.fillRect(0, 620, 5000, 800);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.5, 0.5, 0.8, 0.8);
+    	graphics.fillRect(0, 620+800, 5000, 300);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.8, 0.8, 0.9, 0.9);
+    	graphics.fillRect(0, 620+800+300, 5000, 1500);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.9, 0.9, 0.93, 0.93);
+    	graphics.fillRect(0, 620+800+300+1500, 5000, 450);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.93, 0.93, 1, 1);
+    	graphics.fillRect(0, 620+800+300+1500+450, 5000, 1000);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x6d549b, 0x6d549b, 1, 1, 0.5, 0.5);
+    	graphics.fillRect(0, 620+800+300+1500+450+1000, 5000, 1500);
+		graphics.depth = layers.DARKEN;
 
-		const mask = this.add.graphics();
-		mask.fillStyle(0x000000, 0);
-		mask.fillRect(150, 150, 100, 100)
+		this.darkenMask = this.add.graphics();
 
-		graphics.mask = new Phaser.Display.Masks.GeometryMask(this, mask);
+		graphics.mask = new Phaser.Display.Masks.GeometryMask(this, this.darkenMask);
 		graphics.mask.invertAlpha = true;
 
 		this.enemies = [];
