@@ -1,28 +1,39 @@
-import HouseInventory from "./houseInventory";
+import layers from "@/layers";
+import HouseInventory from "@/objects/houseInventory";
 
 export default class House {
+	/**
+	 * @param {Phaser.Scene} scene 
+	 */
 	constructor(scene) {
 		this.scene = scene;
-		this.width = 500;
-		this.height = 200;
 		this.initX = 2500;
-		this.initY = 620;
+		this.initY = 490;
 		this.radius = 400;
 		this.inventory = new HouseInventory({scene, size: 1000, house: this});
 		this.upgrades = [500, 600, 700];
 
-		this.obj = this.scene.add.rectangle(this.initX, this.initY-.5*this.height, this.width, this.height, 0x00ff00);
+		this.obj = this.scene.add.image(this.initX, this.initY, 'house');
 		this.scene.physics.add.existing(this.obj);
+		this.obj.setScale(0.25);
+		this.obj.body.setVelocityY(-7);
+
+		this.obj.depth = layers.CONNECTORS;
+
+		this.width = this.obj.body.width*this.obj.scaleX;
+		this.height = this.obj.body.height*this.obj.scaleY;
 
 		this.inventory.init();
 	}
 
 	update(time, delta) {
-		if(this.obj.body.y < (this.initY-.7*this.height) && this.obj.body.y > (this.initY-.9*this.height)) {
-			this.obj.body.setAccelerationY(-70 + Math.random() * 10);
+		const y = this.obj.body.y;
+
+		if(y > 310) {
+			this.obj.body.setAccelerationY(-10 + Math.random() * 10);
 		}
-		else if(this.obj.body.y < (this.initY-.9*this.height) && this.obj.body.y > (this.initY-1.1*this.height)) {
-			this.obj.body.setAccelerationY(70 + Math.random() * -10);
+		else if(y < 295) {
+			this.obj.body.setAccelerationY(10 + Math.random() * -10);
 		}
 		else {
 			this.obj.body.setAccelerationY(0);

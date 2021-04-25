@@ -25,6 +25,7 @@ import House from "@/objects/house";
 import GlowImage from "@/../resources/img/glow.png";
 import Title from "@/../resources/img/title.png";
 import SpearImage from "@/../resources/img/spear.png";
+import HouseImage from "@/../resources/img/house.png";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -58,6 +59,7 @@ export default class MainScene extends Scene {
 		this.load.image('cannon', CannonImage);
         this.load.image('glow', GlowImage);
         this.load.image('spear', SpearImage);
+		this.load.image('house', HouseImage);
 	}
 
     create() {
