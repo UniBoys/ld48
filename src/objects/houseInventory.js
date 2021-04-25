@@ -4,9 +4,9 @@ export default class HouseInventory {
 		this.size = size;
 		this.house = house;
 		this.map = [
-			{key: 'wood', amount: 0},
-			{key: 'iron', amount: 0},
-			{key: 'ingots', amount: 0}
+			{key: 'wood', amount: 300, color: 0x964B00},
+			{key: 'iron', amount: 100, color: 0x8B2A2B},
+			{key: 'ingots', amount: 50, color: 0xFFD700}
 		];
 		this.barWidth = 400;
 		this.barHeight = 30;
@@ -21,15 +21,8 @@ export default class HouseInventory {
 	}
 	
 	update(time, delta) {
-		const x = this.house.obj.body.x + 50;
-		const y = this.house.obj.body.y - 70;
 		let order = ['wood', 'iron', 'ingots'];
 		let line;
-
-		this.bar.clear();
-
-		this.bar.lineStyle(2, 0xffffff, 1)
-		this.bar.strokeRect(x, y, this.barWidth, this.barHeight);
 
 		if(this.scene.submarine.inventory.hasItems()) {
 			this.text.setText('Stash to see your upgrades');
@@ -70,8 +63,27 @@ export default class HouseInventory {
 			this.text.setText('There are no upgrades left');
 		}
 
-		if(line) {
+		const x = this.house.obj.body.x + 50;
+		const y = this.house.obj.body.y - 70;
 
+		this.bar.clear();
+
+		this.bar.lineStyle(2, 0xffffff, 1)
+		this.bar.strokeRect(x, y, this.barWidth, this.barHeight);
+
+		if(line) {
+			this.bar.lineStyle(4, this.getObj(order[0]).color, 1)
+			this.bar.lineBetween(x + this.barWidth * line, y-2, x + this.barWidth * line, y + this.barHeight + 2)
+		}
+
+		let sum = 0;
+
+		for(const item of order) {
+			const obj = this.getObj(item);
+			this.bar.fillStyle(obj.color, 1);
+			this.bar.fillRect(x + (sum / this.size) * this.barWidth, y, (obj.amount / this.size) * this.barWidth, this.barHeight);
+
+			sum += obj.amount;
 		}
 
 		this.text.x = this.house.obj.body.x + this.house.obj.body.width/2 - this.text.width/2;
@@ -109,5 +121,9 @@ export default class HouseInventory {
 
 	get(key) {
 		return this.map.find(item => item.key === key).amount;
+	}
+
+	getObj(key) {
+		return this.map.find(item => item.key === key);
 	}
 }

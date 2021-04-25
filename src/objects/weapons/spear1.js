@@ -60,7 +60,6 @@ export default class Spear1 extends Weapon {
 	}
 
 	destroy() {
-
 		this.obj.destroy();
 		for(const projectile of this.projectiles) {
 			projectile.destroy();
