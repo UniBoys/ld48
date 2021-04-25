@@ -2,19 +2,22 @@ import Weapon from "@/objects/weapon";
 import layers from "../../layers";
 
 export default class Cannon extends Weapon{
-	constructor({scene, submarine, relativeX, relativeY, defaultAngle, minAngle, maxAngle}) {
+	constructor({scene, submarine, left, right}) {
 		super({
 			scene, 
 			submarine,
-			relativeX, 
-			relativeY, moveRelative: true,
+			relativeX: left.relativeX, 
+			relativeY: left.relativeY, 
+			moveRelative: true,
 			width: 30,
 			height: 40
 		});
 
-		this.defaultAngle = defaultAngle;
-		this.minAngle = minAngle;
-		this.maxAngle = maxAngle;
+		this.left = left;
+		this.right = right;
+		this.defaultAngle = left.defaultAngle;
+		this.minAngle = left.minAngle;
+		this.maxAngle = left.maxAngle;
 
 		this.mayRotate = false;
 		this.reloadTime = 1000;
@@ -25,10 +28,33 @@ export default class Cannon extends Weapon{
 		this.umpD = 5;
 		this.umpFrames = 12;
 
-		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
+		this.aimAlpha = 0.02;
+
+		this.obj = this.scene.add.rectangle(submarine.initX + this.relativeX, submarine.initY + this.relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
-		this.obj.setAngle(defaultAngle - 90); 
+		this.obj.setAngle(this.defaultAngle - 90); 
 		this.obj.depth = layers.WEAPONS;
+
+		this.aimLeft = this.scene.add.triangle(
+			submarine.initX + this.left.relativeX, submarine.initY + this.left.relativeY, 
+			0, 0, 
+			Math.cos(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			Math.cos(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			'0x0000000', 0
+		);
+
+		this.aimRight = this.scene.add.triangle(
+			submarine.initX + this.right.relativeX, submarine.initY + this.right.relativeY, 
+			0, 0, 
+			Math.cos(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			Math.cos(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			'0x0000000', 0
+		);
+
+		this.aimRight.visible = false;
+
+		this.aimLeft.depth = layers.BACKGROUND_UI;
+		this.aimRight.depth = layers.BACKGROUND_UI;
 
 		this.reloadStart = 0;
 		this.projectiles = [];
@@ -42,6 +68,8 @@ export default class Cannon extends Weapon{
 		for(const projectile of this.projectiles) {
 			projectile.destroy();
 		}
+		this.aimLeft.destroy();
+		this.aimRight.destroy();
 	}
 
 	explode(projectile) {
@@ -56,13 +84,43 @@ export default class Cannon extends Weapon{
 		projectile.body.rotation = this.obj.body.rotation;
 		projectile.body.setVelocityX(Math.cos(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		projectile.body.setVelocityY(Math.sin(projectile.body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		projectile.explode = () => this.explode(projectile);
+
 		this.projectiles.push(projectile);
 		
 		this.firing = true;
 	}
 
+	flip(flipped) {
+		if(flipped) {
+			this.relativeX = this.right.relativeX;
+			this.relativeY = this.right.relativeY;
+			this.defaultAngle = this.right.defaultAngle;
+			this.minAngle = this.right.minAngle;
+			this.maxAngle = this.right.maxAngle;
+			this.aimLeft.visible = false;
+			this.aimRight.visible = true;
+			this.obj.body.rotation = this.right.defaultAngle - 90;
+		}
+		else {
+			this.relativeX = this.left.relativeX;
+			this.relativeY = this.left.relativeY;
+			this.defaultAngle = this.left.defaultAngle;
+			this.minAngle = this.left.minAngle;
+			this.maxAngle = this.left.maxAngle;
+			this.aimRight.visible = false;
+			this.aimLeft.visible = true;
+			this.obj.body.rotation = this.left.defaultAngle - 90;
+		}
+	}
+
 	update(time, delta) {
 		super.update(delta);
+
+		this.aimLeft.x = this.obj.body.x + this.aimLeft.width/2 + this.obj.body.width/2;
+		this.aimLeft.y = this.obj.body.y + this.aimLeft.height/2 + this.obj.body.height/2;
+		this.aimRight.x = this.obj.body.x + this.aimRight.width/2 + this.obj.body.width/2;
+		this.aimRight.y = this.obj.body.y + this.aimRight.height/2 + this.obj.body.height/2;
 
 		if(!this.firing) {
 			this.nonFireRotate(time, delta);
@@ -82,6 +140,7 @@ export default class Cannon extends Weapon{
 		else if((time-this.reloadStart) > this.reloadTime) {
 			this.umpTimer = 0;
 			this.firing = false;
+			
 		}
 	}
 
@@ -95,6 +154,8 @@ export default class Cannon extends Weapon{
 		const oldRotation = this.obj.body.rotation + 90;
 
 		if(deg > this.minAngle && deg < this.maxAngle && this.mayRotate) {
+			this.aimRight.fillAlpha = this.aimAlpha;
+			this.aimLeft.fillAlpha = this.aimAlpha;
 			this.resetStart = 0;
 
 			if(deg-oldRotation > 1) {
@@ -115,6 +176,8 @@ export default class Cannon extends Weapon{
 			}
 		}
 		else {
+			this.aimRight.fillAlpha = 0;
+			this.aimLeft.fillAlpha = 0;
 			if(this.defaultAngle-oldRotation > 1) {
 				this.obj.body.angularVelocity = this.rotateSpeed * delta;
 			}
