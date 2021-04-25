@@ -57,6 +57,8 @@ export default class Spear1 extends Weapon {
 	}
 
 	destroy() {
+		if(this.projectiles[0] === undefined) return;
+
 		this.obj.destroy();
 		for(const projectile of this.projectiles) {
 			projectile.destroy();
@@ -81,7 +83,7 @@ export default class Spear1 extends Weapon {
 	}
 
 	explode() {
-		if(this.projectiles[0].body === undefined) return;
+		if(this.projectiles[0] === undefined) return;
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();
@@ -127,6 +129,9 @@ export default class Spear1 extends Weapon {
 		else if((time-this.stabStart) <= 3000) {
 			this.obj.body.rotation = this.defaultAngle - 90;
 			this.obj.body.y -= this.reloadY;
+
+			this.aimRight.fillAlpha = 0;
+			this.aimLeft.fillAlpha = 0;
 		}
 		else if(this.reloadStep === this.reloadFrames) {
 			this.stabbing = false;
@@ -136,6 +141,9 @@ export default class Spear1 extends Weapon {
 		else if((time-this.stabStart) > 3000) {
 			this.obj.body.y -= this.reloadY -  this.reloadStep * (this.reloadY/this.reloadFrames);
 			this.reloadStep++;
+
+			this.aimRight.fillAlpha = 0;
+			this.aimLeft.fillAlpha = 0;
 		}
 	}
 

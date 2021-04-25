@@ -52,6 +52,18 @@ export default class MainScene extends Scene {
 		background1.depth = 1;
 		this.background1Texture = this.textures.get('background1');
 
+		const graphics = this.add.graphics();
+
+   		graphics.fillGradientStyle(0xaaaaaa, 0xaaaaaa, 0x000000, 0x000000, 0.5);
+    	graphics.fillRect(100, 100, 256, 256);
+
+		const mask = this.add.graphics();
+		mask.fillStyle(0x000000, 0);
+		mask.fillRect(150, 150, 100, 100)
+
+		graphics.mask = new Phaser.Display.Masks.GeometryMask(this, mask);
+		graphics.mask.invertAlpha = true;
+
 		this.enemies = [];
 
 		this.enemies.push(new Squid(this, 800, 800))
