@@ -61,6 +61,8 @@ export default class Spear1 extends Weapon {
 		for(const projectile of this.projectiles) {
 			projectile.destroy();
 		}
+		this.aimLeft.destroy();
+		this.aimRight.destroy();
 	}
 
 	fire() {
@@ -142,8 +144,10 @@ export default class Spear1 extends Weapon {
 	nonStabRotate(time, delta) {
 		const mousePointer = this.scene.game.input.mousePointer;
 		const mainCamera = this.scene.cameras.main;
-		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
-		const deg = Phaser.Math.RAD_TO_DEG * angle; 
+		
+		mousePointer.updateWorldPoint(mainCamera)
+		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.worldX, mousePointer.worldY);
+		const deg = Phaser.Math.RAD_TO_DEG * angle;
 		const oldRotation = this.obj.body.rotation + 90;
 
 		if(deg > this.minAngle && deg < this.maxAngle && this.mayRotate) {

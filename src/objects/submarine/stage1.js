@@ -27,4 +27,10 @@ export default class SubmarineStage1 extends Submarine {
 
 		this.init();
 	}
+
+
+	updateBobbingX(time) {
+		if(time == 0) this.obj.play("sub1-move")
+		else this.obj.play("sub1-idle")
+	}
 }

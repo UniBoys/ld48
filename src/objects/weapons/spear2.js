@@ -1,20 +1,23 @@
 import Weapon from "@/objects/weapon";
 
 export default class Spear1 extends Weapon {
-	constructor({scene, submarine, relativeX, relativeY, defaultAngle, minAngle, maxAngle, left}) {
+	constructor({scene, submarine, left, right, leftSide}) {
 		super({
 			scene, 
 			submarine,
-			relativeX, 
-			relativeY, moveRelative: true,
+			relativeX: left.relativeX, 
+			relativeY: left.relativeY, 
+			moveRelative: true,
 			width: 20,
 			height: 80
 		});
 
-		this.defaultAngle = defaultAngle;
-		this.minAngle = minAngle;
-		this.maxAngle = maxAngle;
 		this.left = left;
+		this.right = right;
+		this.defaultAngle = left.defaultAngle;
+		this.minAngle = left.minAngle;
+		this.maxAngle = left.maxAngle;
+		this.leftSide = leftSide;
 
 		this.mayRotate = false;
 		this.reloadTime = 3000;
@@ -28,13 +31,36 @@ export default class Spear1 extends Weapon {
 		this.supportSpeed = 8;
 		this.supportOffset = 25;
 
-		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
+		this.aimAlpha = 0.02;
+
+		this.obj = this.scene.add.rectangle(submarine.initX + this.relativeX, submarine.initY + this.relativeY, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
-		this.obj.setAngle(defaultAngle - 90);
+		this.obj.setAngle(this.defaultAngle - 90);
 		this.obj.depth = 7; 
 
-		this.support = this.scene.add.rectangle(submarine.initX + relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft), submarine.initY + relativeY + this.height/2 - this.supportOffset, this.supportWidth, 50, 0x000000);
+		this.support = this.scene.add.rectangle(submarine.initX + this.relativeX + this.width/2 + (this.leftSide ? -this.supportLeft : this.supportLeft), submarine.initY + this.relativeY + this.height/2 - this.supportOffset, this.supportWidth, 50, 0x000000);
 		this.support.depth = 6;
+
+		this.aimLeft = this.scene.add.triangle(
+			submarine.initX + this.left.relativeX, submarine.initY + this.left.relativeY, 
+			0, 0, 
+			Math.cos(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			Math.cos(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			'0x0000000', this.aimAlpha
+		);
+
+		this.aimRight = this.scene.add.triangle(
+			submarine.initX + this.right.relativeX, submarine.initY + this.right.relativeY, 
+			0, 0, 
+			Math.cos(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			Math.cos(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
+			'0x0000000', this.aimAlpha
+		);
+
+		this.aimRight.visible = false;
+
+		this.aimLeft.depth = 1;
+		this.aimRight.depth = 1;
 
 		this.stabbing = false;
 		this.stabStart = 0;
@@ -48,6 +74,8 @@ export default class Spear1 extends Weapon {
 			projectile.destroy();
 		}
 		this.support.destroy();
+		this.aimLeft.destroy();
+		this.aimRight.destroy();
 	}
 
 	fire() {
@@ -63,6 +91,30 @@ export default class Spear1 extends Weapon {
 		this.projectiles[0].explode = () => this.explode();
 	}
 
+	flip(flipped) {
+		if(flipped) {
+			this.relativeX = this.right.relativeX;
+			this.relativeY = this.right.relativeY;
+			this.defaultAngle = this.right.defaultAngle;
+			this.minAngle = this.right.minAngle;
+			this.maxAngle = this.right.maxAngle;
+			this.aimLeft.visible = false;
+			this.aimRight.visible = true;
+			this.obj.body.rotation = this.right.defaultAngle - 90;
+		}
+		else {
+			this.relativeX = this.left.relativeX;
+			this.relativeY = this.left.relativeY;
+			this.defaultAngle = this.left.defaultAngle;
+			this.minAngle = this.left.minAngle;
+			this.maxAngle = this.left.maxAngle;
+			this.aimRight.visible = false;
+			this.aimLeft.visible = true;
+			this.obj.body.rotation = this.left.defaultAngle - 90;
+		}
+		this.leftSide = !this.leftSide
+	}
+
 	explode() {
 		this.projectiles[0].destroy();
 		this.projectiles.pop();
@@ -71,13 +123,18 @@ export default class Spear1 extends Weapon {
 	update(time, delta) {
 		super.update(delta);
 
-		this.support.x = this.submarine.obj.body.x + this.relativeX + this.width/2 + (this.left ? -this.supportLeft : this.supportLeft);
+		this.aimLeft.x = this.obj.body.x + this.aimLeft.width/2 + this.obj.body.width/2;
+		this.aimLeft.y = this.obj.body.y + this.aimLeft.height/2 + this.obj.body.height/2;
+		this.aimRight.x = this.obj.body.x + this.aimRight.width/2 + this.obj.body.width/2;
+		this.aimRight.y = this.obj.body.y + this.aimRight.height/2 + this.obj.body.height/2;
+
+		this.support.x = this.submarine.obj.body.x + this.relativeX + this.width/2 + (this.leftSide ? -this.supportLeft : this.supportLeft);
 		this.support.y = this.submarine.obj.body.y + this.relativeY + this.height/2 - this.supportOffset;
 
 		if(!this.stabbing) {
 			this.nonStabRotate(time, delta);
 
-			if(this.left) {
+			if(this.leftSide) {
 				this.support.y += Math.tan((180 - this.obj.body.rotation) * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.supportSpeed; 
 			}
 			else {
@@ -109,7 +166,9 @@ export default class Spear1 extends Weapon {
 	nonStabRotate(time, delta) {
 		const mousePointer = this.scene.game.input.mousePointer;
 		const mainCamera = this.scene.cameras.main;
-		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
+
+		mousePointer.updateWorldPoint(mainCamera)
+		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.worldX, mousePointer.worldY);
 		const deg = Phaser.Math.RAD_TO_DEG * angle; 
 		const oldRotation = this.obj.body.rotation + 90;
 

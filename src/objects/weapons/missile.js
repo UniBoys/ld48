@@ -103,7 +103,8 @@ export default class Missile extends Weapon {
 			else {
 				const mousePointer = this.scene.game.input.mousePointer;
 				const mainCamera = this.scene.cameras.main;
-				const trueAngle = Phaser.Math.Angle.Between(this.projectiles[0].body.x, this.projectiles[0].body.y, mousePointer.x + mainCamera.scrollX, mousePointer.y + mainCamera.scrollY);
+				mousePointer.updateWorldPoint(mainCamera)
+				const trueAngle = Phaser.Math.Angle.Between(this.projectiles[0].body.x, this.projectiles[0].body.y, mousePointer.worldX, mousePointer.worldY);
 
 				const normTrueAngle = Phaser.Math.Angle.Normalize(trueAngle);
 				const normIAngle = Phaser.Math.Angle.Normalize(this.projectiles[0].iAngle - 3.14/2);
