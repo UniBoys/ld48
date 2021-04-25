@@ -1,6 +1,6 @@
 import Submarine from "@/objects/submarine";
 import Spear2 from "@/objects/weapons/spear2";
-import HeadLight from "./headLight";
+import HeadLight from "@/objects/submarine/headLight";
 
 export default class SubmarineStage2 extends Submarine {
 	constructor(scene) {

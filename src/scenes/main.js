@@ -11,24 +11,40 @@ import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
 import Sub2Sprite from '@/../resources/sprites/sub-2.png'
 import Sub3Sprite from '@/../resources/sprites/sub-3.png'
+import Sub4Sprite from '@/../resources/sprites/sub-4.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
-import layers from "../layers";
-import House from "../objects/house";
+import layers from "@/layers";
+import preloadScene from "@/scenes/preload";
+import House from "@/objects/house";
+import Title from "@/../resources/img/title.png";
 
 export default class MainScene extends Scene {
 	constructor() {
-		super({key: 'main'});
+		super({
+			key: 'main', 
+			pack: {
+				files: [
+					{
+						type: 'image',
+						key: 'title',
+						url: Title,
+					}
+				]
+			},
+		});
 	}
 
 	preload() {
+		preloadScene(this)
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('sub2', Sub2Sprite, { frameWidth: 1956, frameHeight: 995 });
 		this.load.spritesheet('sub3', Sub3Sprite, { frameWidth: 2048, frameHeight: 2048 });
+		this.load.spritesheet('sub4', Sub4Sprite, { frameWidth: 1627, frameHeight: 897 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
@@ -45,8 +61,8 @@ export default class MainScene extends Scene {
 		this.minY = 600;
 
 		this.stageList = [
-			// SubmarineStage1, 
-			// SubmarineStage2, 
+			SubmarineStage1, 
+			SubmarineStage2, 
 			SubmarineStage3, 
 			SubmarineStage4,
 		]
@@ -200,6 +216,21 @@ export default class MainScene extends Scene {
             key: 'sub3-move',
             frames: this.anims.generateFrameNumbers('sub3', { frames: [ 0, 1 ] }),
             frameRate: 9,
+            repeat: -1
+        });
+
+		// Sub 4
+		this.anims.create({
+            key: 'sub4-idle',
+            frames: this.anims.generateFrameNumbers('sub4', { frames: [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 2, 1] }),
+            frameRate: 9,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'sub4-move',
+            frames: this.anims.generateFrameNumbers('sub4', { frames: [ 0, 1, 2, 3, 2, 1 ] }),
+            frameRate: 11,
             repeat: -1
         });
 		

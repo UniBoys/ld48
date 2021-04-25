@@ -5,11 +5,34 @@ export default class SubmarineStage4 extends Submarine {
 	constructor(scene) {
 		super(scene, 4);
 
-		this.obj = this.scene.add.rectangle(this.initX, this.initY, this.width, this.height, this.color);
+		this.obj = scene.add.sprite(this.initX, this.initY);
+		this.obj.setScale(0.20)
+		this.obj.play("sub4-idle")
+
+		this.hitboxSizeX = 0.9;
+		this.hitboxSizeY = 0.35;
+		this.hitboxOffsetX = -20;
+		this.hitboxOffsetY = 63;
+
+		this.acceleration = 16;
+		this.deceleration = 12;
+        this.changeBonus = 1.7;
+		this.maxSpeedX = 280;
+		this.maxSpeedY = 220;
 
 		this.weapons = [
-			new Missile({scene, submarine: this, relativeX: 60, relativeY: 125, defaultAngle: 0}),
-			new Missile({scene, submarine: this, relativeX: 190, relativeY: 125, defaultAngle: 0})
+			new Missile({
+				scene, 
+				submarine: this,
+				left: {relativeX: 50, relativeY: 40, defaultAngle: 0},
+				right: {relativeX: 240, relativeY: 40, defaultAngle: 180},
+			 }),
+			 new Missile({
+				scene, 
+				submarine: this,
+				left: {relativeX: 190, relativeY: 40, defaultAngle: 0},
+				right: {relativeX: 100, relativeY: 40, defaultAngle: 180},
+			 }),
 		]
 
 		this.init();
@@ -34,5 +57,10 @@ export default class SubmarineStage4 extends Submarine {
 		else {
 			return this.weapons[0];
 		}
+	}
+
+	updateBobbingX(time) {
+		if(time == 0) this.obj.play("sub4-move")
+		else this.obj.play("sub4-idle")
 	}
 }

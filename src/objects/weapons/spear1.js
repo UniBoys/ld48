@@ -71,15 +71,19 @@ export default class Spear1 extends Weapon {
 
 	fire() {
 		if(this.stabbing) return;
+		if(this.projectiles[0]) this.projectiles[0].destroy();
 
 		this.stabbing = true;
 
 		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
 		this.projectiles[0].depth = layers.PROJECTILES;
+		this.projectiles[0].angle = this.obj.angle;
         this.scene.physics.add.existing(this.projectiles[0]);
+		console.log(this.obj.body.rotation);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;
-		
-		this.projectiles[0].body.setCircle(10, Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*30, 60);
+		this.projectiles[0].body.setCircle(10, 
+			Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*30, 
+			Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*60);
 		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		this.projectiles[0].explode = () => this.explode();
@@ -128,6 +132,7 @@ export default class Spear1 extends Weapon {
 		}
 		else if(this.stabStart === 0) {
 			this.stabStart = time;
+			if(this.projectiles[0]) this.projectiles[0].body.rotation = this.obj.body.rotation;
 		}
 		else if((time-this.stabStart) <= 3000) {
 			this.obj.body.rotation = this.defaultAngle - 90;
@@ -139,7 +144,7 @@ export default class Spear1 extends Weapon {
 		else if(this.reloadStep === this.reloadFrames) {
 			this.stabbing = false;
 			this.stabStart = 0;
-			this.reloadStep = 0 ;
+			this.reloadStep = 0;
 		}
 		else if((time-this.stabStart) > 3000) {
 			this.obj.body.y -= this.reloadY -  this.reloadStep * (this.reloadY/this.reloadFrames);
@@ -158,7 +163,6 @@ export default class Spear1 extends Weapon {
 		const angle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, mousePointer.worldX, mousePointer.worldY);
 		const deg = Phaser.Math.RAD_TO_DEG * angle;
 		const oldRotation = this.obj.body.rotation + 90;
-		//console.log(deg > this.minAngle, deg < this.maxAngle, this.mayRotate);
 
 		if(deg > this.minAngle && deg < this.maxAngle && this.mayRotate) {
 			this.aimRight.fillAlpha = this.aimAlpha;

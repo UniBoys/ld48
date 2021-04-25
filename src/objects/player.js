@@ -8,8 +8,6 @@ export default class Player {
 
         this.scene.physics.add.existing(this.obj);
 
-		this.obj.body.co
-
 		this.acceleration = 5;
 		this.deceleration = 4;
 		this.maxSpeedX = 20;
