@@ -1,3 +1,5 @@
+import Inventory from "@/objects/inventory";
+
 export default class Submarine {
 	/**
 	 * @param {Phaser.Scene} scene 
@@ -30,6 +32,9 @@ export default class Submarine {
 		this.hitboxOffsetX = 0;
 		this.hitboxOffsetY = 30;
 		this.weapons = [];
+		this.inventorySetting = {
+			size: 1000
+		}
 
 		this.cooldownStart = 0;
 	}
@@ -48,6 +53,7 @@ export default class Submarine {
 		this.obj.body.setSize(this.obj.width*this.hitboxSizeX, this.obj.height*this.hitboxSizeY)
 		this.obj.body.setOffset(this.obj.body.offset.x + this.hitboxOffsetX, this.obj.body.offset.y + this.hitboxOffsetY);
         this.scene.cameras.main.startFollow(this.obj);
+		this.inventory = new Inventory(this.inventorySetting);
 	}
 
 	flip() {

@@ -5,11 +5,15 @@ import SubmarineStage1 from "@/objects/submarine/stage1";
 import SubmarineStage4 from "@/objects/submarine/stage4";
 import SubmarineStage2 from "@/objects/submarine/stage2";
 import SubmarineStage3 from "@/objects/submarine/stage3";
+import Iron from "@/objects/resources/iron";
 
 import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
-import Wood from "../objects/resources/wood";
+import OreIronImage from '@/../resources/img/ore-iron.png'
+import PartIron1Image from '@/../resources/img/part-iron-1.png'
+import PartIron2Image from '@/../resources/img/part-iron-2.png'
+import PartIron3Image from '@/../resources/img/part-iron-3.png'
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -20,6 +24,10 @@ export default class MainScene extends Scene {
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
+		this.load.image('ore-iron', OreIronImage);
+		this.load.image('part-iron-1', PartIron1Image);
+		this.load.image('part-iron-2', PartIron2Image);
+		this.load.image('part-iron-3', PartIron3Image);
 	}
 
     create() {
@@ -53,8 +61,9 @@ export default class MainScene extends Scene {
 
 		this.projectiles = [];
 		this.resources = [];
+		this.gatheringResources = [];
 
-		this.resources.push(new Wood(this, 300, 300, 50, 50));
+		this.resources.push(new Iron(this, 300, 300));
 
 		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,U");
 		this.keylistener.U.on('down', () => {
@@ -74,8 +83,13 @@ export default class MainScene extends Scene {
 
 			if(newProjectile !== undefined) {
 				// Check collision with enemies, submarine and resources.
-				this.physics.overlap(this.resources[0].obj.body, newProjectile.body, (object1, object2) => {
-					console.log("Collision between", object1, 'and', object2);
+				this.physics.add.collider(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
+					if(object1.gather) object1.gather();
+					if(object2.explode) object2.explode();
+
+					this.gatheringResources.push(this.resources.find(resource => resource.obj === object1))
+					this.projectiles = this.resources.filter(resource => resource.obj !== object1);
+					this.resources = this.projectiles.filter(projectile => projectile !== object2);
 				})
 
 				this.projectiles.push(newProjectile);
@@ -92,6 +106,7 @@ export default class MainScene extends Scene {
 			projectile.explode();
 		}
 
+		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
 		this.enemies.forEach(enemy => { enemy.update(time, delta) })
 	}
 

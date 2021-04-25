@@ -81,6 +81,8 @@ export default class Spear1 extends Weapon {
 	}
 
 	explode() {
+		if(this.projectiles[0].body === undefined) return;
+
 		this.projectiles[0].destroy();
 		this.projectiles.pop();
 	}
