@@ -9,20 +9,30 @@ export default class SubmarineStage3 extends Submarine {
 		this.obj.setScale(0.20)
 		this.obj.play("sub3-idle")
 
-		this.hitboxSizeX = 0.88;
-		this.hitboxSizeY = 0.37;
-		this.hitboxOffsetX = 37;
-		this.hitboxOffsetY = 33;
+		this.hitboxSizeX = 0.75;
+		this.hitboxSizeY = 0.2;
+		this.hitboxOffsetX = 0;
+		this.hitboxOffsetY = 380;
 
-		this.acceleration = 10;
-		this.deceleration = 6;
-        this.changeBonus = 1.5;
-		this.maxSpeedX = 180;
-		this.maxSpeedY = 120;
+		this.acceleration = 12;
+		this.deceleration = 8;
+        this.changeBonus = 1.7;
+		this.maxSpeedX = 220;
+		this.maxSpeedY = 160;
 
 		this.weapons = [
-			// new Cannon({scene, submarine: this, relativeX: 60, relativeY: 130, defaultAngle: 90, minAngle: 60, maxAngle: 150}),
-			// new Cannon({scene, submarine: this, relativeX: 190, relativeY: 130, defaultAngle: 90, minAngle: 30, maxAngle: 120})
+			new Cannon({
+				scene, 
+				submarine: this, 
+				left: {relativeX: 20, relativeY: 70, defaultAngle: 90, minAngle: 60, maxAngle: 150},
+				right: {relativeX: 260, relativeY: 70, defaultAngle: 90, minAngle: 30, maxAngle: 120},
+			}),
+			new Cannon({
+				scene, 
+				submarine: this, 
+				left: {relativeX: 205, relativeY: 70, defaultAngle: 90, minAngle: 30, maxAngle: 120},
+				right: {relativeX: 75, relativeY: 70, defaultAngle: 90, minAngle: 60, maxAngle: 150},
+			}),
 		]
 
 		this.init();

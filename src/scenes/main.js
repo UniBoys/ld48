@@ -44,8 +44,8 @@ export default class MainScene extends Scene {
 		this.minY = 600;
 
 		this.stageList = [
-			SubmarineStage1, 
-			SubmarineStage2, 
+			// SubmarineStage1, 
+			// SubmarineStage2, 
 			SubmarineStage3, 
 			SubmarineStage4,
 		]
