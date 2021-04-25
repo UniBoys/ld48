@@ -13,15 +13,18 @@ import Sub2Sprite from '@/../resources/sprites/sub-2.png'
 import Sub3Sprite from '@/../resources/sprites/sub-3.png'
 import Sub4Sprite from '@/../resources/sprites/sub-4.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
+import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
+import CannonImage from '@/../resources/img/cannon.png'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
-import Glow from "@/../resources/img/glow.png";
+import GlowImage from "@/../resources/img/glow.png";
 import Title from "@/../resources/img/title.png";
+import SpearImage from "@/../resources/img/spear.png";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -47,16 +50,19 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('sub3', Sub3Sprite, { frameWidth: 2048, frameHeight: 2048 });
 		this.load.spritesheet('sub4', Sub4Sprite, { frameWidth: 1627, frameHeight: 897 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
+		this.load.spritesheet('missile', MissileSprite, { frameWidth: 1546, frameHeight: 457 });
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
 		this.load.image('part-iron-3', PartIron3Image);
-        this.load.image('glow', Glow);
+		this.load.image('cannon', CannonImage);
+        this.load.image('glow', GlowImage);
+        this.load.image('spear', SpearImage);
 	}
 
     create() {
         this.cameras.main.setBackgroundColor("#4488AA")
-		this.cameras.main.zoom = 0.6
+		this.cameras.main.zoom = 0.8
 
 		this.animations();
 
@@ -84,15 +90,15 @@ export default class MainScene extends Scene {
 		const graphics = this.add.graphics();
    		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.2, 0.2, 0.5, 0.5);
     	graphics.fillRect(0, 620, 5000, 800);
-		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.5, 0.5, 0.8, 0.8);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.5, 0.5, 0.85, 0.85);
     	graphics.fillRect(0, 620+800, 5000, 300);
-		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.8, 0.8, 0.9, 0.9);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.85, 0.85, 0.93, 0.93);
     	graphics.fillRect(0, 620+800+300, 5000, 1500);
-		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.9, 0.9, 0.93, 0.93);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.93, 0.93, 0.98, 0.98);
     	graphics.fillRect(0, 620+800+300+1500, 5000, 450);
-		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.93, 0.93, 1, 1);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.98, 0.98, 1, 1);
     	graphics.fillRect(0, 620+800+300+1500+450, 5000, 1000);
-		graphics.fillGradientStyle(0x000000, 0x000000, 0x6d549b, 0x6d549b, 1, 1, 0.5, 0.5);
+		graphics.fillGradientStyle(0x000000, 0x000000, 0x6d549b, 0x6d549b, 1, 1, 0.6, 0.6);
     	graphics.fillRect(0, 620+800+300+1500+450+1000, 5000, 1500);
 		graphics.depth = layers.DARKEN;
 
@@ -271,6 +277,20 @@ export default class MainScene extends Scene {
 		this.anims.create({
             key: 'squid-ult',
             frames: this.anims.generateFrameNumbers('squid', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 11,
+            repeat: -1
+        });
+
+		// Missile
+		this.anims.create({
+            key: 'missile-idle',
+            frames: this.anims.generateFrameNumbers('missile', { frames: [ 0 ] }),
+            frameRate: 1,
+            repeat: -1
+        });
+		this.anims.create({
+            key: 'missile-run',
+            frames: this.anims.generateFrameNumbers('missile', { frames: [ 0, 1, 2, 4 ] }),
             frameRate: 11,
             repeat: -1
         });

@@ -3,8 +3,8 @@ import MainScene from "@/scenes/main";
 
 export default {
 	type: Phaser.AUTO,
-	width: 1280,
-    height: 720,
+	width: 1600,
+    height: 900,
 	parent: 'game-frame',
 	physics: {
 		default: 'arcade',
@@ -14,7 +14,7 @@ export default {
             debugShowStaticBody: true,
             debugShowVelocity: true,
             debugVelocityColor: 0xffff00,
-            debugBodyColor: 0x0000ff,
+            daebugBodyColor: 0x0000ff,
             debugStaticBodyColor: 0xffffff
 		}
 	},

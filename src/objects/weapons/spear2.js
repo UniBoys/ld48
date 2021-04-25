@@ -27,14 +27,15 @@ export default class Spear1 extends Weapon {
 		this.shootVelocity = 200;
 		this.rotateSpeed = 5;
 
-		this.supportLeft = 15;
+		this.supportLeft = 10;
 		this.supportWidth = 5;
-		this.supportSpeed = 8;
+		this.supportSpeed = 9;
 		this.supportOffset = 25;
 
 		this.aimAlpha = 0.02;
 
-		this.obj = this.scene.add.rectangle(submarine.initX + this.relativeX, submarine.initY + this.relativeY, this.width, this.height, 0xffffff);
+		this.obj = this.scene.add.image(submarine.initX + this.relativeX, submarine.initY + this.relativeY, 'spear');
+		this.obj.setDisplaySize(this.width, this.height);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(this.defaultAngle - 90);
 		this.obj.depth = layers.WEAPONS; 
@@ -87,15 +88,16 @@ export default class Spear1 extends Weapon {
 
 		this.stabbing = true;
 
-		this.projectiles[0] = this.scene.add.rectangle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, this.width, this.height, 0xffffff);
+		this.projectiles[0] = this.scene.add.image(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 'spear');
+		this.projectiles[0].setDisplaySize(this.width, this.height);
 		this.projectiles[0].depth = layers.PROJECTILES;
 		this.projectiles[0].angle = this.obj.angle;
         this.scene.physics.add.existing(this.projectiles[0]);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;  
 
-		this.projectiles[0].body.setCircle(10, 
-			Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*30, 
-			Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*80);
+		this.projectiles[0].body.setCircle(10*(this.projectiles[0].width/this.width), 
+			Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*30*(this.projectiles[0].width/this.width), 
+			Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*80*(this.projectiles[0].height/this.height));
 		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		this.projectiles[0].explode = () => this.explode();
