@@ -13,8 +13,16 @@ export default class SubmarineStage1 extends Submarine {
 		this.obj.play("sub1-idle")
 
 		this.weapons = [
-			new Spear1({scene, submarine: this, relativeX: 40, relativeY: 120, defaultAngle: 90, minAngle: 70, maxAngle: 170, upIsUp: true}),
-			new Spear1({scene, submarine: this, relativeX: 140, relativeY: 128, defaultAngle: 90, minAngle: 50, maxAngle: 100, upIsUp: true})
+			new Spear1({
+				scene, submarine: this, 
+				left: {relativeX: 5, relativeY: 90, defaultAngle: 120, minAngle: 90, maxAngle: 170},
+				right: {relativeX: 182, relativeY: 90, defaultAngle: 60, minAngle: 10, maxAngle: 90}
+			}),
+			new Spear1({
+				scene, submarine: this, 
+				left: {relativeX: 115, relativeY: 100, defaultAngle: 75, minAngle: 50, maxAngle: 100},
+				right: {relativeX: 75, relativeY: 100, defaultAngle: 115, minAngle: 80, maxAngle: 130}
+			})
 		]
 
 		this.init();

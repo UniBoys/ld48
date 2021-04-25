@@ -25,6 +25,10 @@ export default class Submarine {
 		this.initY = 0;
 		this.depth = 4;
 		this.weaponCooldown = 2000;
+		this.hitboxSizeX = 0.8;
+		this.hitboxSizeY = 0.8;
+		this.hitboxOffsetX = 0;
+		this.hitboxOffsetY = 30;
 		this.weapons = [];
 
 		this.cooldownStart = 0;
@@ -41,10 +45,42 @@ export default class Submarine {
         this.scene.physics.add.existing(this.obj);
 		this.obj.depth = 9;
 		this.obj.body.setCollideWorldBounds(true);
+		this.obj.body.setSize(this.obj.width*this.hitboxSizeX, this.obj.height*this.hitboxSizeY)
+		this.obj.body.setOffset(this.obj.body.offset.x + this.hitboxOffsetX, this.obj.body.offset.y + this.hitboxOffsetY);
         this.scene.cameras.main.startFollow(this.obj);
 	}
 
+	flip() {
+		if(!this.flipped) {
+			this.flipped = true;
+			this.obj.flipX = true;
+
+			for(const weapon of this.weapons) {
+				weapon.flip(this.flipped);
+			}
+		}
+		else {
+			this.flipped = false;
+			this.obj.flipX = false;
+
+			for(const weapon of this.weapons) {
+				weapon.flip(this.flipped);
+			}
+		}
+	}
+
 	update(time, delta) {
+		if(this.shot) {
+			this.shot = false;
+		}
+
+		if(this.obj.body.velocity.x > 1 && !this.flipped) {
+			this.flip();	
+		}
+		else if(this.obj.body.velocity.x < -1 && this.flipped) {
+			this.flip();
+		}
+
 		this.movement(time, delta);
 
 		const closestWeapon = this.findClosestWeaponToCursor();
@@ -63,11 +99,22 @@ export default class Submarine {
 		if(this.canFire()) {
 			closestWeapon.fire();
 			this.cooldownStart = time;
+			this.shot = true;
 		}
 	}
 
 	canFire() {
 		return (this.scene.keylistener.SPACE.isDown || this.scene.input.mousePointer.leftButtonDown()) && this.cooldownStart === 0;
+	}
+
+	getAllProjectiles() {
+		const projectiles = [];
+		
+		for(const weapon of this.weapons) {
+			projectiles.push(...weapon.projectiles)
+		}
+
+		return projectiles;
 	}
 
 	findClosestWeaponToCursor() {
@@ -143,6 +190,27 @@ export default class Submarine {
                 this.obj.body.setAccelerationX(delta * this.bobbing.maxX * 0.1)
             }
 		}
+
+		if(this.checkForMapCollision(this.obj.body.x, this.obj.body.y)) {
+			if(this.obj.body.velocity.x < 0) this.obj.body.setVelocityX(0);
+			if(this.obj.body.velocity.y < 0) this.obj.body.setVelocityY(0);
+		}
+		else if(this.checkForMapCollision(this.obj.body.x + this.obj.body.width, this.obj.body.y)) {
+			if(this.obj.body.velocity.x > 0) this.obj.body.setVelocityX(0);
+			if(this.obj.body.velocity.y < 0) this.obj.body.setVelocityY(0);
+		}
+		else if(this.checkForMapCollision(this.obj.body.x, this.obj.body.y + this.obj.body.height)) {
+			if(this.obj.body.velocity.x < 0) this.obj.body.setVelocityX(0);
+			if(this.obj.body.velocity.y > 0) this.obj.body.setVelocityY(0);
+		}
+		else if(this.checkForMapCollision(this.obj.body.x + this.obj.body.width, this.obj.body.y + this.obj.body.height)) {
+			if(this.obj.body.velocity.x > 0) this.obj.body.setVelocityX(0);
+			if(this.obj.body.velocity.y > 0) this.obj.body.setVelocityY(0);
+		}
+	}
+
+	checkForMapCollision(x, y) {
+		return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
 	}
 
 	limitMaxSpeed() {

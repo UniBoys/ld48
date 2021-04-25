@@ -52,6 +52,7 @@ export default class Missile extends Weapon {
         this.scene.physics.add.existing(this.projectiles[0]);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;
 		this.projectiles[0].iAngle = this.obj.body.rotation * Phaser.Math.DEG_TO_RAD;
+		this.projectiles[0].explode = () => this.explode();
 	}
 
 	explode() {

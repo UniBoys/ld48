@@ -1,7 +1,7 @@
 import Resource from "@/objects/resource";
 
 export default class Wood extends Resource {
-	constructor({scene, width, height, x, y}) {
+	constructor(scene, x, y, width, height) {
 		super({
 			scene,
 			x,
@@ -10,9 +10,15 @@ export default class Wood extends Resource {
 			height
 		})
 
-		this.obj = this.scene.add.rectangle(submarine.initX + relativeX, submarine.initY + relativeY, this.width, this.height, 0xffffff);
+		this.rotation = 0;
+		
+		this.obj = this.scene.add.rectangle(this.x, this.y, this.width, this.height, 0xffffff);
         this.scene.physics.add.existing(this.obj);
 		this.obj.setAngle(this.rotation - 90);
 		this.obj.depth = 8;
+	}
+
+	gather() {
+		
 	}
 }

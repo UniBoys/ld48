@@ -5,10 +5,11 @@ import SubmarineStage1 from "@/objects/submarine/stage1";
 import SubmarineStage4 from "@/objects/submarine/stage4";
 import SubmarineStage2 from "@/objects/submarine/stage2";
 import SubmarineStage3 from "@/objects/submarine/stage3";
-import image from "@/../resources/img/Background_3_Layers-1.png";
 
+import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
+import Wood from "../objects/resources/wood";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -16,6 +17,7 @@ export default class MainScene extends Scene {
 	}
 
 	preload() {
+		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 	}
@@ -32,30 +34,27 @@ export default class MainScene extends Scene {
 		const stageList = [SubmarineStage1, SubmarineStage2, SubmarineStage3, SubmarineStage4]
 		let stageIndex = 0;
 
-		this.player = new Player(this)
 		this.submarine = new (stageList[stageIndex])(this);
         
 		this.physics.world.setBounds(0, 0, 5000, 6000);
         this.cameras.main.setBounds(0, 0, 5000, 6000);
-		const background1 = this.add.image(0, 0, 'Background_3_Layers-1');
+		const background1 = this.add.image(0, 0, 'background1');
 		background1.setSize(5000, 6000);
 		background1.setPosition(2500, 3000);
 		background1.depth = 1;
+		this.background1Texture = this.textures.get('background1');
 
-		const texture = this.textures.get('Background_3_Layers-1');
-
-		for(let i = 0; i < 80; i++) {
-			this.textures.getPixelAlpha(Math.ceil(500 * Math.random()), Math.ceil(500 * Math.random()), );
-		}
-
-		console.log(`It took ${(stopTime-startTime)} ms to find colors 80 times`);
-
-		this.enemies = []
+		this.enemies = [];
 
 		this.enemies.push(new Squid(this, 800, 800))
 		this.enemies.push(new Squid(this, 1200, 400))
 		this.enemies.push(new Squid(this, 500, 1200))
 		this.enemies.push(new Squid(this, 1800, 300))
+
+		this.projectiles = [];
+		this.resources = [];
+
+		this.resources.push(new Wood(this, 300, 300, 50, 50));
 
 		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,U");
 		this.keylistener.U.on('down', () => {
@@ -67,7 +66,32 @@ export default class MainScene extends Scene {
 
 	update(time, delta) {
 		this.submarine.update(time, delta);
-		this.player.update(delta);
+
+		if(this.submarine.shot) {
+			const allProjectiles = this.submarine.getAllProjectiles();
+
+			const newProjectile = allProjectiles.filter(projectile => !this.projectiles.includes(projectile))[0];
+
+			if(newProjectile !== undefined) {
+				// Check collision with enemies, submarine and resources.
+				this.physics.overlap(this.resources[0].obj.body, newProjectile.body, (object1, object2) => {
+					console.log("Collision between", object1, 'and', object2);
+				})
+
+				this.projectiles.push(newProjectile);
+			}
+		}
+
+		for(const projectile of this.projectiles) {
+			if(projectile.body === undefined) continue;
+
+			const alpha = this.textures.getPixelAlpha(projectile.body.center.x, projectile.body.center.y, "background1");
+			
+			if(alpha === 0) continue;
+
+			projectile.explode();
+		}
+
 		this.enemies.forEach(enemy => { enemy.update(time, delta) })
 	}
 

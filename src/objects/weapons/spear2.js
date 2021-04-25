@@ -60,6 +60,12 @@ export default class Spear1 extends Weapon {
 		this.projectiles[0].body.rotation = this.obj.body.rotation;  
 		this.projectiles[0].body.setVelocityX(Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
 		this.projectiles[0].body.setVelocityY(Math.sin(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2) * this.shootVelocity);
+		this.projectiles[0].explode = () => this.explode();
+	}
+
+	explode() {
+		this.projectiles[0].destroy();
+		this.projectiles.pop();
 	}
 
 	update(time, delta) {
