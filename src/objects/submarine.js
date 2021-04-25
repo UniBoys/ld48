@@ -37,6 +37,10 @@ export default class Submarine {
 			size: 1000
 		}
 		this.headLights = []
+		this.glowStrength = 0.2;
+		this.glowWidth = 1000;
+		this.glowHeight = 700;
+		this.glowColor = 0xdddddd;
 
 		this.cooldownStart = 0;
 	}
@@ -120,6 +124,11 @@ export default class Submarine {
 		for(const headLight of this.headLights) {
 			headLight.update(time, delta);
 		}
+
+		this.scene.radials[0].setAlpha(this.glowStrength);
+		this.scene.radials[0].setTint(this.glowColor);
+		this.scene.radials[0].setDisplaySize(this.glowWidth, this.glowHeight);
+		this.scene.radials[0].setPosition(this.obj.body.x + this.obj.body.width/2, this.obj.body.y + this.obj.body.height/2);
 	}
 
 	canFire() {

@@ -20,6 +20,7 @@ import PartIron3Image from '@/../resources/img/part-iron-3.png'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
+import Glow from "@/../resources/img/glow.png";
 import Title from "@/../resources/img/title.png";
 
 export default class MainScene extends Scene {
@@ -50,6 +51,7 @@ export default class MainScene extends Scene {
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
 		this.load.image('part-iron-3', PartIron3Image);
+        this.load.image('glow', Glow);
 	}
 
     create() {
@@ -98,13 +100,37 @@ export default class MainScene extends Scene {
 
 		graphics.mask = new Phaser.Display.Masks.BitmapMask(this, this.darkenMask);
 		graphics.mask.invertAlpha = true;
+		
+		this.radials = [];
+		const numberOfRadials = 3;
 
-		const emptyGraphics = this.add.graphics();
-		emptyGraphics.fillStyle(0x000000, 0.0);
-    	emptyGraphics.fillRect(0, 620, 5000, 5380);
+		for(let i = 0; i < numberOfRadials; i++) {
+			const radial = this.add.image(-1000, -1000, 'glow');
+			radial.depth = layers.DARKEN;
 
-		this.darkenMask.mask = new Phaser.Display.Masks.GeometryMask(this, emptyGraphics);
-		this.darkenMask.invertAlpha = true;
+			if(i === 0) {
+				this.darkenMask.mask = new Phaser.Display.Masks.BitmapMask(this, radial);
+				this.darkenMask.invertAlpha = true;
+
+				const emptyGraphics = this.add.graphics();
+				emptyGraphics.fillStyle(0x000000, 0.0);
+				emptyGraphics.fillRect(0, 620, 5000, 5380);
+
+				radial.mask = new Phaser.Display.Masks.GeometryMask(this, emptyGraphics);
+				radial.invertAlpha = true;
+				radial.emptyGraphics = emptyGraphics;
+			} 
+			else if(i == 1) {
+				this.radials[i-1].emptyGraphics.mask = new Phaser.Display.Masks.BitmapMask(this, radial);
+				this.radials[i-1].emptyGraphics.invertAlpha = true;
+			}
+			else {
+				this.radials[i-1].mask = new Phaser.Display.Masks.BitmapMask(this, radial);
+				this.radials[i-1].invertAlpha = true;
+			}
+			
+			this.radials[i] = radial;
+		}
 
 		this.enemies = [];
 
