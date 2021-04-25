@@ -25,7 +25,7 @@ export default class Cannon extends Weapon{
 		this.reloadY = 45;
 		this.shootVelocity = 200;
 		this.rotateSpeed = 5;
-		this.umpD = 5;
+		this.umpD = 6;
 		this.umpFrames = 12;
 
 		this.aimAlpha = 0.02;
@@ -79,7 +79,8 @@ export default class Cannon extends Weapon{
 	}
 
 	fire() {
-		const projectile = this.scene.add.circle(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 10, 0x000000);
+		const projectile = this.scene.add.image(this.scene.submarine.obj.body.x + this.relativeX + this.width/2, this.scene.submarine.obj.body.y + this.relativeY + this.height/2, 'cannonball');
+		projectile.setDisplaySize(20, 20);
         this.scene.physics.add.existing(projectile);
 		projectile.depth = layers.PROJECTILES;
 		projectile.body.rotation = this.obj.body.rotation;

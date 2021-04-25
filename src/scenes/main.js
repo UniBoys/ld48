@@ -14,11 +14,14 @@ import Sub3Sprite from '@/../resources/sprites/sub-3.png'
 import Sub4Sprite from '@/../resources/sprites/sub-4.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import MissileSprite from '@/../resources/sprites/missile-sprite.png'
+import WaterSprite from '@/../resources/sprites/water-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
 import CannonImage from '@/../resources/img/cannon.png'
+import CannonballImage from '@/../resources/img/cannonball.png'
+import SignImage from '@/../resources/img/sign.png'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -52,14 +55,17 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('sub4', Sub4Sprite, { frameWidth: 1627, frameHeight: 897 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 		this.load.spritesheet('missile', MissileSprite, { frameWidth: 1546, frameHeight: 457 });
+		this.load.spritesheet('water', WaterSprite, { frameWidth: 1200, frameHeight: 200 });
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
 		this.load.image('part-iron-3', PartIron3Image);
 		this.load.image('cannon', CannonImage);
+		this.load.image('cannonball', CannonballImage);
         this.load.image('glow', GlowImage);
         this.load.image('spear', SpearImage);
 		this.load.image('house', HouseImage);
+		this.load.image('sign', SignImage);
 	}
 
     create() {
@@ -121,7 +127,7 @@ export default class MainScene extends Scene {
 
 				const emptyGraphics = this.add.graphics();
 				emptyGraphics.fillStyle(0x000000, 0.0);
-				emptyGraphics.fillRect(0, 620, 5000, 5380);
+				emptyGraphics.fillRect(0, 606, 5000, 5400);
 
 				radial.mask = new Phaser.Display.Masks.GeometryMask(this, emptyGraphics);
 				radial.invertAlpha = true;
@@ -145,6 +151,12 @@ export default class MainScene extends Scene {
 		// this.enemies.push(new Squid(this, 1200, 400))
 		// this.enemies.push(new Squid(this, 500, 1200))
 		// this.enemies.push(new Squid(this, 1800, 300))
+		
+		for(let x = 0; x < 6000; x += 120) {
+			const water = this.add.sprite(x, 610);
+			water.play("water");
+			water.setDisplaySize(120, 20);
+		}
 
 		this.projectiles = [];
 		this.resources = [];
@@ -293,6 +305,14 @@ export default class MainScene extends Scene {
             key: 'missile-run',
             frames: this.anims.generateFrameNumbers('missile', { frames: [ 0, 1, 2, 4 ] }),
             frameRate: 11,
+            repeat: -1
+        });
+
+		// Water 
+		this.anims.create({
+            key: 'water',
+            frames: this.anims.generateFrameNumbers('water', { frames: [ 0, 1, 2 ] }),
+            frameRate: 8,
             repeat: -1
         });
 	}

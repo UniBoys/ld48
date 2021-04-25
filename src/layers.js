@@ -12,6 +12,7 @@ export default {
 	PROJECTILES: 11,
 	WEAPONS: 12,
 	SUBMARINE: 13,
-	UI_1: 14,
-	UI_2: 15
+	SIGN: 14,
+	UI_1: 15,
+	UI_2: 16
 };

@@ -33,6 +33,11 @@ export default class Submarine {
 		this.hitboxOffsetX = 0;
 		this.hitboxOffsetY = 30;
 		this.weapons = [];
+		this.signY = 0;
+		this.signX = 0;
+		this.signR = 0;
+		this.signW = 0;
+		this.signH = 0;
 		this.inventorySetting = {
 			size: 1000
 		}
@@ -47,6 +52,7 @@ export default class Submarine {
 
 	destroy() {
 		this.obj.destroy();
+		this.sign.destroy();
 		for(const weapon of this.weapons) {
 			weapon.destroy();
 		}
@@ -60,12 +66,18 @@ export default class Submarine {
 		this.obj.body.setOffset(this.obj.body.offset.x + this.hitboxOffsetX, this.obj.body.offset.y + this.hitboxOffsetY);
         this.scene.cameras.main.startFollow(this.obj);
 		this.inventory = new Inventory(this.inventorySetting);
+
+		this.sign = this.scene.add.image(this.obj.body.x + this.signLeftX, this.obj.body.x + this.signY, 'sign');
+		this.sign.depth = layers.SIGN;
+		this.sign.setDisplaySize(this.signW, this.signH);
+		this.sign.angle = this.signR;
 	}
 
 	flip() {
 		if(!this.flipped) {
 			this.flipped = true;
 			this.obj.flipX = true;
+			this.sign.visible = false;
 
 			for(const weapon of this.weapons) {
 				weapon.flip(this.flipped);
@@ -77,6 +89,7 @@ export default class Submarine {
 		else {
 			this.flipped = false;
 			this.obj.flipX = false;
+			this.sign.visible = true;
 
 			for(const weapon of this.weapons) {
 				weapon.flip(this.flipped);
@@ -123,6 +136,11 @@ export default class Submarine {
 
 		for(const headLight of this.headLights) {
 			headLight.update(time, delta);
+		}
+
+		if(!this.flipped) {
+			this.sign.x = this.obj.body.x + this.signX;
+			this.sign.y = this.obj.body.y + this.signY;
 		}
 
 		this.scene.radials[0].setAlpha(this.glowStrength);

@@ -21,6 +21,12 @@ export default class SubmarineStage3 extends Submarine {
 		this.maxSpeedX = 220;
 		this.maxSpeedY = 160;
 
+		this.signX = 215;
+		this.signY = 60;
+		this.signR = 0;
+		this.signW = 120;
+		this.signH = 19;
+
 		this.weapons = [
 			new Cannon({
 				scene, 

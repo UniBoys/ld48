@@ -21,6 +21,12 @@ export default class SubmarineStage2 extends Submarine {
 		this.maxSpeedX = 120;
 		this.maxSpeedY = 90;
 
+		this.signX = 240;
+		this.signY = 25;
+		this.signR = 5;
+		this.signW = 110;
+		this.signH = 18;
+
 		this.weapons = [
 			new Spear2({
 				scene, 
