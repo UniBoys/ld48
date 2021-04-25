@@ -3,23 +3,23 @@
 * @param {Phaser.Scene} scene 
 */
 export default (scene) => {
+    var width = scene.cameras.main.width;
+    var height = scene.cameras.main.height;
+
     const title = scene.add.image(100, 0, 'title');
-    title.setOrigin(0);
     title.setScale(0.3);
-
-    const padding = 100
-
+    title.setPosition(width / 2 , 190)
+    
+    const padding = 130
 
     var progressBar = scene.add.graphics();
     var progressBox = scene.add.graphics();
-    progressBox.fillStyle(0x222222, 0.8);
-    progressBox.fillRect(240, 270 + padding, 320, 50);
+    progressBox.fillStyle(0x2d5d75, 0.8);
+    progressBox.fillRect(width / 2 - 320/2, 270 + padding, 320, 50);
     
-    var width = scene.cameras.main.width;
-    var height = scene.cameras.main.height;
     var loadingText = scene.make.text({
         x: width / 2,
-        y: height / 2 - 50 + padding,
+        y: height / 2 + padding,
         text: 'Loading...',
         style: {
             font: '20px monospace',
@@ -30,7 +30,7 @@ export default (scene) => {
     
     var percentText = scene.make.text({
         x: width / 2,
-        y: height / 2 - 5 + padding,
+        y: height / 2 + 35 + padding,
         text: '0%',
         style: {
             font: '18px monospace',
@@ -41,7 +41,7 @@ export default (scene) => {
     
     var assetText = scene.make.text({
         x: width / 2,
-        y: height / 2 + 50 + padding,
+        y: height / 2 + 90 + padding,
         text: '',
         style: {
             font: '18px monospace',
@@ -55,7 +55,7 @@ export default (scene) => {
         percentText.setText(parseInt(value * 100) + '%');
         progressBar.clear();
         progressBar.fillStyle(0xffffff, 1);
-        progressBar.fillRect(250, 280, 300 * value, 30);
+        progressBar.fillRect(width / 2 - 300/2, 280 + padding, 300 * value, 30);
     });
     
     scene.load.on('fileprogress', function (file) {

@@ -6,6 +6,7 @@ export default {
 	width: 1600,
     height: 900,
 	parent: 'game-frame',
+	backgroundColor: '#4488AA',
 	physics: {
 		default: 'arcade',
 		arcade: {

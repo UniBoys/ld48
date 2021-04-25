@@ -61,7 +61,6 @@ export default class MainScene extends Scene {
 	}
 
     create() {
-        this.cameras.main.setBackgroundColor("#4488AA")
 		this.cameras.main.zoom = 0.8
 
 		this.animations();
