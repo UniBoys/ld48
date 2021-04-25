@@ -83,8 +83,7 @@ export default class Submarine {
 		if(this.bobbing.lastX == 0) {
 			if(this.obj.body.velocity.x > 1 && !this.flipped) {
 				this.flip();	
-			}
-			else if(this.obj.body.velocity.x < -1 && this.flipped) {
+			} else if(this.obj.body.velocity.x < -1 && this.flipped) {
 				this.flip();
 			}
 		}

@@ -46,7 +46,7 @@ export default class Spear1 extends Weapon {
 			0, 0, 
 			Math.cos(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
 			Math.cos(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.left.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
-			'0x0000000', this.aimAlpha
+			'0x0000000', 0
 		);
 
 		this.aimRight = this.scene.add.triangle(
@@ -54,7 +54,7 @@ export default class Spear1 extends Weapon {
 			0, 0, 
 			Math.cos(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.maxAngle * Phaser.Math.DEG_TO_RAD) * 1200,
 			Math.cos(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200, Math.sin(this.right.minAngle * Phaser.Math.DEG_TO_RAD) * 1200,
-			'0x0000000', this.aimAlpha
+			'0x0000000', 0
 		);
 
 		this.aimRight.visible = false;
@@ -80,6 +80,9 @@ export default class Spear1 extends Weapon {
 
 	fire() {
 		if(this.stabbing) return;
+
+		this.aimRight.fillAlpha = 0;
+		this.aimLeft.fillAlpha = 0;
 
 		this.stabbing = true;
 
@@ -153,6 +156,8 @@ export default class Spear1 extends Weapon {
 		}
 		else if(this.reloadStep === this.reloadFrames) {
 			this.stabbing = false;
+			this.aimRight.fillAlpha = this.aimAlpha;
+			this.aimLeft.fillAlpha = this.aimAlpha;
 			this.stabStart = 0;
 			this.reloadStep = 0 ;
 		}
@@ -173,6 +178,8 @@ export default class Spear1 extends Weapon {
 		const oldRotation = this.obj.body.rotation + 90;
 
 		if(deg > this.minAngle && deg < this.maxAngle && this.mayRotate) {
+			this.aimRight.fillAlpha = this.aimAlpha;
+			this.aimLeft.fillAlpha = this.aimAlpha;
 			this.resetStart = 0;
 
 			if(deg-oldRotation > 1) {
@@ -193,6 +200,8 @@ export default class Spear1 extends Weapon {
 			}
 		}
 		else {
+			this.aimRight.fillAlpha = 0;
+			this.aimLeft.fillAlpha = 0;
 			if(this.defaultAngle-oldRotation > 1) {
 				this.obj.body.angularVelocity = this.rotateSpeed * delta;
 			}
