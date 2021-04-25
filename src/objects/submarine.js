@@ -25,7 +25,7 @@ export default class Submarine {
 		this.height = 150;
 		this.color = 0xff0000;
 		this.initX = 4000;
-		this.initY = 400;
+		this.initY = 650;
 		this.depth = 4;
 		this.weaponCooldown = 2000;
 		this.hitboxSizeX = 0.8;
@@ -148,7 +148,9 @@ export default class Submarine {
 	}
 
 	movement(time, delta) {
-		if(this.scene.keylistener.W.isDown && !this.scene.keylistener.S.isDown) {
+		if(this.obj.body.y + this.obj.body.height/2 < this.scene.minY) {
+			this.obj.body.setAccelerationY(100)
+		} else if(this.scene.keylistener.W.isDown && !this.scene.keylistener.S.isDown) {
 			this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1));
 
 			this.limitMaxSpeed();

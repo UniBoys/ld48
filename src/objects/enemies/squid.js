@@ -98,7 +98,9 @@ export default class Squid extends Enemy {
         }
 
         // Move y
-        if(inRange && submarine.obj.y < this.obj.y) {
+        if(this.obj.body.y < this.scene.minY) {
+			this.obj.body.setAccelerationY(100)
+		} else if(inRange && submarine.obj.y < this.obj.y) {
             this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()

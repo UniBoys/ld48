@@ -48,6 +48,8 @@ export default class Spear1 extends Weapon {
 			'0x0000000', this.aimAlpha
 		);
 
+		this.aimRight.visible = false;
+
 		this.aimLeft.depth = layers.BACKGROUND_UI;
 		this.aimRight.depth = layers.BACKGROUND_UI;
 
@@ -58,7 +60,6 @@ export default class Spear1 extends Weapon {
 	}
 
 	destroy() {
-		if(this.projectiles[0] === undefined) return;
 
 		this.obj.destroy();
 		for(const projectile of this.projectiles) {

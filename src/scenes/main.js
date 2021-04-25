@@ -10,6 +10,7 @@ import Iron from "@/objects/resources/iron";
 import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
 import Sub2Sprite from '@/../resources/sprites/sub-2.png'
+import Sub3Sprite from '@/../resources/sprites/sub-3.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
@@ -26,6 +27,7 @@ export default class MainScene extends Scene {
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('sub2', Sub2Sprite, { frameWidth: 1956, frameHeight: 995 });
+		this.load.spritesheet('sub3', Sub3Sprite, { frameWidth: 2048, frameHeight: 2048 });
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
@@ -39,7 +41,14 @@ export default class MainScene extends Scene {
 
 		this.animations();
 
-		this.stageList = [SubmarineStage1, SubmarineStage2, SubmarineStage3, SubmarineStage4]
+		this.minY = 600;
+
+		this.stageList = [
+			SubmarineStage1, 
+			SubmarineStage2, 
+			SubmarineStage3, 
+			SubmarineStage4,
+		]
 		let stageIndex = 0;
 
 		this.submarine = new (this.stageList[stageIndex])(this);
@@ -166,6 +175,21 @@ export default class MainScene extends Scene {
             key: 'sub2-move',
             frames: this.anims.generateFrameNumbers('sub2', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7 ] }),
             frameRate: 16,
+            repeat: -1
+        });
+
+		// Sub 3
+		this.anims.create({
+            key: 'sub3-idle',
+            frames: this.anims.generateFrameNumbers('sub3', { frames: [ 0, 1] }),
+            frameRate: 1,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'sub3-move',
+            frames: this.anims.generateFrameNumbers('sub3', { frames: [ 0, 1 ] }),
+            frameRate: 9,
             repeat: -1
         });
 		
