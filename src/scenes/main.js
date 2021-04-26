@@ -1,6 +1,7 @@
 import {Scene, Input, Camera} from "phaser";
 import Player from "@/objects/player";
-import Squid from "@/objects/enemies/squid"
+import Squid from "@/objects/enemies/squid";
+import Queen from "@/objects/enemies/queen";
 import SubmarineStage1 from "@/objects/submarine/stage1";
 import SubmarineStage4 from "@/objects/submarine/stage4";
 import SubmarineStage2 from "@/objects/submarine/stage2";
@@ -24,6 +25,9 @@ import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
 import SharkSprite from '@/../resources/sprites/shark-sprite.png'
 import LanternfishSprite from '@/../resources/sprites/lanternfish-sprite.png'
 import ChestSprite from '@/../resources/sprites/chest.png'
+import WispQueenSprite from '@/../resources/sprites/wisp-queen.png'
+import QueenPrisonSprite from '@/../resources/sprites/queen-prison.png'
+import QueenPrisonBackground from '@/../resources/img/queen-prison-bg.png'
 import OreWood1Image from '@/../resources/img/ore-wood-1.png'
 import OrePlank1Image from '@/../resources/img/ore-plank-1.png'
 import PartWood1Image from '@/../resources/img/part-wood-1.png'
@@ -52,6 +56,7 @@ import MissSound from '@/../resources/audio/miss.wav'
 import WoodSound from '@/../resources/audio/wood.wav'
 import EngineSound from '@/../resources/audio/engine.wav'
 import UpgradeSound from '@/../resources/audio/upgrade.wav'
+import PickupSound from '@/../resources/audio/pickup.wav'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -82,7 +87,6 @@ export default class MainScene extends Scene {
 
 	preload() {
 		preloadScene(this)
-		console.log('background1: ', Background1)
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('sub2', Sub2Sprite, { frameWidth: 1956, frameHeight: 995 });
@@ -95,6 +99,10 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('water-bar', WaterBarSprite, {frameWidth: 50, frameHeight: 800});
 		this.load.spritesheet('shark', SharkSprite, {frameWidth: 2048, frameHeight: 900});
 		this.load.spritesheet('lanternfish', LanternfishSprite, {frameWidth: 1706, frameHeight: 909});
+		this.load.spritesheet('wisp-queen', WispQueenSprite, {frameWidth: 429, frameHeight: 512});
+		this.load.spritesheet('queen-prison', QueenPrisonSprite, {frameWidth: 2260, frameHeight: 1584});
+		this.load.image('queen-prison-bg', QueenPrisonBackground);
+		this.load.image('ore-wood-1', OreWood1Image);
 		this.load.image('ore-wood-1', OreWood1Image);
 		this.load.image('part-wood-1', PartWood1Image);
 		this.load.image('part-wood-2', PartWood2Image);
@@ -130,6 +138,7 @@ export default class MainScene extends Scene {
 		this.load.audio('wood', WoodSound);
 		this.load.audio('engine', EngineSound);
 		this.load.audio('upgrade', UpgradeSound);
+		this.load.audio('pickup', PickupSound);
 	}
 
     create() {
@@ -330,7 +339,15 @@ export default class MainScene extends Scene {
 		// Lanter Fish
 		this.spawners.push(new Spawner(this, [
 			{x: 937, y: 4328, must: false},
-		], 1, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
+			{x: 4400, y: 3900, must: false},
+			{x: 4131, y: 5522, must: true},
+			{x: 1592, y: 5382, must: true},
+		], 4, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
+
+		// Queen
+		this.spawners.push(new Spawner(this, [
+			{x: 2800, y: 5870, must: true},
+		], 1, 10000, this.enemies, (x, y, disposing) => new Queen(this, x, y, disposing)));
 
 		/// Resources - Planks
 		this.spawners.push(new Spawner(this, [
@@ -381,8 +398,6 @@ export default class MainScene extends Scene {
 			this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
 				this.submarine.damage(30);
 				enemy.damage(1)
-				const sound = this.sound.add('hit');
-				sound.setVolume(50)
 				sound.play();
 			})
 		})
@@ -539,5 +554,28 @@ export default class MainScene extends Scene {
             frameRate: 4,
             repeat: 0,
 		});
+
+		// Wisp Queen
+		this.anims.create({
+            key: 'queen-idle',
+            frames: this.anims.generateFrameNumbers('wisp-queen', { frames: [ 0, 1, 2, 3, 4, 3, 2, 1 ] }),
+            frameRate: 8,
+            repeat: -1,
+        });
+
+		// Queen Prison
+		this.anims.create({
+            key: 'prison-idle',
+            frames: this.anims.generateFrameNumbers('queen-prison', { frames: [ 0 ] }),
+            frameRate: 1,
+            repeat: 0,
+        });
+
+		this.anims.create({
+            key: 'prison-break',
+            frames: this.anims.generateFrameNumbers('queen-prison', { frames: [ 0, 1, 2, 3, 4, 5 ] }),
+            frameRate: 6,
+            repeat: 0,
+        });
 	}
 }

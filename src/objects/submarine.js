@@ -25,8 +25,8 @@ export default class Submarine {
 		this.width = 250;
 		this.height = 150;
 		this.color = 0xff0000;
-		this.initX = 2500;
-		this.initY = 650;
+		this.initX = 3500//2500;
+		this.initY = 5600//650;
 		this.weaponCooldown = 2000;
 		this.hitboxSizeX = 0.8;
 		this.hitboxSizeY = 0.8;
@@ -57,6 +57,8 @@ export default class Submarine {
 
 	damage(amount) {
 		if(this.lastDamage != 0) return;
+		const sound = this.sound.add('hit');
+		sound.setVolume(50)
 		this.inventory.add('water', amount)
 
 		this.lastDamage = -1;
@@ -298,7 +300,7 @@ export default class Submarine {
 	}
 
 	checkForMapCollision(x, y) {
-		return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
+		return true || this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
 	}
 
 	limitMaxSpeed() {

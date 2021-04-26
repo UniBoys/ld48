@@ -69,14 +69,17 @@ export default class Resource extends Spawnable {
 		for(var i = 1; i <= this.partAmount; i++) {
 			this.createPart(i);
 		}
+		
+		this.gathering = true;
 
 		this.scene.physics.add.collider(this.parts, this.scene.submarine.obj, (object1, object2) => {
 			object1.destroy();
 			this.parts = this.parts.filter(part => part !== object1);
 			this.scene.submarine.inventory.add(this.addName, this.amount / 3);
+
+			const sound = this.scene.sound.add('pickup');
+			sound.play();
 		})
-		
-		this.gathering = true;
 	}
 
 	createPart(index) {
