@@ -345,7 +345,7 @@ export default class MainScene extends Scene {
 	updateColliding() {
 		this.enemies.forEach((enemy) => { 
 			this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
-				// TODO add watter to ship
+				this.submarine.damage(30);
 				enemy.damage(1)
 			})
 		})

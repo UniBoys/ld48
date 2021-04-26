@@ -18,7 +18,7 @@ export default class SubmarineStage1 extends Submarine {
 		this.signW = 100;
 		this.signH = 18;
 
-		this.inventorySetting.size = 300;
+		this.inventorySetting.size = 250;
 
 		this.depthDamage = [
 			{y1: 0, y2: 1600, amount: 1},

@@ -45,7 +45,8 @@ export default class SubmarineStage3 extends Submarine {
 		this.depthDamage = [
 			{y1: 0, y2: 6000, amount: 1},
 		]
-
+		
+		this.inventorySetting.size = 400;
 
 		this.headLights = [
 			new HeadLight({

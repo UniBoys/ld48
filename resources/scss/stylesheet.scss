@@ -9,3 +9,16 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.container {
+    &.paused {
+        #game-frame {
+            -webkit-filter: blur(5px);
+            -moz-filter: blur(5px);
+            -o-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+            transition: .3s filter;
+        }
+    }
+}

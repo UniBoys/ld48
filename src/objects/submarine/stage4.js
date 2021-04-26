@@ -27,6 +27,8 @@ export default class SubmarineStage4 extends Submarine {
 		this.signW = 60;
 		this.signH = 9;
 
+		this.inventorySetting.size = 600;
+
 		this.weapons = [
 			new Missile({
 				scene, 

@@ -9,11 +9,26 @@ export default class GameView {
         document.addEventListener('keydown', e => {
             if(e.key === 'Escape') this.togglePause();
         })
+
+        this.paused = false;
+    }
+
+    togglePause() {
+        document.getElementById('container').classList.toggle('paused');
+
+        if(this.paused) {
+            this.game.scene.resume('main');
+            this.paused = false;
+        }
+        else {
+            this.game.scene.pause('main');
+            this.paused = true;
+        }
     }
 
     view() {
         return (
-            <div class='container'>
+            <div id='container' class='container'>
                 <div id="game-frame" class="main-center">
 				
                 </div>
