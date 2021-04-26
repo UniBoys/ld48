@@ -59,6 +59,7 @@ import UpgradeSound from '@/../resources/audio/upgrade.wav'
 import PickupSound from '@/../resources/audio/pickup.wav'
 import SpearSound from '@/../resources/audio/spear.wav'
 import ChestSound from '@/../resources/audio/chest.wav'
+import ThemeSong from '@/../resources/audio/theme.ogg'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -143,6 +144,7 @@ export default class MainScene extends Scene {
 		this.load.audio('pickup', PickupSound);
 		this.load.audio('spear', SpearSound);
 		this.load.audio('chest', ChestSound);
+		this.load.audio('theme', ThemeSong);
 	}
 
     create() {
@@ -238,6 +240,11 @@ export default class MainScene extends Scene {
 		this.deathScreen.setPosition(800, 450);
 		this.deathScreen.depth = layers.UI_SCREENS;
 		this.deathScreen.visible = false;
+
+		const theme = this.sound.add('theme');
+		theme.setLoop(true);
+		theme.setVolume(0.04)
+		theme.play();
     }
 
 	update(time, delta) {

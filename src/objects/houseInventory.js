@@ -30,13 +30,14 @@ export default class HouseInventory {
 	update(time, delta) {
 		let order = ['wood', 'iron', 'treasure'];
 		let line;
+		let hide = [];
 
 		if(this.scene.submarine.inventory.hasItems()) {
 			this.text.setText('Press e to stash');
 		}
 		else if(this.scene.submarine.stage === 1) {
 			if(this.get('wood') >= this.house.upgrades[0]) {
-				this.text.setText('You can upgrade now');
+				this.text.setText('Press e to upgrade');
 			}
 			else {
 				this.text.setText('Try to find more wood');
@@ -46,24 +47,26 @@ export default class HouseInventory {
 		}
 		else if(this.scene.submarine.stage === 2) {
 			if(this.get('wood') >= this.house.upgrades[1]) {
-				this.text.setText('You can upgrade now');
+				this.text.setText('Press e to upgrade');
 			}
 			else {
 				this.text.setText('Try to find more iron');
 			}
 
 			order = ['iron', 'treasure'];
+			hide = ['wood'];
 			line = this.house.upgrades[1]/this.size;
 		}
 		else if(this.scene.submarine.stage === 3) {
 			if(this.get('wood') >= this.house.upgrades[2]) {
-				this.text.setText('You can upgrade now');
+				this.text.setText('Press e to upgrade');
 			}
 			else {
 				this.text.setText('Try to find more treasures');
 			}
 
 			order = ['treasure'];
+			hide = ['wood', 'iron'];
 			line = this.house.upgrades[2]/this.size;
 		}
 		else if(this.scene.submarine.stage === 4) {
@@ -87,12 +90,15 @@ export default class HouseInventory {
 
 		for(const item of order) {
 			const obj = this.getObj(item);
-			//this.bar.fillStyle(obj.color, 1);
-			//this.bar.fillRect(x + (sum / this.size) * this.barWidth, y, (obj.amount / this.size) * this.barWidth, this.barHeight);
 			obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
 			obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
 
 			sum += obj.amount;
+		}
+
+		for(const item of hide) {
+			const obj = this.getObj(item);
+			obj.obj.setPosition(-1000, -1000)
 		}
 
 		this.text.x = this.house.obj.body.x + this.house.obj.body.width/2 - this.text.width/2;
@@ -101,10 +107,18 @@ export default class HouseInventory {
 		if(this.visible) {
 			this.text.visible = true;
 			this.bar.visible = true;
+
+			for(const item of this.map) {
+				item.obj.visible = true;
+			}
 		}
 		else {
 			this.text.visible = false;
 			this.bar.visible = false;
+
+			for(const item of this.map) {
+				item.obj.visible = false;
+			}			
 		}
 	}
 
