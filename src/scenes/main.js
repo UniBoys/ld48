@@ -305,7 +305,16 @@ export default class MainScene extends Scene {
 		// Sharks
 		this.spawners.push(new Spawner(this, [
 			{x: 1200, y: 2840, must: false},
-		], 1, 10000, this.enemies, (x, y, disposing) => new Shark(this, x, y, disposing)));
+			{x: 1180, y: 4060, must: false},
+			{x: 460, y: 2160, must: false},
+			{x: 4610, y: 2783, must: false},
+			{x: 2410, y: 1930, must: false},
+		], 3, 10000, this.enemies, (x, y, disposing) => new Shark(this, x, y, disposing)));
+
+		// Lanter Fish
+		this.spawners.push(new Spawner(this, [
+			{x: 937, y: 4328, must: false},
+		], 1, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
 
 		/// Resources - Planks
 		this.spawners.push(new Spawner(this, [

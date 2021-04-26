@@ -42,6 +42,7 @@ export default class Lanternfish extends Enemy{
     dispose() {
         super.dispose()
         this.obj.destroy()
+        this.radial.destroy();
     }
 
     update(time, delta) {
