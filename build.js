@@ -13,21 +13,26 @@ const config = {
     },
     module: {
         rules: [{
-                test: /\.js$/,
-                exclude: /\/node_modules\//,
-                loader: "babel-loader"
-            },
+            test: /\.js$/,
+            exclude: /\/node_modules\//,
+            loader: "babel-loader"
+        },
             {
                 test: /\.scss$/,
                 use: [{
-                        loader: 'file-loader',
-                        options: {
-                            name: 'css/[name].css',
-                        }
-                    },
+                    loader: 'file-loader',
+                    options: {
+                        name: 'css/[name].css',
+                        minimize: true,
+                        sourceMap: true,
+                        publicPath: '../',
+                        useRelativePaths: true
+                    }
+                },
                     "extract-loader",
                     "css-loader",
-                    "sass-loader"
+                    "resolve-url-loader",
+                    "sass-loader",
                 ]
             },
             {
@@ -38,8 +43,19 @@ const config = {
                 }
             },
             {
-                test: /\.(jpe?g|gif|png|wav|mp3)$/,
-                loader: "file-loader"
+                test: /\.(png|jpg|gif|wav)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
+                            context: path.resolve(__dirname, "src/"),
+                            outputPath: 'dist/',
+                            publicPath: '../',
+                            useRelativePaths: true
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -71,6 +87,6 @@ const server = new WebpackDevServer(compiler, {
     contentBase: path.join(__dirname, './dist')
 });
 
-server.listen(port, 'localhost', function(err) {
+server.listen(port, 'localhost', function (err) {
     if (err) throw err;
 });

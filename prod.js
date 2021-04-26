@@ -13,20 +13,21 @@ const config = {
     },
     module: {
         rules: [{
-                test: /\.js$/,
-                exclude: /\/node_modules\//,
-                loader: "babel-loader"
-            },
+            test: /\.js$/,
+            exclude: /\/node_modules\//,
+            loader: "babel-loader"
+        },
             {
                 test: /\.scss$/,
                 use: [{
-                        loader: 'file-loader',
-                        options: {
-                            name: 'css/[name].css',
-                        }
-                    },
+                    loader: 'file-loader',
+                    options: {
+                        name: 'css/[name].css',
+                    }
+                },
                     "extract-loader",
                     "css-loader",
+                    "resolve-url-loader",
                     "sass-loader"
                 ]
             },
