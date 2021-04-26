@@ -16,6 +16,7 @@ export default class Enemy extends Spawnable {
     }
 
     damage(amount) {
+        if(this.lastDamage != 0) return;
         this.health -= amount;
 
         if(this.health <= 0) this.dispose();
