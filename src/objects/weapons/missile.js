@@ -2,7 +2,7 @@ import Weapon from "@/objects/weapon";
 import layers from "../../layers";
 
 export default class Missile extends Weapon {
-	constructor({scene, submarine, left, right}) {
+	constructor({scene, submarine, left, right, radian}) {
 		super({
 			scene, 
 			submarine,
@@ -17,6 +17,7 @@ export default class Missile extends Weapon {
 		this.right = right;
 
 		this.isLeft = true;
+		this.radian = radian;
 
 		this.missile = {
 			velocity: 200,
@@ -90,6 +91,16 @@ export default class Missile extends Weapon {
 		this.firing = false;
 		this.reloading = true;
 		this.fireStart = 0;
+
+		const x = this.projectiles[0].body.x;
+		const y = this.projectiles[0].body.y;
+		
+		const explosion = this.scene.add.sprite(x, y);
+		explosion.play('explosion');
+		explosion.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+			explosion.destroy();
+		})
+		explosion.setDisplaySize(60, 60);
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();

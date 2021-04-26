@@ -15,10 +15,16 @@ import Sub4Sprite from '@/../resources/sprites/sub-4.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import WaterSprite from '@/../resources/sprites/water-sprite.png'
+import ExplosionSprite from "@/../resources/sprites/explosion.png";
+import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
 import OreIronImage from '@/../resources/img/ore-iron.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
+import WoodBarImage from '@/../resources/img/wood-bar.png'
+import IronBarImage from '@/../resources/img/iron-bar.png'
+import TreasureBarImage from '@/../resources/img/treasure-bar.png'
+import OxygenBarImage from '@/../resources/img/oxygen-bar.png'
 import CannonImage from '@/../resources/img/cannon.png'
 import CannonballImage from '@/../resources/img/cannonball.png'
 import SignImage from '@/../resources/img/sign.png'
@@ -56,6 +62,8 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('squid', SquidSprite, { frameWidth: 797, frameHeight: 1833 });
 		this.load.spritesheet('missile', MissileSprite, { frameWidth: 1546, frameHeight: 457 });
 		this.load.spritesheet('water', WaterSprite, { frameWidth: 1200, frameHeight: 200 });
+		this.load.spritesheet('explosion', ExplosionSprite, { frameWidth: 500, frameHeight: 500 });
+		this.load.spritesheet('water-bar', WaterBarSprite, {frameWidth: 50, frameHeight: 800});
 		this.load.image('ore-iron', OreIronImage);
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
@@ -66,6 +74,10 @@ export default class MainScene extends Scene {
         this.load.image('spear', SpearImage);
 		this.load.image('house', HouseImage);
 		this.load.image('sign', SignImage);
+		this.load.image('oxygen-bar', OxygenBarImage);
+		this.load.image('iron-bar', IronBarImage);
+		this.load.image('wood-bar', WoodBarImage);
+		this.load.image('treasure-bar', TreasureBarImage);
 	}
 
     create() {
@@ -116,6 +128,10 @@ export default class MainScene extends Scene {
 		
 		this.radials = [];
 		const numberOfRadials = 3;
+		/**
+		 * Reservations:
+		 * 0   - submarine
+		 */
 
 		for(let i = 0; i < numberOfRadials; i++) {
 			const radial = this.add.image(-1000, -1000, 'glow');
@@ -161,8 +177,6 @@ export default class MainScene extends Scene {
 		this.projectiles = [];
 		this.resources = [];
 		this.gatheringResources = [];
-
-		this.resources.push(new Iron(this, 300, 300));
 
 		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,U");
 		this.keylistener.U.on('down', () => {
@@ -314,6 +328,22 @@ export default class MainScene extends Scene {
             frames: this.anims.generateFrameNumbers('water', { frames: [ 0, 1, 2 ] }),
             frameRate: 8,
             repeat: -1
+        });
+
+		// Explosion
+		this.anims.create({
+            key: 'explosion',
+            frames: this.anims.generateFrameNumbers('explosion', { frames: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] }),
+            frameRate: 20,
+            repeat: 0
+        });
+
+		// Water bar
+		this.anims.create({
+            key: 'water-bar',
+            frames: this.anims.generateFrameNumbers('water-bar', { frames: [ 1,2,3,4 ] }),
+            frameRate: 6,
+            repeat: -1,
         });
 	}
 }

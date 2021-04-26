@@ -32,12 +32,14 @@ export default class SubmarineStage4 extends Submarine {
 				submarine: this,
 				left: {relativeX: 30, relativeY: 65, defaultAngle: 0},
 				right: {relativeX: 170, relativeY: 65, defaultAngle: 180},
+				radian: 1
 			 }),
 			 new Missile({
 				scene, 
 				submarine: this,
 				left: {relativeX: 160, relativeY: 65, defaultAngle: 0},
 				right: {relativeX: 40, relativeY: 65, defaultAngle: 180},
+				radian: 2
 			 }),
 		]
 

@@ -65,7 +65,7 @@ export default class Submarine {
 		this.obj.body.setSize(this.obj.width*this.hitboxSizeX, this.obj.height*this.hitboxSizeY)
 		this.obj.body.setOffset(this.obj.body.offset.x + this.hitboxOffsetX, this.obj.body.offset.y + this.hitboxOffsetY);
         this.scene.cameras.main.startFollow(this.obj);
-		this.inventory = new Inventory(this.inventorySetting);
+		this.inventory = new Inventory(this.scene, this.inventorySetting);
 
 		this.sign = this.scene.add.image(this.obj.body.x + this.signLeftX, this.obj.body.x + this.signY, 'sign');
 		this.sign.depth = layers.SIGN;
@@ -142,6 +142,8 @@ export default class Submarine {
 			this.sign.x = this.obj.body.x + this.signX;
 			this.sign.y = this.obj.body.y + this.signY;
 		}
+
+		this.inventory.update(time, delta);
 
 		this.scene.radials[0].setAlpha(this.glowStrength);
 		this.scene.radials[0].setTint(this.glowColor);
