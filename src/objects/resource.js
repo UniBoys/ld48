@@ -21,7 +21,7 @@ export default class Resource extends Spawnable {
 	}
 
 	init() {
-		this.obj = this.scene.add.image(this.x, this.y, `ore-${this.name}-${Math.ceil(this.variance*Math.random())}`);
+		if(this.obj == undefined) this.obj = this.scene.add.image(this.x, this.y, `ore-${this.name}-${Math.ceil(this.variance*Math.random())}`);
 		this.obj.setOrigin(0.5, 1)
 		this.obj.flipX = Math.random() <= 0.4;
         this.scene.physics.add.existing(this.obj);
@@ -64,9 +64,9 @@ export default class Resource extends Spawnable {
 		this.dispose();
 		this.obj.destroy();
 
-		this.createPart(1);
-		this.createPart(2);
-		this.createPart(3);
+		for(var i = 1; i <= this.partAmount; i++) {
+			this.createPart(i);
+		}
 
 		this.scene.physics.add.collider(this.parts, this.scene.submarine.obj, (object1, object2) => {
 			object1.destroy();

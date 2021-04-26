@@ -8,6 +8,7 @@ import SubmarineStage3 from "@/objects/submarine/stage3";
 import Plank from "@/objects/resources/plank";
 import Wood from "@/objects/resources/wood";
 import Iron from "@/objects/resources/iron";
+import Gold from "@/objects/resources/gold";
 
 import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
@@ -18,7 +19,8 @@ import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import WaterSprite from '@/../resources/sprites/water-sprite.png'
 import ExplosionSprite from "@/../resources/sprites/explosion.png";
-import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
+import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png';
+import ChestSprite from '@/../resources/sprites/chest.png'
 import OreWood1Image from '@/../resources/img/ore-wood-1.png'
 import OrePlank1Image from '@/../resources/img/ore-plank-1.png'
 import PartWood1Image from '@/../resources/img/part-wood-1.png'
@@ -29,6 +31,9 @@ import OreIron2Image from '@/../resources/img/ore-iron-2.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
+import PartGold1Image from '@/../resources/img/part-gold-1.png'
+import PartGold2Image from '@/../resources/img/part-gold-2.png'
+import PartGold3Image from '@/../resources/img/part-gold-3.png'
 import WoodBarImage from '@/../resources/img/wood-bar.png'
 import IronBarImage from '@/../resources/img/iron-bar.png'
 import TreasureBarImage from '@/../resources/img/treasure-bar.png'
@@ -86,6 +91,10 @@ export default class MainScene extends Scene {
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
 		this.load.image('part-iron-3', PartIron3Image);
+		this.load.spritesheet('chest', ChestSprite, {frameWidth: 861, frameHeight: 744});
+		this.load.image('part-gold-1', PartGold1Image);
+		this.load.image('part-gold-2', PartGold2Image);
+		this.load.image('part-gold-3', PartGold3Image);
 		this.load.image('cannon', CannonImage);
 		this.load.image('cannonball', CannonballImage);
         this.load.image('glow', GlowImage);
@@ -287,6 +296,34 @@ export default class MainScene extends Scene {
 			{x: 1950, y: 1438, must: false},
 			{x: 1215, y: 1533, must: false},
 		], 2, 120000, this.resources, (x, y, disposing) => new Wood(this, x, y, disposing)))
+
+		// Iron
+		this.spawners.push(new Spawner(this, [
+			{x: 4151, y: 2840, must: false},
+			{x: 3377, y: 3236, must: false},
+			{x: 2908, y: 2755, must: true},
+			{x: 2238, y: 3025, must: false},
+			{x: 2177, y: 2195, must: false},
+			{x: 1500, y: 2142, must: false},
+			{x: 345, y: 2420, must: false},
+			{x: 673, y: 2423, must: false},
+			{x: 1285, y: 3055, must: true},
+			{x: 579, y: 3628, must: false},
+			{x: 1500, y: 4265, must: false},
+			{x: 1856, y: 4425, must: false},
+			{x: 2400, y: 4210, must: false},
+			{x: 3210, y: 4240, must: false},
+			{x: 3980, y: 4474, must: false},
+		], 10, 120000, this.resources, (x, y, disposing) => new Iron(this, x, y, disposing)))
+
+		// Chests
+		this.spawners.push(new Spawner(this, [
+			{x: 4485, y: 1200, must: false},
+			{x: 4650, y: 3120, must: false},
+			{x: 281, y: 3550, must: false},
+			{x: 627, y: 4540, must: false},
+			{x: 4480, y: 4210, must: false},
+		], 5, 10000000, this.resources, (x, y, disposing) => new Gold(this, x, y, disposing)))
 	}
 
 	updateColliding() {
@@ -405,6 +442,21 @@ export default class MainScene extends Scene {
             frames: this.anims.generateFrameNumbers('water-bar', { frames: [ 1,2,3,4 ] }),
             frameRate: 6,
             repeat: -1,
+        });
+
+		// Chest
+		this.anims.create({
+            key: 'chest-idle',
+            frames: this.anims.generateFrameNumbers('chest', { frames: [ 0 ] }),
+            frameRate: 1,
+            repeat: 0,
+        });
+
+		this.anims.create({
+            key: 'chest-open',
+            frames: this.anims.generateFrameNumbers('chest', { frames: [ 0, 1, 2 ] }),
+            frameRate: 4,
+            repeat: 0,
         });
 	}
 }

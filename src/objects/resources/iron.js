@@ -1,6 +1,6 @@
 import Resource from "@/objects/resource";
 
-export default class Iron extends Resource {
+export default class Gold extends Resource {
 	constructor(scene, x, y, disposing) {
 		super({
 			scene,
