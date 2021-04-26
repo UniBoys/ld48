@@ -17,5 +17,6 @@ export default {
 	SIGN: 16,
 	UI_1: 17,
 	UI_2: 18,
-	UI_3: 19,
+	UI_SCREENS: 19,
+	UI_4: 20
 };

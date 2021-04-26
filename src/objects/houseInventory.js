@@ -4,7 +4,7 @@ export default class HouseInventory {
 		this.size = size;
 		this.house = house;
 		this.map = [
-			{key: 'wood', amount: 300, color: 0x964B00},
+			{key: 'wood', amount: 500, color: 0x964B00},
 			{key: 'iron', amount: 100, color: 0x8B2A2B},
 			{key: 'treasure', amount: 50, color: 0xFFD700}
 		];
@@ -28,7 +28,7 @@ export default class HouseInventory {
 			this.text.setText('Stash to see your upgrades');
 		}
 		else if(this.scene.submarine.stage === 1) {
-			if(this.get('wood') > this.house.upgrades[0]) {
+			if(this.get('wood') >= this.house.upgrades[0]) {
 				this.text.setText('You can upgrade now');
 			}
 			else {
@@ -38,7 +38,7 @@ export default class HouseInventory {
 			line = this.house.upgrades[0]/this.size;
 		}
 		else if(this.scene.submarine.stage === 2) {
-			if(this.get('wood') > this.house.upgrades[1]) {
+			if(this.get('wood') >= this.house.upgrades[1]) {
 				this.text.setText('You can upgrade now');
 			}
 			else {
@@ -49,7 +49,7 @@ export default class HouseInventory {
 			line = this.house.upgrades[1]/this.size;
 		}
 		else if(this.scene.submarine.stage === 3) {
-			if(this.get('wood') > this.house.upgrades[2]) {
+			if(this.get('wood') >= this.house.upgrades[2]) {
 				this.text.setText('You can upgrade now');
 			}
 			else {

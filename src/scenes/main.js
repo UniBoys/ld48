@@ -43,6 +43,7 @@ import OxygenBarImage from '@/../resources/img/oxygen-bar.png'
 import CannonImage from '@/../resources/img/cannon.png'
 import CannonballImage from '@/../resources/img/cannonball.png'
 import SignImage from '@/../resources/img/sign.png'
+import DeathScreenImage from '@/../resources/img/death-screen.png'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -112,6 +113,7 @@ export default class MainScene extends Scene {
 		this.load.image('iron-bar', IronBarImage);
 		this.load.image('wood-bar', WoodBarImage);
 		this.load.image('treasure-bar', TreasureBarImage);
+		this.load.image('death-screen', DeathScreenImage);
 	}
 
     create() {
@@ -199,6 +201,14 @@ export default class MainScene extends Scene {
 		this.corstText.setOrigin(0.5, 0.5);
 		this.corstText.setScrollFactor(0);
 		this.corstText.depth = layers.UI_2
+
+		this.deathScreenStart = 0;
+		this.deathScreen = this.add.image(0, 0, 'death-screen');
+		this.deathScreen.setScrollFactor(0)
+		this.deathScreen.setDisplaySize(1600/.8, 900/.8);
+		this.deathScreen.setPosition(800, 450);
+		this.deathScreen.depth = layers.UI_SCREENS;
+		this.deathScreen.visible = false;
     }
 
 	update(time, delta) {
@@ -212,11 +222,25 @@ export default class MainScene extends Scene {
 			this.handleNewProjectile();
 		}
 
+		if(this.deathScreenStart > 0 && (time-this.deathScreenStart) > 2000) {
+			this.deathScreenStart = 0;
+			this.deathScreen.visible = false;
+		}
+
 		this.handleProjectileMapCollision();
 
 		this.spawners.forEach(spawner => { spawner.update(time, delta) })
 		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
 		this.enemies.forEach(enemy => { enemy.update(time, delta) });
+	}
+
+	respawn(time) {
+		this.submarine.destroy();
+		this.submarine = new (this.stageList[this.stageIndex%this.stageList.length])(this);
+		this.updateColliding();
+
+		this.deathScreen.visible = true;
+		this.deathScreenStart = time;
 	}
 
 	handleProjectileMapCollision() {

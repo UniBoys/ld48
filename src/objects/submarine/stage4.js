@@ -44,6 +44,10 @@ export default class SubmarineStage4 extends Submarine {
 			 }),
 		]
 
+		this.depthDamage = [
+			{y1: 0, y2: 6000, amount: 1},
+		]
+
 		this.headLights = [
 			new HeadLight({
 				scene,

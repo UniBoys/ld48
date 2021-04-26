@@ -46,6 +46,7 @@ export default class House {
 			this.inventory.visible = true;
 
 			if(this.scene.keylistener.E.isDown) {
+				console.log(this.canUpgrade());
 				if(this.scene.submarine.inventory.hasItems()) {
 					this.inventory.add('wood', this.scene.submarine.inventory.get('wood'));
 					this.inventory.add('iron', this.scene.submarine.inventory.get('iron'));
@@ -53,6 +54,8 @@ export default class House {
 					this.scene.submarine.inventory.reset();
 				}
 				else if(this.canUpgrade()) {
+					this.removeItems();
+
 					this.scene.stageIndex++;
 					this.scene.submarine.destroy();
 					this.scene.submarine = new (this.scene.stageList[this.scene.stageIndex%this.scene.stageList.length])(this.scene);
@@ -67,16 +70,27 @@ export default class House {
 		this.inventory.update(time, delta);
 	}
 
-	canUpgrade() {
-		console.log(this.inventory.get('wood'), this.upgrades[0])
-		if(this.scene.submarine.stage === 0) {
-			return this.inventory.get('wood') > this.upgrades[0];
-		}
-		else if(this.scene.submarine.stage === 1) {
-			return this.inventory.get('iron') > this.upgrades[1];
+	removeItems() {
+		if(this.scene.submarine.stage === 1) {
+			this.inventory.remove('wood', this.upgrades[0]);
 		}
 		else if(this.scene.submarine.stage === 2) {
-			return this.inventory.get('treasure') > this.upgrades[2];
+			this.inventory.remove('iron', this.upgrades[1]);
+		}
+		else if(this.scene.submarine.stage === 3) {
+			this.inventory.remove('treasure', this.upgrades[2]);
+		}
+	}
+
+	canUpgrade() {
+		if(this.scene.submarine.stage === 1) {
+			return this.inventory.get('wood') >= this.upgrades[0];
+		}
+		else if(this.scene.submarine.stage === 2) {
+			return this.inventory.get('iron') >= this.upgrades[1];
+		}
+		else if(this.scene.submarine.stage === 3) {
+			return this.inventory.get('treasure') >= this.upgrades[2];
 		}
 		else {
 			return false;

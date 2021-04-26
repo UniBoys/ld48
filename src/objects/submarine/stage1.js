@@ -18,6 +18,13 @@ export default class SubmarineStage1 extends Submarine {
 		this.signW = 100;
 		this.signH = 18;
 
+		this.inventorySetting.size = 300;
+
+		this.depthDamage = [
+			{y1: 0, y2: 1600, amount: 1},
+			{y1: 1600, y2: 6000, amount: 5},
+		]
+
 		this.weapons = [
 			new Spear1({
 				scene, submarine: this, 

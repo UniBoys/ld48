@@ -38,6 +38,8 @@ export default class Submarine {
 		this.signR = 0;
 		this.signW = 0;
 		this.signH = 0;
+		this.depthDamage = [];
+		this.depthDamageDelay = 1000;
 		this.inventorySetting = {
 			size: 1000
 		}
@@ -48,6 +50,7 @@ export default class Submarine {
 		this.glowColor = 0xdddddd;
 
 		this.cooldownStart = 0;
+		this.lastDepthDamage = 0;
 	}
 
 	destroy() {
@@ -145,12 +148,26 @@ export default class Submarine {
 			this.sign.y = this.obj.body.y + this.signY;
 		}
 
+		if((time-this.lastDepthDamage) > this.depthDamageDelay) {
+			for(const damage of this.depthDamage) {
+				if(this.obj.body.y < damage.y1 || this.obj.body.y > damage.y2) continue;
+
+				this.inventory.add('water', damage.amount);
+			}
+
+			this.lastDepthDamage = time;
+		}
+
 		this.inventory.update(time, delta);
 
 		this.radial.setAlpha(this.glowStrength);
 		this.radial.setTint(this.glowColor);
 		this.radial.setDisplaySize(this.glowWidth, this.glowHeight);
 		this.radial.setPosition(this.obj.body.x + this.obj.body.width/2, this.obj.body.y + this.obj.body.height/2);
+
+		if(this.inventory.get('oxygen') <= 0) {
+			this.scene.respawn(time);
+		}
 	}
 
 	canFire() {

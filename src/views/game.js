@@ -5,13 +5,22 @@ import Phaser from "phaser";
 export default class GameView {
     oncreate() {
         this.game = new Phaser.Game(config);
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Escape') this.togglePause();
+        })
     }
 
     view() {
         return (
-			<div id="game-frame" class="main-center">
+            <div class='container'>
+                <div id="game-frame" class="main-center">
 				
-			</div>
+                </div>
+                <div class='escape-menu'>
+
+                </div>
+            </div>
         );
     }
 }
