@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const EncodingPlugin = require('webpack-encoding-plugin');
 
 const config = {
-    mode: 'developement',
+    mode: 'development',
     entry: ['babel-polyfill', './resources/scss/stylesheet.scss', './index.js'],
     output: {
         path: path.resolve(__dirname, "./dist"),
