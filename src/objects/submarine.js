@@ -57,8 +57,9 @@ export default class Submarine {
 
 	damage(amount) {
 		if(this.lastDamage != 0) return;
-		const sound = this.sound.add('hit');
-		sound.setVolume(50)
+		const sound = this.scene.sound.add('hit');
+		sound.setVolume(.5)
+		sound.play();
 		this.inventory.add('water', amount)
 
 		this.lastDamage = -1;
@@ -183,6 +184,10 @@ export default class Submarine {
 		this.radial.setDisplaySize(this.glowWidth, this.glowHeight);
 		this.radial.setPosition(this.obj.body.x + this.obj.body.width/2, this.obj.body.y + this.obj.body.height/2);
 
+		if(this.obj.body.y < 600) {
+			this.inventory.remove('water', this.inventory.get('water'));
+		}
+
 		if(this.inventory.get('oxygen') <= 0) {
 			this.scene.respawn(time);
 		}
@@ -300,7 +305,7 @@ export default class Submarine {
 	}
 
 	checkForMapCollision(x, y) {
-		return true || this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
+		return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
 	}
 
 	limitMaxSpeed() {

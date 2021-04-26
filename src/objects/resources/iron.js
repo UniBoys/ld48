@@ -22,7 +22,7 @@ export default class Gold extends Resource {
 
 	sound() {
 		const sound = this.scene.sound.add('ore');
-		sound.setVolume(20)
+		sound.setVolume(.2)
 		sound.play();
 	}
 }

@@ -41,5 +41,9 @@ export default class Iron extends Resource {
 		this.gathering = true;
 	}
 
-	sound() {}
+	sound() {
+		const sound = this.scene.sound.add('chest');
+		sound.setVolume(.2)
+		sound.play();
+	}
 }

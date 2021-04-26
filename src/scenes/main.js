@@ -57,6 +57,8 @@ import WoodSound from '@/../resources/audio/wood.wav'
 import EngineSound from '@/../resources/audio/engine.wav'
 import UpgradeSound from '@/../resources/audio/upgrade.wav'
 import PickupSound from '@/../resources/audio/pickup.wav'
+import SpearSound from '@/../resources/audio/spear.wav'
+import ChestSound from '@/../resources/audio/chest.wav'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -139,6 +141,8 @@ export default class MainScene extends Scene {
 		this.load.audio('engine', EngineSound);
 		this.load.audio('upgrade', UpgradeSound);
 		this.load.audio('pickup', PickupSound);
+		this.load.audio('spear', SpearSound);
+		this.load.audio('chest', ChestSound);
 	}
 
     create() {
@@ -398,7 +402,6 @@ export default class MainScene extends Scene {
 			this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
 				this.submarine.damage(30);
 				enemy.damage(1)
-				sound.play();
 			})
 		})
 	}
