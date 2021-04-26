@@ -100,7 +100,7 @@ export default class Missile extends Weapon {
 		explosion.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
 			explosion.destroy();
 		})
-		explosion.setDisplaySize(60, 60);
+		explosion.setDisplaySize(120, 120);
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();

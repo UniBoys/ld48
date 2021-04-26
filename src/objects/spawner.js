@@ -67,7 +67,7 @@ export class Spawner {
             this.lastCheck = time;
             if(this.limit>this.spawned.length) {
                 const left = this.spawns
-                    .filter((spawn) => !this.spawned.some((s) => (s.x ?? s.obj.x) == spawn.x && (s.y || s.obj.y) == spawn.y));
+                    .filter((spawn) => !this.spawned.some((s) => (s?.x ?? s?.obj?.x) == spawn.x && (s?.y || s?.obj?.y) == spawn.y));
 
                 shuffleArray(left)
 
