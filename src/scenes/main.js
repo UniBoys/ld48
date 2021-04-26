@@ -214,9 +214,9 @@ export default class MainScene extends Scene {
 
 		this.handleProjectileMapCollision();
 
-		this.spawners.forEach(spawner => { spawner.update(time, delta) })
-		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
-		this.enemies.forEach(enemy => { enemy.update(time, delta) });
+		this.spawners.filter((resource) => resource != undefined).forEach(spawner => { spawner.update(time, delta) })
+		this.gatheringResources.filter((resource) => resource != undefined).forEach(resource => { resource.update(time, delta) })
+		this.enemies.filter((resource) => resource != undefined).forEach(enemy => { enemy.update(time, delta) });
 	}
 
 	handleProjectileMapCollision() {
