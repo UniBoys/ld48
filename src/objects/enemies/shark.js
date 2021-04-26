@@ -56,6 +56,7 @@ export default class Shark extends Enemy{
     }
 
     update(time, delta) {
+        super.update(time, delta);
         const submarine = this.scene.submarine;
         const dist = Math.sqrt((this.obj.x - submarine.obj.x)*(this.obj.x - submarine.obj.x) + (this.obj.y - submarine.obj.y)*(this.obj.y - submarine.obj.y));
 
@@ -107,13 +108,15 @@ export default class Shark extends Enemy{
         }
 
         // Move y
+        const subY = submarine.obj.y + submarine.obj.height*submarine.obj.scaleY/2
+
         if(this.obj.body.y < this.scene.minY) {
 			this.obj.body.setAccelerationY(100)
-		} else if(inRange && submarine.obj.y < this.obj.y) {
+		} else if(inRange && subY < this.obj.y) {
             this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
-        } else if(inRange && submarine.obj.y > this.obj.y) {
+        } else if(inRange && subY > this.obj.y) {
             this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()

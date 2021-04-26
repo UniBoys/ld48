@@ -56,9 +56,14 @@ export class Spawner {
     }
 
     removeSpawnable(spawnable) {
-        const index = this.spawned.indexOf(spawnable);
+        let index = this.spawned.indexOf(spawnable);
         if (index > -1) {
             this.spawned.splice(index, 1);
+        }
+
+        index = this.array.indexOf(spawnable);
+        if (index > -1) {
+            this.array.splice(index, 1);
         }
     }
 

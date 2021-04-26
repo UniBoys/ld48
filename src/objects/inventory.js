@@ -68,7 +68,6 @@ export default class Inventory {
 			}
 		}
 		else if(this.get('oxygen')/this.size < this.warnAmount) {
-			console.log('test');
 			if(!this.flash && this.warnStart === 0) {
 				this.warnStart = time;
 				this.flash = true;

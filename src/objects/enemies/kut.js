@@ -45,6 +45,7 @@ export default class Lanternfish extends Enemy{
     }
 
     update(time, delta) {
+        super.update(time, delta);
         const submarine = this.scene.submarine;
         const inRange = Math.abs(this.obj.x - submarine.obj.x) < this.attackDistance && Math.abs(this.obj.y - submarine.obj.y) < this.attackDistance
 
@@ -69,13 +70,15 @@ export default class Lanternfish extends Enemy{
         }
 
         // Move y
+        const subY = submarine.obj.y + submarine.obj.height*submarine.obj.scaleY/2
+
         if(this.obj.body.y < this.scene.minY) {
 			this.obj.body.setAccelerationY(100)
-		} else if(inRange && submarine.obj.y < this.obj.y) {
+		} else if(inRange && subY < this.obj.y) {
             this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
-        } else if(inRange && submarine.obj.y > this.obj.y) {
+        } else if(inRange && subY > this.obj.y) {
             this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
 
             this.limitMaxSpeed()
