@@ -10,7 +10,7 @@ export default (scene) => {
     title.setScale(0.3);
     title.setPosition(width / 2 , 190)
     
-    const padding = 130
+    const padding = 100
 
     var progressBar = scene.add.graphics();
     var progressBox = scene.add.graphics();
@@ -22,7 +22,7 @@ export default (scene) => {
         y: height / 2 + padding,
         text: 'Loading...',
         style: {
-            font: '20px monospace',
+            font: '45px Amatic SC',
             fill: '#ffffff'
         }
     });
@@ -30,10 +30,10 @@ export default (scene) => {
     
     var percentText = scene.make.text({
         x: width / 2,
-        y: height / 2 + 35 + padding,
+        y: height / 2 + 45 + padding,
         text: '0%',
         style: {
-            font: '18px monospace',
+            font: '30px Amatic SC',
             fill: '#ffffff'
         }
     });
@@ -44,7 +44,7 @@ export default (scene) => {
         y: height / 2 + 90 + padding,
         text: '',
         style: {
-            font: '18px monospace',
+            font: '28px Amatic SC',
             fill: '#ffffff'
         }
     });

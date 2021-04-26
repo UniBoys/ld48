@@ -1,12 +1,13 @@
+import {Spawnable} from '@/objects/spawner'
 
-
-export default class Enemy {
+export default class Enemy extends Spawnable {
     /**
      * @param {Phaser.Scene} scene
      * @param {number} x
      * @param {number} y
      */
-	constructor(scene) {
+	constructor(scene, disposing) {
+        super(disposing)
 		this.scene = scene;
     }
 
@@ -14,9 +15,5 @@ export default class Enemy {
         this.scene.physics.add.existing(this.obj);
 
         this.obj.body.setCollideWorldBounds(true);
-    }
-
-    update(time, delta) {
-
     }
 }

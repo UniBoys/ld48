@@ -1,7 +1,7 @@
 import Weapon from "@/objects/weapon";
 import layers from "../../layers";
 
-export default class Cannon extends Weapon{
+export default class Cannon extends Weapon {
 	constructor({scene, submarine, left, right}) {
 		super({
 			scene, 

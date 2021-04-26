@@ -5,6 +5,8 @@ import SubmarineStage1 from "@/objects/submarine/stage1";
 import SubmarineStage4 from "@/objects/submarine/stage4";
 import SubmarineStage2 from "@/objects/submarine/stage2";
 import SubmarineStage3 from "@/objects/submarine/stage3";
+import Plank from "@/objects/resources/plank";
+import Wood from "@/objects/resources/wood";
 import Iron from "@/objects/resources/iron";
 
 import Background1 from "@/../resources/img/background-1.png";
@@ -17,7 +19,13 @@ import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import WaterSprite from '@/../resources/sprites/water-sprite.png'
 import ExplosionSprite from "@/../resources/sprites/explosion.png";
 import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
-import OreIronImage from '@/../resources/img/ore-iron.png'
+import OreWood1Image from '@/../resources/img/ore-wood-1.png'
+import OrePlank1Image from '@/../resources/img/ore-plank-1.png'
+import PartWood1Image from '@/../resources/img/part-wood-1.png'
+import PartWood2Image from '@/../resources/img/part-wood-2.png'
+import PartWood3Image from '@/../resources/img/part-wood-3.png'
+import OreIron1Image from '@/../resources/img/ore-iron-1.png'
+import OreIron2Image from '@/../resources/img/ore-iron-2.png'
 import PartIron1Image from '@/../resources/img/part-iron-1.png'
 import PartIron2Image from '@/../resources/img/part-iron-2.png'
 import PartIron3Image from '@/../resources/img/part-iron-3.png'
@@ -35,6 +43,7 @@ import GlowImage from "@/../resources/img/glow.png";
 import Title from "@/../resources/img/title.png";
 import SpearImage from "@/../resources/img/spear.png";
 import HouseImage from "@/../resources/img/house.png";
+import { Spawner } from "../objects/spawner";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -64,7 +73,16 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('water', WaterSprite, { frameWidth: 1200, frameHeight: 200 });
 		this.load.spritesheet('explosion', ExplosionSprite, { frameWidth: 500, frameHeight: 500 });
 		this.load.spritesheet('water-bar', WaterBarSprite, {frameWidth: 50, frameHeight: 800});
-		this.load.image('ore-iron', OreIronImage);
+		this.load.image('ore-wood-1', OreWood1Image);
+		this.load.image('part-wood-1', PartWood1Image);
+		this.load.image('part-wood-2', PartWood2Image);
+		this.load.image('part-wood-3', PartWood3Image);
+		this.load.image('ore-plank-1', OrePlank1Image);
+		this.load.image('part-plank-1', PartWood1Image);
+		this.load.image('part-plank-2', PartWood2Image);
+		this.load.image('part-plank-3', PartWood3Image);
+		this.load.image('ore-iron-1', OreIron1Image);
+		this.load.image('ore-iron-2', OreIron2Image);
 		this.load.image('part-iron-1', PartIron1Image);
 		this.load.image('part-iron-2', PartIron2Image);
 		this.load.image('part-iron-3', PartIron3Image);
@@ -160,23 +178,20 @@ export default class MainScene extends Scene {
 			
 			this.radials[i] = radial;
 		}
-
-		this.enemies = [];
-
-		// this.enemies.push(new Squid(this, 800, 800))
-		// this.enemies.push(new Squid(this, 1200, 400))
-		// this.enemies.push(new Squid(this, 500, 1200))
-		// this.enemies.push(new Squid(this, 1800, 300))
 		
 		for(let x = 0; x < 6000; x += 120) {
 			const water = this.add.sprite(x, 610);
 			water.play("water");
 			water.setDisplaySize(120, 20);
 		}
+		this.spawners = [];
+		this.enemies = [];
 
 		this.projectiles = [];
 		this.resources = [];
 		this.gatheringResources = [];
+
+		this.setupSpawners();
 
 		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,U");
 		this.keylistener.U.on('down', () => {
@@ -187,12 +202,28 @@ export default class MainScene extends Scene {
 		});
 
 		this.updateColliding();
+
+
+		this.corstText = this.make.text({
+			x: this.cameras.main.width / 2,
+			y: this.cameras.main.height / 2 + 300,
+			text: '',
+			style: {
+				font: '18px monospace',
+				fill: '#ffffff'
+			}
+		});
+		this.corstText.setOrigin(0.5, 0.5);
+		this.corstText.setScrollFactor(0);
+		this.corstText.depth = layers.UI_2
     }
 
 	update(time, delta) {
 		this.darkenMask.clear();
 		this.submarine.update(time, delta);
 		this.house.update(time, delta);
+
+		this.corstText.setText(`x: ${this.input.mousePointer.worldX.toFixed(0)}, y: ${this.input.mousePointer.worldY.toFixed(0)}`)
 
 		if(this.submarine.shot) {
 			const allProjectiles = this.submarine.getAllProjectiles();
@@ -201,7 +232,7 @@ export default class MainScene extends Scene {
 
 			if(newProjectile !== undefined) {
 				// Check collision with enemies, submarine and resources.
-				this.physics.add.collider(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
+				this.physics.add.overlap(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
 					if(object1.gather) object1.gather();
 					if(object2.explode) object2.explode();
 
@@ -224,8 +255,38 @@ export default class MainScene extends Scene {
 			projectile.explode();
 		}
 
+		this.spawners.forEach(spawner => { spawner.update(time, delta) })
 		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
 		this.enemies.forEach(enemy => { enemy.update(time, delta) });
+	}
+
+	setupSpawners() {
+		/// Enemies - Squid
+		this.spawners.push(new Spawner(this, [
+			{x: 4300, y: 930, must: true},
+			{x: 4300, y: 2600, must: false},
+			{x: 2300, y: 1700, must: false},
+			{x: 3300, y: 1800, must: false},
+			{x: 2600, y: 3050, must: false},
+			{x: 1350, y: 2000, must: false},
+			{x: 500, y: 2200, must: false},
+			{x: 500, y: 3300, must: false},
+		], 6, 10000, this.enemies, (x, y, disposing) => new Squid(this, x, y, disposing)));
+
+		/// Resources - Planks
+		this.spawners.push(new Spawner(this, [
+			{x: 415, y: 1335, must: true},
+			{x: 780, y: 1227, must: false},
+			{x: 1440, y: 1024, must: false},
+			{x: 2650, y: 1245, must: false},
+		], 3, 120000, this.resources, (x, y, disposing) => new Plank(this, x, y, disposing)))
+
+		// Wood
+		this.spawners.push(new Spawner(this, [
+			{x: 3045, y: 1075, must: true},
+			{x: 1950, y: 1438, must: false},
+			{x: 1215, y: 1533, must: false},
+		], 2, 120000, this.resources, (x, y, disposing) => new Wood(this, x, y, disposing)))
 	}
 
 	updateColliding() {

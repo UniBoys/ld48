@@ -1,7 +1,9 @@
-import layers from "../layers";
+import {Spawnable} from '@/objects/spawner'
+import layers from "@/layers";
 
-export default class Resource {
-	constructor({scene, x, y, width, height}) {
+export default class Resource extends Spawnable {
+	constructor({scene, x, y, width, height, disposing}) {
+		super(disposing)
 		this.scene = scene;
 		this.x = x;
 		this.y = y;
@@ -19,16 +21,19 @@ export default class Resource {
 	}
 
 	init() {
-		this.obj = this.scene.add.image(this.x, this.y, 'ore-iron');
+		this.obj = this.scene.add.image(this.x, this.y, `ore-${this.name}-${Math.ceil(this.variance*Math.random())}`);
+		this.obj.setOrigin(0.5, 1)
+		this.obj.flipX = Math.random() <= 0.4;
         this.scene.physics.add.existing(this.obj);
 		this.obj.setDisplaySize(this.width, this.height)
 		this.obj.setAngle(this.rotation);
-		this.obj.depth = layers.BACKGROUND_BEFORE;
+		this.obj.depth = layers.RESOURCES;
 		this.obj.gather = () => this.gather();
 
 		this.gathering = false;
 		this.gatherStart = 0;
 		this.parts = [];
+		if(this.addName == undefined) this.addName = this.name;
 	}
 
 	update(time, delta) {
@@ -52,11 +57,11 @@ export default class Resource {
 				part.body.setVelocityX(Math.cos(part.iAngle) * this.partSpeed * delta)
 				part.body.setVelocityY(Math.sin(part.iAngle) * this.partSpeed * delta)
 			}
-			
 		}
 	}
 
 	gather() {
+		this.dispose();
 		this.obj.destroy();
 
 		this.createPart(1);
@@ -66,14 +71,14 @@ export default class Resource {
 		this.scene.physics.add.collider(this.parts, this.scene.submarine.obj, (object1, object2) => {
 			object1.destroy();
 			this.parts = this.parts.filter(part => part !== object1);
-			this.scene.submarine.inventory.add(this.name, this.amount / 3);
+			this.scene.submarine.inventory.add(this.addName, this.amount / 3);
 		})
 		
 		this.gathering = true;
 	}
 
 	createPart(index) {
-		const part = this.scene.add.image(this.x, this.y, `part-iron-${index}`);
+		const part = this.scene.add.image(this.x, this.y, `part-${this.name}-${index}`);
 		part.depth = layers.ITEMS;
 		part.setDisplaySize(this.partWidth, this.partHeight);
         this.scene.physics.add.existing(part);

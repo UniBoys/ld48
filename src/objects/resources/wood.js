@@ -1,21 +1,24 @@
 import Resource from "@/objects/resource";
 
-export default class Iron extends Resource {
+export default class Wood extends Resource {
 	constructor(scene, x, y, disposing) {
 		super({
 			scene,
 			x,
 			y,
-			width: 150,
-			height: 60,
+			width: 1533/9,
+			height: 1181/9,
 			disposing,
 		});
 
-		this.name = "iron";
-		this.variance = 2;
+		this.name = "wood";
+		this.variance = 1;
 		this.partWidth = 70;
 		this.partHeight = 70;
 		this.partAmount = 3;
+
+		this.freeFloatTime = 2000;
+		this.partRotateSpeed = 0.3;
 
 		this.init();
 	}

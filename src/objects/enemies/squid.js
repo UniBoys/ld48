@@ -1,5 +1,5 @@
 import Enemy from '@/objects/enemy'
-import layers from '../../layers';
+import layers from '@/layers';
 
 export default class Squid extends Enemy {
     /**
@@ -7,8 +7,8 @@ export default class Squid extends Enemy {
      * @param {number} x
      * @param {number} y
      */
-    constructor(scene, x, y) {
-        super(scene)
+    constructor(scene, x, y, disposable) {
+        super(scene, disposable)
 
         this.attackDistance = 600
         this.defaultAcceleration = 1;
@@ -47,6 +47,10 @@ export default class Squid extends Enemy {
         this.cooldown = false;
     }
 
+    dispose() {
+        super.dispose()
+        this.obj.destroy()
+    }
 
     update(time, delta) {
         const submarine = this.scene.submarine;

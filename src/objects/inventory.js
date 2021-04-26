@@ -5,11 +5,11 @@ export default class Inventory {
 		this.size = size;
 		this.scene = scene;
 		this.map = [
-			{key: 'wood', amount: 50},
+			{key: 'wood', amount: 0},
 			{key: 'iron', amount: 0},
 			{key: 'treasure', amount: 0},
-			{key: 'oxygen', amount: 850},
-			{key: 'water', amount: 100}
+			{key: 'oxygen', amount: this.size},
+			{key: 'water', amount: 0}
 		];
 
 		this.flashFrames = 30;
@@ -99,10 +99,10 @@ export default class Inventory {
 			amount = this.size - this.sum();
 		}
 
-		console.log(key, amount, this.map.find(item => item.key === key));
-
 		this.map.find(item => item.key === key).amount += amount;
 		this.map.find(item => item.key === 'oxygen').amount -= amount;
+
+		console.log(this.map)
 	}
 
 	remove(key, amount) {
