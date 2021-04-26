@@ -101,6 +101,8 @@ export default class Missile extends Weapon {
 			explosion.destroy();
 		})
 		explosion.setDisplaySize(120, 120);
+		const sound = this.scene.sound.add('explosion');
+		sound.play();
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();

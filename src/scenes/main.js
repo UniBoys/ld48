@@ -44,6 +44,8 @@ import CannonImage from '@/../resources/img/cannon.png'
 import CannonballImage from '@/../resources/img/cannonball.png'
 import SignImage from '@/../resources/img/sign.png'
 import DeathScreenImage from '@/../resources/img/death-screen.png'
+import ExplosionSound from '@/../resources/audio/explosion.wav'
+import HitSound from '@/../resources/audio/hit.wav'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -115,6 +117,8 @@ export default class MainScene extends Scene {
 		this.load.image('wood-bar', WoodBarImage);
 		this.load.image('treasure-bar', TreasureBarImage);
 		this.load.image('death-screen', DeathScreenImage);
+		this.load.audio('explosion', ExplosionSound);
+		this.load.audio('hit', HitSound);
 	}
 
     create() {
@@ -347,6 +351,8 @@ export default class MainScene extends Scene {
 			this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
 				this.submarine.damage(30);
 				enemy.damage(1)
+				const sound = this.sound.add('hit');
+				sound.play();
 			})
 		})
 	}
