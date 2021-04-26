@@ -247,7 +247,7 @@ export default class MainScene extends Scene {
 				this.projectiles = this.projectiles.filter(projectile => projectile !== object2);
 			})
 
-			this.physics.add.collider(this.enemies.map(enemy => enemy.obj), newProjectile, (object1, object2) => {
+			this.physics.add.overlap(this.enemies.map(enemy => enemy.obj), newProjectile, (object1, object2) => {
 				const amount = this.stageIndex === 3 ? 2 : 1;
 
 				if(object1.damage) object1.damage(amount);
@@ -318,7 +318,12 @@ export default class MainScene extends Scene {
 	}
 
 	updateColliding() {
-		this.enemies.forEach((enemy) => { this.physics.add.collider(this.submarine.obj, enemy.obj)})
+		this.enemies.forEach((enemy) => { 
+			this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
+				// TODO add watter to ship
+				enemy.damage(1)
+			})
+		})
 	}
 
 	animations() {

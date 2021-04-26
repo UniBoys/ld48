@@ -80,7 +80,6 @@ export default class Spear1 extends Weapon {
 		this.projectiles[0].depth = layers.PROJECTILES;
 		this.projectiles[0].angle = this.obj.angle;
         this.scene.physics.add.existing(this.projectiles[0]);
-		console.log(this.obj.body.rotation);
 		this.projectiles[0].body.rotation = this.obj.body.rotation;
 		this.projectiles[0].body.setCircle(10*(this.projectiles[0].width/this.width), 
 			Math.cos(this.projectiles[0].body.rotation * Phaser.Math.DEG_TO_RAD + Math.PI/2)*30*(this.projectiles[0].width/this.width), 

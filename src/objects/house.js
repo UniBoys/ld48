@@ -68,7 +68,6 @@ export default class House {
 	}
 
 	canUpgrade() {
-		console.log(this.inventory.get('wood'), this.upgrades[0])
 		if(this.scene.submarine.stage === 0) {
 			return this.inventory.get('wood') > this.upgrades[0];
 		}

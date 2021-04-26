@@ -4,7 +4,8 @@
     "description": "Our LD48 project",
     "main": "index.js",
     "scripts": {
-        "test": "node build"
+        "test": "node build",
+        "build": "node prod"
     },
     "repository": {
         "type": "git",

@@ -106,8 +106,6 @@ export default class HouseInventory {
 			amount = this.size - this.sum();
 		}
 
-		console.log(key, amount, this.map.find(item => item.key === key));
-
 		this.map.find(item => item.key === key).amount += amount;
 	}
 
