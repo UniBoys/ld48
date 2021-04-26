@@ -143,28 +143,7 @@ export default class Shark extends Enemy{
             this.obj.x += Math.sin(time/this.wiggle.delay) * this.wiggle.multiplier
             this.obj.y += Math.cos(time/this.wiggle.delay) * this.wiggle.multiplier
         }
-        
-        if(this.checkForMapCollision(this.obj.body.x, this.obj.body.y)) {
-			if(this.obj.body.velocity.x < 0) this.obj.body.setVelocityX(0);
-			if(this.obj.body.velocity.y < 0) this.obj.body.setVelocityY(0);
-		}
-		else if(this.checkForMapCollision(this.obj.body.x + this.obj.body.width, this.obj.body.y)) {
-			if(this.obj.body.velocity.x > 0) this.obj.body.setVelocityX(0);
-			if(this.obj.body.velocity.y < 0) this.obj.body.setVelocityY(0);
-		}
-		else if(this.checkForMapCollision(this.obj.body.x, this.obj.body.y + this.obj.body.height)) {
-			if(this.obj.body.velocity.x < 0) this.obj.body.setVelocityX(0);
-			if(this.obj.body.velocity.y > 0) this.obj.body.setVelocityY(0);
-		}
-		else if(this.checkForMapCollision(this.obj.body.x + this.obj.body.width, this.obj.body.y + this.obj.body.height)) {
-			if(this.obj.body.velocity.x > 0) this.obj.body.setVelocityX(0);
-			if(this.obj.body.velocity.y > 0) this.obj.body.setVelocityY(0);
-		}
-	}
-
-	checkForMapCollision(x, y) {
-		return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
-	}   
+	} 
 
     limitMaxSpeed() {
 		if(Math.abs(this.obj.body.velocity.x) > this.maxSpeed) {

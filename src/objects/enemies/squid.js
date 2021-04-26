@@ -124,13 +124,6 @@ export default class Squid extends Enemy {
                 this.obj.body.setVelocityY(0)
             }
         }
-        
-        if(this.checkForMapCollision(this.obj.body.center.x, this.obj.body.center.y)) {
-            this.obj.body.setVelocityX(-this.obj.body.velocity.x);
-            this.obj.body.setVelocityY(-this.obj.body.velocity.y);
-            this.obj.body.setAccelerationX(-this.obj.body.acceleration.x);
-            this.obj.body.setAccelerationY(-this.obj.body.acceleration.y);
-        }
 
         const trueAngle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, this.obj.x + this.obj.body.velocity.x, this.obj.y + this.obj.body.velocity.y)
         const nextAngle = Phaser.Math.Angle.RotateTo((this.obj.angle - 90) * Phaser.Math.DEG_TO_RAD, trueAngle, 0.01)
@@ -142,11 +135,7 @@ export default class Squid extends Enemy {
             this.obj.x += Math.sin(time/this.wiggle.delay) * this.wiggle.multiplier
             this.obj.y += Math.cos(time/this.wiggle.delay) * this.wiggle.multiplier
         }
-    }
-
-    checkForMapCollision(x, y) {
-		return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
-	}   
+    } 
 
     limitMaxSpeed() {
 		if(Math.abs(this.obj.body.velocity.x) > this.maxSpeed) {

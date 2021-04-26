@@ -23,42 +23,55 @@ export default class HouseInventory {
             item.obj.setOrigin(0, 0)
         }
 
-        this.text = this.scene.add.text(this.house.obj.body.x + 50, this.house.obj.body.y - 130, 'Stash to see your upgrades', {
-            fontFamily: 'Amatic SC',
-            fontSize: 50
-        });
-        this.text.setAlign('center');
-    }
+		this.text = this.scene.add.text(this.house.obj.body.x + 50, this.house.obj.body.y - 130, 'Stash to see your upgrades', {fontFamily: 'Amatic SC', fontSize: 50});
+		this.text.setAlign('center');
+	}
+	
+	update(time, delta) {
+		let order = ['wood', 'iron', 'treasure'];
+		let line;
+		let hide = [];
 
-    update(time, delta) {
-        let order = ['wood', 'iron', 'treasure'];
-        let line;
+		if(this.scene.submarine.inventory.hasItems()) {
+			this.text.setText('Press e to stash');
+		}
+		else if(this.scene.submarine.stage === 1) {
+			if(this.get('wood') >= this.house.upgrades[0]) {
+				this.text.setText('Press e to upgrade');
+			}
+			else {
+				this.text.setText('Try to find more wood');
+			}
 
-        if (this.scene.submarine.inventory.hasItems()) {
-            this.text.setText('Press e to stash');
-        } else if (this.scene.submarine.stage === 1) {
-            if (this.get('wood') >= this.house.upgrades[0]) {
-                this.text.setText('You can upgrade now');
-            } else {
-                this.text.setText('Try to find more wood');
-            }
+			line = this.house.upgrades[0]/this.size;
+		}
+		else if(this.scene.submarine.stage === 2) {
+			if(this.get('wood') >= this.house.upgrades[1]) {
+				this.text.setText('Press e to upgrade');
+			}
+			else {
+				this.text.setText('Try to find more iron');
+			}
 
-            line = this.house.upgrades[0] / this.size;
-        } else if (this.scene.submarine.stage === 2) {
-            if (this.get('wood') >= this.house.upgrades[1]) {
-                this.text.setText('You can upgrade now');
-            } else {
-                this.text.setText('Try to find more iron');
-            }
+			order = ['iron', 'treasure'];
+			hide = ['wood'];
+			line = this.house.upgrades[1]/this.size;
+		}
+		else if(this.scene.submarine.stage === 3) {
+			if(this.get('wood') >= this.house.upgrades[2]) {
+				this.text.setText('Press e to upgrade');
+			}
+			else {
+				this.text.setText('Try to find more treasures');
+			}
 
-            order = ['iron', 'treasure'];
-            line = this.house.upgrades[1] / this.size;
-        } else if (this.scene.submarine.stage === 3) {
-            if (this.get('wood') >= this.house.upgrades[2]) {
-                this.text.setText('You can upgrade now');
-            } else {
-                this.text.setText('Try to find more treasures');
-            }
+			order = ['treasure'];
+			hide = ['wood', 'iron'];
+			line = this.house.upgrades[2]/this.size;
+		}
+		else if(this.scene.submarine.stage === 4) {
+			this.text.setText('There are no upgrades left');
+		}
 
             order = ['treasure'];
             line = this.house.upgrades[2] / this.size;
@@ -79,7 +92,10 @@ export default class HouseInventory {
             this.bar.lineBetween(x + this.barWidth * line, y - 2, x + this.barWidth * line, y + this.barHeight + 2)
         }
 
-        let sum = 0;
+		for(const item of order) {
+			const obj = this.getObj(item);
+			obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
+			obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
 
         for (const item of order) {
             const obj = this.getObj(item);
@@ -88,11 +104,31 @@ export default class HouseInventory {
             obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
             obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
 
-            sum += obj.amount;
-        }
+		for(const item of hide) {
+			const obj = this.getObj(item);
+			obj.obj.setPosition(-1000, -1000)
+		}
 
-        this.text.x = this.house.obj.body.x + this.house.obj.body.width / 2 - this.text.width / 2;
-        this.text.y = this.house.obj.body.y - 130;
+		this.text.x = this.house.obj.body.x + this.house.obj.body.width/2 - this.text.width/2;
+		this.text.y = this.house.obj.body.y - 130;
+
+		if(this.visible) {
+			this.text.visible = true;
+			this.bar.visible = true;
+
+			for(const item of this.map) {
+				item.obj.visible = true;
+			}
+		}
+		else {
+			this.text.visible = false;
+			this.bar.visible = false;
+
+			for(const item of this.map) {
+				item.obj.visible = false;
+			}			
+		}
+	}
 
         if (this.visible) {
             this.text.visible = true;

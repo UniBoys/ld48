@@ -58,6 +58,7 @@ import UpgradeSound from '@/../resources/audio/upgrade.wav'
 import PickupSound from '@/../resources/audio/pickup.wav'
 import SpearSound from '@/../resources/audio/spear.wav'
 import ChestSound from '@/../resources/audio/chest.wav'
+import ThemeSong from '@/../resources/audio/theme.ogg'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -125,24 +126,25 @@ export default class MainScene extends Scene {
         this.load.image('cannonball', CannonballImage);
         this.load.image('glow', GlowImage);
         this.load.image('spear', SpearImage);
-        this.load.image('house', HouseImage);
-        this.load.image('sign', SignImage);
-        this.load.image('oxygen-bar', OxygenBarImage);
-        this.load.image('iron-bar', IronBarImage);
-        this.load.image('wood-bar', WoodBarImage);
-        this.load.image('treasure-bar', TreasureBarImage);
-        this.load.image('death-screen', DeathScreenImage);
-        this.load.audio('explosion', ExplosionSound);
-        this.load.audio('hit', HitSound);
-        this.load.audio('ore', OreSound);
-        this.load.audio('miss', MissSound);
-        this.load.audio('wood', WoodSound);
-        this.load.audio('engine', EngineSound);
-        this.load.audio('upgrade', UpgradeSound);
-        this.load.audio('pickup', PickupSound);
-        this.load.audio('spear', SpearSound);
-        this.load.audio('chest', ChestSound);
-    }
+		this.load.image('house', HouseImage);
+		this.load.image('sign', SignImage);
+		this.load.image('oxygen-bar', OxygenBarImage);
+		this.load.image('iron-bar', IronBarImage);
+		this.load.image('wood-bar', WoodBarImage);
+		this.load.image('treasure-bar', TreasureBarImage);
+		this.load.image('death-screen', DeathScreenImage);
+		this.load.audio('explosion', ExplosionSound);
+		this.load.audio('hit', HitSound);
+		this.load.audio('ore', OreSound);
+		this.load.audio('miss', MissSound);
+		this.load.audio('wood', WoodSound);
+		this.load.audio('engine', EngineSound);
+		this.load.audio('upgrade', UpgradeSound);
+		this.load.audio('pickup', PickupSound);
+		this.load.audio('spear', SpearSound);
+		this.load.audio('chest', ChestSound);
+		this.load.audio('theme', ThemeSong);
+	}
 
     create() {
         this.cameras.main.zoom = 0.8
@@ -215,28 +217,18 @@ export default class MainScene extends Scene {
             this.updateColliding()
         });
 
-        this.updateColliding();
+		this.deathScreenStart = 0;
+		this.deathScreen = this.add.image(0, 0, 'death-screen');
+		this.deathScreen.setScrollFactor(0)
+		this.deathScreen.setDisplaySize(1600/.8, 900/.8);
+		this.deathScreen.setPosition(800, 450);
+		this.deathScreen.depth = layers.UI_SCREENS;
+		this.deathScreen.visible = false;
 
-        // this.corstText = this.make.text({
-        //     x: this.cameras.main.width / 2,
-        //     y: this.cameras.main.height / 2 + 300,
-        //     text: '',
-        //     style: {
-        //         font: '18px monospace',
-        //         fill: '#ffffff'
-        //     }
-        // });
-        // this.corstText.setOrigin(0.5, 0.5);
-        // this.corstText.setScrollFactor(0);
-        // this.corstText.depth = layers.UI_2
-
-        this.deathScreenStart = 0;
-        this.deathScreen = this.add.image(0, 0, 'death-screen');
-        this.deathScreen.setScrollFactor(0)
-        this.deathScreen.setDisplaySize(1600 / .8, 900 / .8);
-        this.deathScreen.setPosition(800, 450);
-        this.deathScreen.depth = layers.UI_SCREENS;
-        this.deathScreen.visible = false;
+		const theme = this.sound.add('theme');
+		theme.setLoop(true);
+		theme.setVolume(0.04)
+		theme.play();
     }
 
     update(time, delta) {
