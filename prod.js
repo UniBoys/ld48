@@ -42,7 +42,7 @@ const config = {
                 }
             },
             {
-                test: /\.(png|jpg|gif|wav)$/,
+                test: /\.(png|jpg|gif|wav|ogg)$/,
                 loader: 'file-loader',
             }
         ]
