@@ -31,8 +31,7 @@ const config = {
                 },
                     "extract-loader",
                     "css-loader",
-                    "resolve-url-loader",
-                    "sass-loader",
+                    'sass-loader',
                 ]
             },
             {
@@ -44,18 +43,7 @@ const config = {
             },
             {
                 test: /\.(png|jpg|gif|wav)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[path][name].[ext]',
-                            context: path.resolve(__dirname, "src/"),
-                            outputPath: 'dist/',
-                            publicPath: '../',
-                            useRelativePaths: true
-                        }
-                    }
-                ]
+                loader: 'file-loader',
             }
         ]
     },

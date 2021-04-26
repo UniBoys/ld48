@@ -1,4 +1,3 @@
-
 /**
  * @callback disposingCallback
  * @param {Spawner} spawnable
@@ -13,13 +12,13 @@
  */
 
 export class Spawner {
-	/**
-	 * @param {Phaser.Scene} scene 
+    /**
+     * @param {Phaser.Scene} scene
      * @param {{x: number, y: number, must: boolean}[]} spawns
      * @param {number} limit
      * @param {Spawnable[]} array
      * @param {creatorCallback} creator
-	 */
+     */
     constructor(scene, spawns, limit, delay, array, creator) {
         this.scene = scene;
         this.spawns = spawns;
@@ -44,7 +43,7 @@ export class Spawner {
         shuffleArray(left)
 
         left
-            .slice(0, this.limit-this.spawned.length+1)
+            .slice(0, this.limit - this.spawned.length + 1)
             .forEach((spawn) => this.add(spawn.x, spawn.y));
     }
 
@@ -53,6 +52,8 @@ export class Spawner {
 
         this.spawned.push(spawnable)
         this.array.push(spawnable)
+
+        this.scene.updateColliding()
     }
 
     removeSpawnable(spawnable) {
@@ -65,19 +66,25 @@ export class Spawner {
         if (index > -1) {
             this.array.splice(index, 1);
         }
+
+        this.lastCheck = -1
     }
 
     update(time, delta) {
-        if(time - this.lastCheck > this.delay) {
+        if (this.lastCheck === -1) this.lastCheck = time
+        if (time - this.lastCheck > this.delay) {
             this.lastCheck = time;
-            if(this.limit>this.spawned.length) {
+            if (this.limit > this.spawned.length) {
                 const left = this.spawns
-                    .filter((spawn) => !this.spawned.some((s) => (s?.x ?? s?.obj?.x) == spawn.x && (s?.y || s?.obj?.y) == spawn.y));
+                    .filter((spawn) => {
+                        const sub = this.scene.submarine.obj.body
+                        return (Math.abs(spawn.x - sub.x) > 2000 || Math.abs(spawn.y - sub.y) > 1500) && !this.spawned.some((s) => (s?.x ?? s?.obj?.x) === spawn.x && (s?.y || s?.obj?.y) === spawn.y)
+                    });
 
                 shuffleArray(left)
 
                 left
-                    .slice(0, this.limit-this.spawned.length+1)
+                    .slice(0, this.limit - this.spawned.length + 1)
                     .forEach((spawn) => this.add(spawn.x, spawn.y))
             }
         }
@@ -94,13 +101,15 @@ function shuffleArray(array) {
 export class Spawnable {
 
     /**
-     * @param {disposingCallback} disposing 
+     * @param {disposingCallback} disposing
      */
     constructor(disposing) {
         this.disposing = disposing
     }
 
-    update(time, delta) {}
+    update(time, delta) {
+    }
+
     dispose() {
         this.disposing(this)
     }
