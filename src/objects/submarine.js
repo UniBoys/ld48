@@ -261,7 +261,8 @@ export default class Submarine {
 
             this.limitMaxSpeed();
         } else if (this.obj.body.velocity.x > this.bobbing.maxX && this.bobbing.lastX == 0) {
-            this.obj.body.setAccelerationX(-delta * this.deceleration)
+            console.log("test");
+           this.obj.body.setAccelerationX(-delta * this.deceleration)
         } else if (this.obj.body.velocity.x < -this.bobbing.maxX && this.bobbing.lastX == 0) {
             this.obj.body.setAccelerationX(delta * this.deceleration)
         } else if (time - this.bobbing.lastX - this.bobbing.delayX > 0) {

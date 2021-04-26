@@ -39,17 +39,9 @@ body {
     }
 
     .escape-menu {
-        display: flex;
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        transition: .3s opacity;
-        top: 0;
-        left: 0;
-        pointer-events: none;
+        opacity: 1;
+    }
+  }
 
   .escape-menu {
     display: flex;
@@ -62,6 +54,7 @@ body {
     transition: .3s opacity;
     top: 0;
     left: 0;
+    pointer-events: none;
 
     #movement {
       width: 450px;

@@ -70,12 +70,6 @@ export default class HouseInventory {
 			line = this.house.upgrades[2]/this.size;
 		}
 		else if(this.scene.submarine.stage === 4) {
-			this.text.setText('There are no upgrades left');
-		}
-
-            order = ['treasure'];
-            line = this.house.upgrades[2] / this.size;
-        } else if (this.scene.submarine.stage === 4) {
             this.text.setText('There are no upgrades left');
         }
 
@@ -92,17 +86,15 @@ export default class HouseInventory {
             this.bar.lineBetween(x + this.barWidth * line, y - 2, x + this.barWidth * line, y + this.barHeight + 2)
         }
 
+		let sum = 0;
+
 		for(const item of order) {
 			const obj = this.getObj(item);
 			obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
 			obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
 
-        for (const item of order) {
-            const obj = this.getObj(item);
-            //this.bar.fillStyle(obj.color, 1);
-            //this.bar.fillRect(x + (sum / this.size) * this.barWidth, y, (obj.amount / this.size) * this.barWidth, this.barHeight);
-            obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
-            obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
+			sum += obj.amount;
+		}
 
 		for(const item of hide) {
 			const obj = this.getObj(item);
@@ -128,15 +120,6 @@ export default class HouseInventory {
 				item.obj.visible = false;
 			}			
 		}
-	}
-
-        if (this.visible) {
-            this.text.visible = true;
-            this.bar.visible = true;
-        } else {
-            this.text.visible = false;
-            this.bar.visible = false;
-        }
     }
 
     add(key, amount) {
