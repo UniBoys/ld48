@@ -51,6 +51,16 @@ export default class Submarine {
 
 		this.cooldownStart = 0;
 		this.lastDepthDamage = 0;
+
+		this.lastDamage = 0;
+	}
+
+	damage(amount) {
+		if(this.lastDamage != 0) return;
+		this.inventory.add('water', amount)
+
+		this.lastDamage = -1;
+        this.obj.tint = 0xff0000;
 	}
 
 	destroy() {
@@ -109,6 +119,12 @@ export default class Submarine {
 		if(this.shot) {
 			this.shot = false;
 		}
+
+		if(this.lastDamage == -1) this.lastDamage = time
+        else if(this.lastDamage > 0 && time - this.lastDamage > 1000) {
+            this.lastDamage = 0;
+            this.obj.tint = 0xffffff
+        }
 
 		if(this.bobbing.lastX == 0) {
 			if(this.obj.body.velocity.x > 10 && !this.flipped) {

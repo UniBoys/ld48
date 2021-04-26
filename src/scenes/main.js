@@ -302,6 +302,11 @@ export default class MainScene extends Scene {
 			{x: 500, y: 3300, must: false},
 		], 6, 10000, this.enemies, (x, y, disposing) => new Squid(this, x, y, disposing)));
 
+		// Sharks
+		this.spawners.push(new Spawner(this, [
+			{x: 1200, y: 2840, must: false},
+		], 1, 10000, this.enemies, (x, y, disposing) => new Shark(this, x, y, disposing)));
+
 		/// Resources - Planks
 		this.spawners.push(new Spawner(this, [
 			{x: 415, y: 1335, must: true},
