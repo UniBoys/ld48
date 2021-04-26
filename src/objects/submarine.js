@@ -15,8 +15,8 @@ export default class Submarine {
         this.bobbing = {
             delayX: 1000,
             delayY: 500,
-            maxX: 10,
-            maxY: 10,
+            maxX: 20,
+            maxY: 20,
             lastX: 0,
             lastY: 0,
         }
@@ -131,9 +131,9 @@ export default class Submarine {
         }
 
         if (this.bobbing.lastX == 0) {
-            if (this.obj.body.velocity.x > 10 && !this.flipped) {
+            if (this.obj.body.velocity.x > 60 && !this.flipped) {
                 this.flip();
-            } else if (this.obj.body.velocity.x < -10 && this.flipped) {
+            } else if (this.obj.body.velocity.x < -60 && this.flipped) {
                 this.flip();
             }
         }
@@ -238,9 +238,9 @@ export default class Submarine {
             this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1));
 
             this.limitMaxSpeed();
-        } else if (this.obj.body.velocity.y > this.bobbing.maxY && this.bobbing.lastY == 0) {
+        } else if (this.obj.body.velocity.y > 50) {
             this.obj.body.setAccelerationY(-delta * this.deceleration)
-        } else if (this.obj.body.velocity.y < -this.bobbing.maxY && this.bobbing.lastY == 0) {
+        } else if (this.obj.body.velocity.y < -50) {
             this.obj.body.setAccelerationY(delta * this.deceleration)
         } else if (time - this.bobbing.lastY - this.bobbing.delayY > 0) {
             this.bobbing.lastY = time
@@ -260,16 +260,12 @@ export default class Submarine {
             this.obj.body.setAccelerationX(-delta * this.acceleration * (this.obj.body.velocity.x > 0 ? this.changeBonus : 1));
 
             this.limitMaxSpeed();
-        } else if (this.obj.body.velocity.x > this.bobbing.maxX && this.bobbing.lastX == 0) {
-            console.log("test");
-           this.obj.body.setAccelerationX(-delta * this.deceleration)
-        } else if (this.obj.body.velocity.x < -this.bobbing.maxX && this.bobbing.lastX == 0) {
+        } else if (this.obj.body.velocity.x > 50) {
+            this.obj.body.setAccelerationX(-delta * this.deceleration)
+        } else if (this.obj.body.velocity.x < -50) {
             this.obj.body.setAccelerationX(delta * this.deceleration)
-        } else if (time - this.bobbing.lastX - this.bobbing.delayX > 0) {
-            if (this.bobbing.lastX == 0) {
-                this.updateBobbingX(time)
-            }
-            this.bobbing.lastX = time
+        } else if (time - this.bobbing.lastX - this.bobbing.delayX > 0 && Math.abs(this.obj.body.velocity.x) < 10) {
+            this.bobbing.lastX = time;
 
             if (this.obj.body.velocity.x > this.bobbing.maxX) {
                 this.obj.body.setAccelerationX(-delta * this.bobbing.maxX * 0.1)
@@ -295,6 +291,18 @@ export default class Submarine {
 
     checkForMapCollision(x, y) {
         return this.scene.textures.getPixelAlpha(x, y, "background1") > 0;
+    }
+
+    limitBobbing() {
+        if (Math.abs(this.obj.body.velocity.x) > this.maxSpeedX/4) {
+            this.obj.body.setAccelerationX(0);
+            this.obj.body.setVelocityX(this.obj.body.velocity.x > 0 ? this.maxSpeedX/4 : -this.maxSpeedX/4);
+        }
+
+        if (Math.abs(this.obj.body.velocity.y) > this.maxSpeedY/4) {
+            this.obj.body.setAccelerationY(0);
+            this.obj.body.setVelocityY(this.obj.body.velocity.y > 0 ? this.maxSpeedY/4 : -this.maxSpeedY/4);
+        }
     }
 
     limitMaxSpeed() {

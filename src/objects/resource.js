@@ -96,6 +96,7 @@ export default class Resource extends Spawnable {
 
         part.body.setVelocityX(Math.cos(angleToPlayer) * this.partSpeed * 10);
         part.body.setVelocityY(Math.sin(angleToPlayer) * this.partSpeed * 10);
+        part.body.setBounce(0.3);
         part.iAngle = angleToPlayer;
         this.parts.push(part);
     }
