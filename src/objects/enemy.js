@@ -6,9 +6,19 @@ export default class Enemy extends Spawnable {
      * @param {number} x
      * @param {number} y
      */
-	constructor(scene, disposing) {
+	constructor(scene, disposing, maxHealth) {
         super(disposing)
 		this.scene = scene;
+        this.maxHealth = maxHealth;
+        this.health = this.maxHealth;
+    }
+
+    destroy() {}
+
+    damage(amount) {
+        this.health -= amount;
+
+        if(this.health < 0) this.destroy();
     }
 
     init() {
@@ -16,4 +26,6 @@ export default class Enemy extends Spawnable {
 
         this.obj.body.setCollideWorldBounds(true);
     }
+
+    update(time, delta) {}
 }

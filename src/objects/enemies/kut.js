@@ -1,26 +1,20 @@
-import Enemy from '@/objects/enemy'
-import layers from '@/layers';
+import layers from "../../layers";
+import Enemy from "../enemy";
 
-export default class Squid extends Enemy {
-    /**
+export default class Lanternfish extends Enemy{
+	/**
      * @param {Phaser.Scene} scene
      * @param {number} x
      * @param {number} y
      */
-    constructor(scene, x, y, disposable) {
-        super(scene, disposable, 2)
+	 constructor(scene, x, y, disposable) {
+        super(scene, disposable, 4)
 
-        this.attackDistance = 600
-        this.defaultAcceleration = 1;
-		this.defaultDeceleration = 3;
-        this.defaultMaxSpeed = 30;
+        this.attackDistance = 800
+		this.acceleration = 1;
+		this.deceleration = 3;
+        this.maxSpeed = 30;
         this.changeBonus = 2;
-        this.ultRange = 400;
-        this.ultTime = 2000;
-        this.ultAcceleration = 3;
-        this.ultDeceleration = 6;
-        this.ultMaxSpeed = 50;
-        this.ultCooldown = 5000;
 
         this.wiggle = {
             multiplier: 0.2,
@@ -29,22 +23,20 @@ export default class Squid extends Enemy {
         }
 
         this.obj = scene.add.sprite(x, y);
-		this.obj.setScale(0.13)
-		this.obj.play("squid-idle")
+		this.obj.setScale(0.28)
+		this.obj.play("lanternfish-idle")
         this.obj.depth = layers.MOBS;
 
         this.init()
 
-        this.obj.body.setCircle(400, 50, 500)
         this.obj.body.setBounce(1)
+		this.obj.body.setSize(this.obj.width*.7, this.obj.height*.6);
 
-        this.acceleration = this.defaultAcceleration;
-		this.deceleration = this.defaultDeceleration;
-        this.maxSpeed = this.defaultMaxSpeed;
-        this.ultStart = 0;
-        this.ultCooldownStart = 0;
-        this.ulting = false;
-        this.cooldown = false;
+		this.radial = this.scene.add.image(this.obj.body.x, this.obj.body.y, 'glow');
+		this.radial.setAlpha(0.5);
+		this.radial.setTint(0x651fff);
+		this.radial.setDisplaySize(300, 300);
+		this.radial.depth = layers.LANTERN;
     }
 
     dispose() {
@@ -54,31 +46,6 @@ export default class Squid extends Enemy {
 
     update(time, delta) {
         const submarine = this.scene.submarine;
-        const dist = Math.sqrt((this.obj.x - submarine.obj.x)*(this.obj.x - submarine.obj.x) + (this.obj.y - submarine.obj.y)*(this.obj.y - submarine.obj.y));
-
-        if((time-this.ultCooldownStart) > this.ultCooldown && this.cooldown) { // Cooldown finished
-            this.ultCooldownStart = 0;
-            this.cooldown = false;
-        }
-        else if(!this.cooldown && !this.ulting && dist < this.ultRange && this.ultCooldownStart === 0) { // Ulting
-            this.obj.play("squid-ult")
-            this.ultStart = time;
-            this.acceleration = this.ultAcceleration;
-            this.deceleration = this.ultDeceleration;
-            this.maxSpeed = this.ultMaxSpeed;
-            this.ulting = true;
-        }
-        else if((time-this.ultStart) > this.ultTime && this.ulting) { // Cooldown starting
-            this.obj.play("squid-idle")
-            this.ultStart = 0;
-            this.ulting = false;
-            this.ultCooldownStart = time;
-            this.acceleration = this.defaultAcceleration;
-            this.deceleration = this.defaultDeceleration;
-            this.maxSpeed = this.defaultMaxSpeed;
-            this.cooldown = true;
-        }
-
         const inRange = Math.abs(this.obj.x - submarine.obj.x) < this.attackDistance && Math.abs(this.obj.y - submarine.obj.y) < this.attackDistance
 
         // Move x
@@ -123,10 +90,19 @@ export default class Squid extends Enemy {
             }
         }
 
-        const trueAngle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, this.obj.x + this.obj.body.velocity.x, this.obj.y + this.obj.body.velocity.y)
-        const nextAngle = Phaser.Math.Angle.RotateTo((this.obj.angle - 90) * Phaser.Math.DEG_TO_RAD, trueAngle, 0.01)
+		if(this.obj.body.velocity.x > 4) {
+			this.obj.setFlipX(true)
+		}
+		else if(this.obj.body.velocity.x < -4) {
+			this.obj.setFlipX(false)
+		}
 
-        this.obj.setAngle(nextAngle * Phaser.Math.RAD_TO_DEG + 90)
+		if(this.obj.flipX) {
+			this.radial.setPosition(this.obj.body.x + this.obj.body.width/2 + 220, this.obj.body.y + this.obj.body.height/2 - 20);
+		}
+		else {
+			this.radial.setPosition(this.obj.body.x + this.obj.body.width/2 - 220, this.obj.body.y + this.obj.body.height/2 - 20);
+		}
 
         if(time - this.wiggle.last - this.wiggle.delay > 0) {
             this.wiggle.last = time

@@ -1,5 +1,6 @@
 import Submarine from "@/objects/submarine";
 import Missile from "@/objects/weapons/missile";
+import HeadLight from "@/objects/submarine/headLight";
 
 export default class SubmarineStage4 extends Submarine {
 	constructor(scene) {
@@ -41,6 +42,21 @@ export default class SubmarineStage4 extends Submarine {
 				right: {relativeX: 40, relativeY: 65, defaultAngle: 180},
 				radian: 2
 			 }),
+		]
+
+		this.headLights = [
+			new HeadLight({
+				scene,
+				submarine: this,
+				left: {relativeX: 260, relativeY: 40, a1: 180, a2: 110},
+				right: {relativeX: 40, relativeY: 40, a1: 0, a2: 70}
+			}),
+			new HeadLight({
+				scene,
+				submarine: this,
+				left: {relativeX: 260, relativeY: 40, a1: -180, a2: -110},
+				right: {relativeX: 40, relativeY: 40, a1: -70, a2: 0}
+			}),
 		]
 
 		this.init();

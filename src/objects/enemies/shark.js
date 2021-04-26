@@ -1,24 +1,26 @@
-import Enemy from '@/objects/enemy'
-import layers from '@/layers';
+import layers from "../../layers";
+import Enemy from "../enemy";
 
-export default class Squid extends Enemy {
+export default class Shark extends Enemy{
     /**
      * @param {Phaser.Scene} scene
      * @param {number} x
      * @param {number} y
      */
     constructor(scene, x, y, disposable) {
-        super(scene, disposable, 2)
+        super(scene, disposable, 3)
 
-        this.attackDistance = 600
+        this.attackDistance = 800
         this.defaultAcceleration = 1;
 		this.defaultDeceleration = 3;
+		this.defaultXBonus = 1.5;
         this.defaultMaxSpeed = 30;
         this.changeBonus = 2;
         this.ultRange = 400;
         this.ultTime = 2000;
         this.ultAcceleration = 3;
         this.ultDeceleration = 6;
+		this.ultXBonus = 2;
         this.ultMaxSpeed = 50;
         this.ultCooldown = 5000;
 
@@ -29,18 +31,19 @@ export default class Squid extends Enemy {
         }
 
         this.obj = scene.add.sprite(x, y);
-		this.obj.setScale(0.13)
-		this.obj.play("squid-idle")
+		this.obj.setScale(0.14)
+		this.obj.play("shark-idle")
         this.obj.depth = layers.MOBS;
 
         this.init()
 
-        this.obj.body.setCircle(400, 50, 500)
         this.obj.body.setBounce(1)
+		this.obj.body.setSize(this.obj.width*.9, this.obj.height*.5);
 
         this.acceleration = this.defaultAcceleration;
 		this.deceleration = this.defaultDeceleration;
         this.maxSpeed = this.defaultMaxSpeed;
+		this.xBonus = this.defaultXBonus;
         this.ultStart = 0;
         this.ultCooldownStart = 0;
         this.ulting = false;
@@ -61,21 +64,23 @@ export default class Squid extends Enemy {
             this.cooldown = false;
         }
         else if(!this.cooldown && !this.ulting && dist < this.ultRange && this.ultCooldownStart === 0) { // Ulting
-            this.obj.play("squid-ult")
+            this.obj.play("shark-ult")
             this.ultStart = time;
             this.acceleration = this.ultAcceleration;
             this.deceleration = this.ultDeceleration;
             this.maxSpeed = this.ultMaxSpeed;
+			this.xBonus = this.ultXBonus;
             this.ulting = true;
         }
         else if((time-this.ultStart) > this.ultTime && this.ulting) { // Cooldown starting
-            this.obj.play("squid-idle")
+            this.obj.play("shark-idle")
             this.ultStart = 0;
             this.ulting = false;
             this.ultCooldownStart = time;
             this.acceleration = this.defaultAcceleration;
             this.deceleration = this.defaultDeceleration;
             this.maxSpeed = this.defaultMaxSpeed;
+			this.xBonus = this.defaultXBonus;
             this.cooldown = true;
         }
 
@@ -83,18 +88,18 @@ export default class Squid extends Enemy {
 
         // Move x
         if(inRange && submarine.obj.x < this.obj.x) {
-            this.obj.body.setAccelerationX(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
+            this.obj.body.setAccelerationX(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1) * this.xBonus)
 
             this.limitMaxSpeed()
         } else if(inRange && submarine.obj.x > this.obj.x) {
-            this.obj.body.setAccelerationX(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
+            this.obj.body.setAccelerationX(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1) * this.xBonus)
 
             this.limitMaxSpeed()
         } else {
             if(this.obj.body.velocity.x > this.deceleration*2) {
-                this.obj.body.setAccelerationX(-delta * this.deceleration)
+                this.obj.body.setAccelerationX(-delta * this.deceleration * this.xBonus)
             } else if(this.obj.body.velocity.x <-this.deceleration*2) {
-                this.obj.body.setAccelerationX(delta * this.deceleration)
+                this.obj.body.setAccelerationX(delta * this.deceleration * this.xBonus)
             } else {
                 this.obj.body.setAccelerationX(0)
                 this.obj.body.setVelocityX(0)
@@ -123,10 +128,12 @@ export default class Squid extends Enemy {
             }
         }
 
-        const trueAngle = Phaser.Math.Angle.Between(this.obj.x, this.obj.y, this.obj.x + this.obj.body.velocity.x, this.obj.y + this.obj.body.velocity.y)
-        const nextAngle = Phaser.Math.Angle.RotateTo((this.obj.angle - 90) * Phaser.Math.DEG_TO_RAD, trueAngle, 0.01)
-
-        this.obj.setAngle(nextAngle * Phaser.Math.RAD_TO_DEG + 90)
+		if(this.obj.body.velocity.x > 4) {
+			this.obj.setFlipX(true)
+		}
+		else if(this.obj.body.velocity.x < -4) {
+			this.obj.setFlipX(false)
+		}
 
         if(time - this.wiggle.last - this.wiggle.delay > 0) {
             this.wiggle.last = time

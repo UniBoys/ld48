@@ -71,6 +71,8 @@ export default class Submarine {
 		this.sign.depth = layers.SIGN;
 		this.sign.setDisplaySize(this.signW, this.signH);
 		this.sign.angle = this.signR;
+
+		this.radial = this.scene.radials.getFree(this.obj);
 	}
 
 	flip() {
@@ -145,10 +147,10 @@ export default class Submarine {
 
 		this.inventory.update(time, delta);
 
-		this.scene.radials[0].setAlpha(this.glowStrength);
-		this.scene.radials[0].setTint(this.glowColor);
-		this.scene.radials[0].setDisplaySize(this.glowWidth, this.glowHeight);
-		this.scene.radials[0].setPosition(this.obj.body.x + this.obj.body.width/2, this.obj.body.y + this.obj.body.height/2);
+		this.radial.setAlpha(this.glowStrength);
+		this.radial.setTint(this.glowColor);
+		this.radial.setDisplaySize(this.glowWidth, this.glowHeight);
+		this.radial.setPosition(this.obj.body.x + this.obj.body.width/2, this.obj.body.y + this.obj.body.height/2);
 	}
 
 	canFire() {

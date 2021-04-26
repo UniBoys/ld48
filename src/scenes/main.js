@@ -19,6 +19,8 @@ import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import WaterSprite from '@/../resources/sprites/water-sprite.png'
 import ExplosionSprite from "@/../resources/sprites/explosion.png";
 import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
+import SharkSprite from '@/../resources/sprites/shark-sprite.png'
+import LanternfishSprite from '@/../resources/sprites/lanternfish-sprite.png'
 import OreWood1Image from '@/../resources/img/ore-wood-1.png'
 import OrePlank1Image from '@/../resources/img/ore-plank-1.png'
 import PartWood1Image from '@/../resources/img/part-wood-1.png'
@@ -44,6 +46,9 @@ import Title from "@/../resources/img/title.png";
 import SpearImage from "@/../resources/img/spear.png";
 import HouseImage from "@/../resources/img/house.png";
 import { Spawner } from "../objects/spawner";
+import Shark from "../objects/enemies/shark";
+import RadialManager from "../radial";
+import Lanternfish from "../objects/enemies/kut";
 
 export default class MainScene extends Scene {
 	constructor() {
@@ -73,6 +78,8 @@ export default class MainScene extends Scene {
 		this.load.spritesheet('water', WaterSprite, { frameWidth: 1200, frameHeight: 200 });
 		this.load.spritesheet('explosion', ExplosionSprite, { frameWidth: 500, frameHeight: 500 });
 		this.load.spritesheet('water-bar', WaterBarSprite, {frameWidth: 50, frameHeight: 800});
+		this.load.spritesheet('shark', SharkSprite, {frameWidth: 2048, frameHeight: 900});
+		this.load.spritesheet('lanternfish', LanternfishSprite, {frameWidth: 1706, frameHeight: 909});
 		this.load.image('ore-wood-1', OreWood1Image);
 		this.load.image('part-wood-1', PartWood1Image);
 		this.load.image('part-wood-2', PartWood2Image);
@@ -111,11 +118,8 @@ export default class MainScene extends Scene {
 			SubmarineStage3, 
 			SubmarineStage4,
 		]
-		let stageIndex = 0;
+		this.stageIndex = 0;
 
-		this.submarine = new (this.stageList[stageIndex])(this);
-		this.house = new House(this);
-        
 		this.physics.world.setBounds(0, 0, 5000, 6000);
         this.cameras.main.setBounds(0, 0, 5000, 6000);
 		const background1 = this.add.image(0, 0, 'background1');
@@ -144,40 +148,11 @@ export default class MainScene extends Scene {
 		graphics.mask = new Phaser.Display.Masks.BitmapMask(this, this.darkenMask);
 		graphics.mask.invertAlpha = true;
 		
-		this.radials = [];
-		const numberOfRadials = 3;
-		/**
-		 * Reservations:
-		 * 0   - submarine
-		 */
+		this.radials = new RadialManager(this, 1);
+		this.radials.create();
 
-		for(let i = 0; i < numberOfRadials; i++) {
-			const radial = this.add.image(-1000, -1000, 'glow');
-			radial.depth = layers.DARKEN;
-
-			if(i === 0) {
-				this.darkenMask.mask = new Phaser.Display.Masks.BitmapMask(this, radial);
-				this.darkenMask.invertAlpha = true;
-
-				const emptyGraphics = this.add.graphics();
-				emptyGraphics.fillStyle(0x000000, 0.0);
-				emptyGraphics.fillRect(0, 606, 5000, 5400);
-
-				radial.mask = new Phaser.Display.Masks.GeometryMask(this, emptyGraphics);
-				radial.invertAlpha = true;
-				radial.emptyGraphics = emptyGraphics;
-			} 
-			else if(i == 1) {
-				this.radials[i-1].emptyGraphics.mask = new Phaser.Display.Masks.BitmapMask(this, radial);
-				this.radials[i-1].emptyGraphics.invertAlpha = true;
-			}
-			else {
-				this.radials[i-1].mask = new Phaser.Display.Masks.BitmapMask(this, radial);
-				this.radials[i-1].invertAlpha = true;
-			}
-			
-			this.radials[i] = radial;
-		}
+		this.submarine = new (this.stageList[this.stageIndex])(this);
+		this.house = new House(this);
 		
 		for(let x = 0; x < 6000; x += 120) {
 			const water = this.add.sprite(x, 610);
@@ -193,16 +168,15 @@ export default class MainScene extends Scene {
 
 		this.setupSpawners();
 
-		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,U");
+		this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,E,U");
 		this.keylistener.U.on('down', () => {
-			stageIndex++;
+			this.stageIndex++;
 			this.submarine.destroy();
-			this.submarine = new (this.stageList[stageIndex%this.stageList.length])(this);
+			this.submarine = new (this.stageList[this.stageIndex%this.stageList.length])(this);
 			this.updateColliding()
 		});
 
 		this.updateColliding();
-
 
 		this.corstText = this.make.text({
 			x: this.cameras.main.width / 2,
@@ -226,25 +200,17 @@ export default class MainScene extends Scene {
 		this.corstText.setText(`x: ${this.input.mousePointer.worldX.toFixed(0)}, y: ${this.input.mousePointer.worldY.toFixed(0)}`)
 
 		if(this.submarine.shot) {
-			const allProjectiles = this.submarine.getAllProjectiles();
-
-			const newProjectile = allProjectiles.filter(projectile => !this.projectiles.includes(projectile))[0];
-
-			if(newProjectile !== undefined) {
-				// Check collision with enemies, submarine and resources.
-				this.physics.add.overlap(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
-					if(object1.gather) object1.gather();
-					if(object2.explode) object2.explode();
-
-					this.gatheringResources.push(this.resources.find(resource => resource.obj === object1))
-					this.projectiles = this.resources.filter(resource => resource.obj !== object1);
-					this.resources = this.projectiles.filter(projectile => projectile !== object2);
-				})
-
-				this.projectiles.push(newProjectile);
-			}
+			this.handleNewProjectile();
 		}
 
+		this.handleProjectileMapCollision();
+
+		this.spawners.forEach(spawner => { spawner.update(time, delta) })
+		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
+		this.enemies.forEach(enemy => { enemy.update(time, delta) });
+	}
+
+	handleProjectileMapCollision() {
 		for(const projectile of this.projectiles) {
 			if(projectile.body === undefined) continue;
 
@@ -254,10 +220,35 @@ export default class MainScene extends Scene {
 
 			projectile.explode();
 		}
+	}
 
-		this.spawners.forEach(spawner => { spawner.update(time, delta) })
-		this.gatheringResources.forEach(resource => { resource.update(time, delta) })
-		this.enemies.forEach(enemy => { enemy.update(time, delta) });
+	handleNewProjectile() {
+		const allProjectiles = this.submarine.getAllProjectiles();
+
+		const newProjectile = allProjectiles.filter(projectile => !this.projectiles.includes(projectile))[0];
+
+		if(newProjectile !== undefined) {
+			// Check collision with enemies, submarine and resources.
+			this.physics.add.overlap(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
+				if(object1.gather) object1.gather();
+				if(object2.explode) object2.explode();
+
+				this.gatheringResources.push(this.resources.find(resource => resource.obj === object1))
+				this.resources = this.resources.filter(resource => resource.obj !== object1);
+				this.projectiles = this.projectiles.filter(projectile => projectile !== object2);
+			})
+
+			this.physics.add.collider(this.enemies.map(enemy => enemy.obj), newProjectile, (object1, object2) => {
+				const amount = this.stageIndex === 3 ? 2 : 1;
+
+				if(object1.damage) object1.damage(amount);
+				if(object2.explode) object2.explode();
+
+				this.projectiles = this.projectiles.filter(projectile => projectile.obj !== object1);
+			})
+
+			this.projectiles.push(newProjectile);
+		}
 	}
 
 	setupSpawners() {
@@ -378,7 +369,7 @@ export default class MainScene extends Scene {
         });
 		this.anims.create({
             key: 'missile-run',
-            frames: this.anims.generateFrameNumbers('missile', { frames: [ 0, 1, 2, 4 ] }),
+            frames: this.anims.generateFrameNumbers('missile', { frames: [ 0, 1, 2, 3 ] }),
             frameRate: 11,
             repeat: -1
         });
@@ -405,6 +396,29 @@ export default class MainScene extends Scene {
             frames: this.anims.generateFrameNumbers('water-bar', { frames: [ 1,2,3,4 ] }),
             frameRate: 6,
             repeat: -1,
+        });
+
+		// Shark
+		this.anims.create({
+            key: 'shark-idle',
+            frames: this.anims.generateFrameNumbers('shark', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+		this.anims.create({
+            key: 'shark-ult',
+            frames: this.anims.generateFrameNumbers('shark', { frames: [ 0, 1, 2, 1 ] }),
+            frameRate: 9,
+            repeat: -1
+        });
+
+		// Lanternfish
+		this.anims.create({
+            key: 'lanternfish-idle',
+            frames: this.anims.generateFrameNumbers('lanternfish', { frames: [ 0, 1, 2, 3, 4, 3, 2, 1 ] }),
+            frameRate: 9,
+            repeat: -1
         });
 	}
 }
