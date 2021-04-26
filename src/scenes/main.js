@@ -73,6 +73,7 @@ export default class MainScene extends Scene {
 
 	preload() {
 		preloadScene(this)
+		console.log('background1: ', Background1)
 		this.load.image('background1', Background1);
 		this.load.spritesheet('sub1', Sub1Sprite, { frameWidth: 957, frameHeight: 717 });
 		this.load.spritesheet('sub2', Sub2Sprite, { frameWidth: 1956, frameHeight: 995 });
