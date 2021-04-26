@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const EncodingPlugin = require('webpack-encoding-plugin');
 
 const config = {
-    mode: 'development',
+    mode: 'production',
     entry: ['babel-polyfill', './resources/scss/stylesheet.scss', './index.js'],
     output: {
         path: path.resolve(__dirname, "./dist"),
@@ -23,12 +23,15 @@ const config = {
                     loader: 'file-loader',
                     options: {
                         name: 'css/[name].css',
+                        minimize: true,
+                        sourceMap: true,
+                        publicPath: '../',
+                        useRelativePaths: true
                     }
                 },
                     "extract-loader",
                     "css-loader",
-                    "resolve-url-loader",
-                    "sass-loader"
+                    'sass-loader',
                 ]
             },
             {
@@ -39,8 +42,8 @@ const config = {
                 }
             },
             {
-                test: /\.(jpe?g|gif|png|wav|mp3|ogg)$/,
-                loader: "file-loader"
+                test: /\.(png|jpg|gif|wav)$/,
+                loader: 'file-loader',
             }
         ]
     },
