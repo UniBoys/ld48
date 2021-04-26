@@ -16,6 +16,13 @@ export default class HouseInventory {
 
 	init() {
 		this.bar = this.scene.add.graphics();
+
+		for(const item of this.map) {
+			item.obj = this.scene.add.image(0, 0, `${item.key}-bar`);
+			item.obj.setAngle(-90);
+			item.obj.setOrigin(0,0)
+		}
+
 		this.text = this.scene.add.text(this.house.obj.body.x + 50, this.house.obj.body.y - 130, 'Stash to see your upgrades', {fontFamily: 'Amatic SC', fontSize: 50});
 		this.text.setAlign('center');
 	}
@@ -25,7 +32,7 @@ export default class HouseInventory {
 		let line;
 
 		if(this.scene.submarine.inventory.hasItems()) {
-			this.text.setText('Stash to see your upgrades');
+			this.text.setText('Press e to stash');
 		}
 		else if(this.scene.submarine.stage === 1) {
 			if(this.get('wood') >= this.house.upgrades[0]) {
@@ -45,7 +52,7 @@ export default class HouseInventory {
 				this.text.setText('Try to find more iron');
 			}
 
-			order = ['iron', 'wood', 'treasure'];
+			order = ['iron', 'treasure'];
 			line = this.house.upgrades[1]/this.size;
 		}
 		else if(this.scene.submarine.stage === 3) {
@@ -56,7 +63,7 @@ export default class HouseInventory {
 				this.text.setText('Try to find more treasures');
 			}
 
-			order = ['treasure', 'iron', 'wood'];
+			order = ['treasure'];
 			line = this.house.upgrades[2]/this.size;
 		}
 		else if(this.scene.submarine.stage === 4) {
@@ -80,8 +87,10 @@ export default class HouseInventory {
 
 		for(const item of order) {
 			const obj = this.getObj(item);
-			this.bar.fillStyle(obj.color, 1);
-			this.bar.fillRect(x + (sum / this.size) * this.barWidth, y, (obj.amount / this.size) * this.barWidth, this.barHeight);
+			//this.bar.fillStyle(obj.color, 1);
+			//this.bar.fillRect(x + (sum / this.size) * this.barWidth, y, (obj.amount / this.size) * this.barWidth, this.barHeight);
+			obj.obj.setPosition(x + (sum / this.size) * this.barWidth, y + this.barHeight)
+			obj.obj.setCrop(0, 0, this.barHeight, (obj.amount / this.size) * this.barWidth);
 
 			sum += obj.amount;
 		}

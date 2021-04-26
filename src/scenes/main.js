@@ -297,12 +297,12 @@ export default class MainScene extends Scene {
 		if(newProjectile !== undefined) {
 			// Check collision with enemies, submarine and resources.
 			this.physics.add.overlap(this.resources.map(resource => resource.obj), newProjectile, (object1, object2) => {
-				if(object1.gather) object1.gather();
-				if(object2.explode) object2.explode();
-
 				this.gatheringResources.push(this.resources.find(resource => resource.obj === object1))
 				this.resources = this.resources.filter(resource => resource.obj !== object1);
 				this.projectiles = this.projectiles.filter(projectile => projectile !== object2);
+
+				if(object1.gather) object1.gather();
+				if(object2.explode) object2.explode();
 			})
 
 			this.physics.add.overlap(this.enemies.map(enemy => enemy.obj), newProjectile, (object1, object2) => {

@@ -20,59 +20,61 @@ export default class Submarine {
             lastX: 0,
             lastY: 0,
         }
-        this.maxSpeedX = 70;
-        this.maxSpeedY = 70;
-        this.width = 250;
-        this.height = 150;
-        this.color = 0xff0000;
-        this.initX = 3300//2500;
-        this.initY = 5600//650;
-        this.weaponCooldown = 2000;
-        this.hitboxSizeX = 0.8;
-        this.hitboxSizeY = 0.8;
-        this.hitboxOffsetX = 0;
-        this.hitboxOffsetY = 30;
-        this.weapons = [];
-        this.signY = 0;
-        this.signX = 0;
-        this.signR = 0;
-        this.signW = 0;
-        this.signH = 0;
-        this.depthDamage = [];
-        this.depthDamageDelay = 1000;
-        this.inventorySetting = {
-            size: 1000
-        }
-        this.headLights = []
-        this.glowStrength = 0.2;
-        this.glowWidth = 1000;
-        this.glowHeight = 700;
-        this.glowColor = 0xdddddd;
+		this.maxSpeedX = 70;
+		this.maxSpeedY = 70;
+		this.width = 250;
+		this.height = 150;
+		this.color = 0xff0000;
+		this.initX = 2500;
+		this.initY = 650;
+		this.weaponCooldown = 2000;
+		this.hitboxSizeX = 0.8;
+		this.hitboxSizeY = 0.8;
+		this.hitboxOffsetX = 0;
+		this.hitboxOffsetY = 30;
+		this.weapons = [];
+		this.signY = 0;
+		this.signX = 0;
+		this.signR = 0;
+		this.signW = 0;
+		this.signH = 0;
+		this.depthDamage = [];
+		this.depthDamageDelay = 1000;
+		this.inventorySetting = {
+			size: 1000
+		}
+		this.headLights = []
+		this.glowStrength = 0.2;
+		this.glowWidth = 1000;
+		this.glowHeight = 700;
+		this.glowColor = 0xdddddd;
 
-        this.cooldownStart = 0;
-        this.lastDepthDamage = 0;
+		this.cooldownStart = 0;
+		this.lastDepthDamage = 0;
 
-        this.lastDamage = 0;
-    }
+		this.lastDamage = 0;
+	}
 
-    damage(amount) {
-        if (this.lastDamage != 0) return;
-        const sound = this.scene.sound.add('hit');
-        sound.setVolume(.5)
-        sound.play();
-        this.inventory.add('water', amount)
+	damage(amount) {
+		if(this.lastDamage != 0) return;
+		const sound = this.scene.sound.add('hit');
+		sound.setVolume(.5)
+		sound.play();
+		this.inventory.add('water', amount)
 
-        this.lastDamage = -1;
+		this.lastDamage = -1;
         this.obj.tint = 0xff0000;
     }
 
-    destroy() {
-        this.obj.destroy();
-        this.sign.destroy();
-        for (const weapon of this.weapons) {
-            weapon.destroy();
-        }
-    }
+	destroy() {
+		this.scene.house.upgrades[2] -= this.inventory.get('treasure');
+
+		this.obj.destroy();
+		this.sign.destroy();
+		for(const weapon of this.weapons) {
+			weapon.destroy();
+		}
+	}
 
     init() {
         this.scene.physics.add.existing(this.obj);

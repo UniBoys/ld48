@@ -1,6 +1,7 @@
 import m from "mithril";
 import config from "@/config";
 import Phaser from "phaser";
+import Movement from "@/../resources/img/movement.png";
 
 export default class GameView {
     oncreate() {
@@ -33,7 +34,7 @@ export default class GameView {
 				
                 </div>
                 <div class='escape-menu'>
-
+                    <div id="movement" style={{backgroundImage: `url(${Movement})`}}></div>
                 </div>
             </div>
         );
