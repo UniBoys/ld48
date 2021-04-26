@@ -44,11 +44,42 @@ export default class House {
 
 		if(dist < this.radius) {
 			this.inventory.visible = true;
+
+			if(this.scene.keylistener.E.isDown) {
+				if(this.scene.submarine.inventory.hasItems()) {
+					this.inventory.add('wood', this.scene.submarine.inventory.get('wood'));
+					this.inventory.add('iron', this.scene.submarine.inventory.get('iron'));
+					this.inventory.add('treasure', this.scene.submarine.inventory.get('treasure'));
+					this.scene.submarine.inventory.reset();
+				}
+				else if(this.canUpgrade()) {
+					this.scene.stageIndex++;
+					this.scene.submarine.destroy();
+					this.scene.submarine = new (this.scene.stageList[this.scene.stageIndex%this.scene.stageList.length])(this.scene);
+					this.scene.updateColliding()
+				}
+			}
 		}
 		else {
 			this.inventory.visible = false;
 		}
 
 		this.inventory.update(time, delta);
+	}
+
+	canUpgrade() {
+		console.log(this.inventory.get('wood'), this.upgrades[0])
+		if(this.scene.submarine.stage === 0) {
+			return this.inventory.get('wood') > this.upgrades[0];
+		}
+		else if(this.scene.submarine.stage === 1) {
+			return this.inventory.get('iron') > this.upgrades[1];
+		}
+		else if(this.scene.submarine.stage === 2) {
+			return this.inventory.get('treasure') > this.upgrades[2];
+		}
+		else {
+			return false;
+		}
 	}
 }

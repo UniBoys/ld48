@@ -70,6 +70,7 @@ export default class Resource extends Spawnable {
 
 		this.scene.physics.add.collider(this.parts, this.scene.submarine.obj, (object1, object2) => {
 			object1.destroy();
+			console.log(this.addName, this.amount / 3);
 			this.parts = this.parts.filter(part => part !== object1);
 			this.scene.submarine.inventory.add(this.addName, this.amount / 3);
 		})

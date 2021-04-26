@@ -25,7 +25,7 @@ export default class Submarine {
 		this.width = 250;
 		this.height = 150;
 		this.color = 0xff0000;
-		this.initX = 2000;
+		this.initX = 2500;
 		this.initY = 650;
 		this.weaponCooldown = 2000;
 		this.hitboxSizeX = 0.8;

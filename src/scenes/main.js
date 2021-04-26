@@ -22,7 +22,6 @@ import ExplosionSprite from "@/../resources/sprites/explosion.png";
 import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
 import SharkSprite from '@/../resources/sprites/shark-sprite.png'
 import LanternfishSprite from '@/../resources/sprites/lanternfish-sprite.png'
-import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png';
 import ChestSprite from '@/../resources/sprites/chest.png'
 import OreWood1Image from '@/../resources/img/ore-wood-1.png'
 import OrePlank1Image from '@/../resources/img/ore-plank-1.png'

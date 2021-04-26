@@ -6,7 +6,7 @@ export default class HouseInventory {
 		this.map = [
 			{key: 'wood', amount: 300, color: 0x964B00},
 			{key: 'iron', amount: 100, color: 0x8B2A2B},
-			{key: 'ingots', amount: 50, color: 0xFFD700}
+			{key: 'treasure', amount: 50, color: 0xFFD700}
 		];
 		this.barWidth = 400;
 		this.barHeight = 30;
@@ -21,7 +21,7 @@ export default class HouseInventory {
 	}
 	
 	update(time, delta) {
-		let order = ['wood', 'iron', 'ingots'];
+		let order = ['wood', 'iron', 'treasure'];
 		let line;
 
 		if(this.scene.submarine.inventory.hasItems()) {
@@ -45,7 +45,7 @@ export default class HouseInventory {
 				this.text.setText('Try to find more iron');
 			}
 
-			order = ['iron', 'wood', 'ingots'];
+			order = ['iron', 'wood', 'treasure'];
 			line = this.house.upgrades[1]/this.size;
 		}
 		else if(this.scene.submarine.stage === 3) {
@@ -56,7 +56,7 @@ export default class HouseInventory {
 				this.text.setText('Try to find more treasures');
 			}
 
-			order = ['ingots', 'iron', 'wood'];
+			order = ['treasure', 'iron', 'wood'];
 			line = this.house.upgrades[2]/this.size;
 		}
 		else if(this.scene.submarine.stage === 4) {

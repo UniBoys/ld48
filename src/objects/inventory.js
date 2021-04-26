@@ -93,16 +93,8 @@ export default class Inventory {
 	}
 
 	add(key, amount) {
-		const sum = this.sum();
-
-		if(sum + amount > this.size) {
-			amount = this.size - this.sum();
-		}
-
 		this.map.find(item => item.key === key).amount += amount;
 		this.map.find(item => item.key === 'oxygen').amount -= amount;
-
-		console.log(this.map)
 	}
 
 	remove(key, amount) {
@@ -115,7 +107,7 @@ export default class Inventory {
 	}
 
 	hasItems() {
-		return this.map.find(item => item.amount > 0 && ['water', 'oxygen'].includes(item.key)) !== undefined;
+		return this.map.find(item => item.amount > 0 && !['water', 'oxygen'].includes(item.key)) !== undefined;
 	}
 
 	get(key) {
@@ -124,5 +116,13 @@ export default class Inventory {
 
 	getItem(key) {
 		return this.map.find(item => item.key === key);
+	}
+
+	reset() {
+		this.getItem('wood').amount = 0;
+		this.getItem('water').amount = 0;
+		this.getItem('iron').amount = 0;
+		this.getItem('treasure').amount = 0;
+		this.getItem('oxygen').amount = this.size;
 	}
 }
