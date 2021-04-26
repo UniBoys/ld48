@@ -64,6 +64,8 @@ export default class Resource extends Spawnable {
 		this.dispose();
 		this.obj.destroy();
 
+		this.sound()
+
 		for(var i = 1; i <= this.partAmount; i++) {
 			this.createPart(i);
 		}

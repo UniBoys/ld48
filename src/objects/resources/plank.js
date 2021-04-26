@@ -23,4 +23,10 @@ export default class Plank extends Resource {
 
 		this.init();
 	}
+
+	sound() {
+		const sound = this.scene.sound.add('wood');
+		sound.setVolume(.3)
+		sound.play();
+	}
 }

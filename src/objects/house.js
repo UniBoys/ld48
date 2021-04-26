@@ -59,7 +59,11 @@ export default class House {
 					this.scene.stageIndex++;
 					this.scene.submarine.destroy();
 					this.scene.submarine = new (this.scene.stageList[this.scene.stageIndex%this.scene.stageList.length])(this.scene);
-					this.scene.updateColliding()
+					this.scene.updateColliding();
+
+					const sound = this.scene.sound.add('upgrade');
+					sound.setVolume(1);
+					sound.play();
 				}
 			}
 		}

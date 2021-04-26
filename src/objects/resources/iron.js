@@ -19,4 +19,10 @@ export default class Gold extends Resource {
 
 		this.init();
 	}
+
+	sound() {
+		const sound = this.scene.sound.add('ore');
+		sound.setVolume(20)
+		sound.play();
+	}
 }

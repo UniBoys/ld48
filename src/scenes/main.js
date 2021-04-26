@@ -9,6 +9,7 @@ import Plank from "@/objects/resources/plank";
 import Wood from "@/objects/resources/wood";
 import Iron from "@/objects/resources/iron";
 import Gold from "@/objects/resources/gold";
+import Missile from "@/objects/weapons/missile";
 
 import Background1 from "@/../resources/img/background-1.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
@@ -46,6 +47,11 @@ import SignImage from '@/../resources/img/sign.png'
 import DeathScreenImage from '@/../resources/img/death-screen.png'
 import ExplosionSound from '@/../resources/audio/explosion.wav'
 import HitSound from '@/../resources/audio/hit.wav'
+import OreSound from '@/../resources/audio/ore.wav'
+import MissSound from '@/../resources/audio/miss.wav'
+import WoodSound from '@/../resources/audio/wood.wav'
+import EngineSound from '@/../resources/audio/engine.wav'
+import UpgradeSound from '@/../resources/audio/upgrade.wav'
 import layers from "@/layers";
 import preloadScene from "@/scenes/preload";
 import House from "@/objects/house";
@@ -119,6 +125,11 @@ export default class MainScene extends Scene {
 		this.load.image('death-screen', DeathScreenImage);
 		this.load.audio('explosion', ExplosionSound);
 		this.load.audio('hit', HitSound);
+		this.load.audio('ore', OreSound);
+		this.load.audio('miss', MissSound);
+		this.load.audio('wood', WoodSound);
+		this.load.audio('engine', EngineSound);
+		this.load.audio('upgrade', UpgradeSound);
 	}
 
     create() {
@@ -256,6 +267,11 @@ export default class MainScene extends Scene {
 			
 			if(alpha === 0) continue;
 
+			if(!(projectile instanceof Missile)) {
+				const sound = this.sound.add('miss')
+				sound.setVolume(0.3)
+				sound.play();
+			}
 			projectile.explode();
 		}
 	}
@@ -366,6 +382,7 @@ export default class MainScene extends Scene {
 				this.submarine.damage(30);
 				enemy.damage(1)
 				const sound = this.sound.add('hit');
+				sound.setVolume(50)
 				sound.play();
 			})
 		})

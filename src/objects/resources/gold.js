@@ -40,4 +40,6 @@ export default class Iron extends Resource {
 		
 		this.gathering = true;
 	}
+
+	sound() {}
 }

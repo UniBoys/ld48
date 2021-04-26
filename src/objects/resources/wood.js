@@ -22,4 +22,10 @@ export default class Wood extends Resource {
 
 		this.init();
 	}
+
+	sound() {
+		const sound = this.scene.sound.add('wood');
+		sound.setVolume(.2)
+		sound.play();
+	}
 }

@@ -69,6 +69,10 @@ export default class Missile extends Weapon {
 		this.projectiles[0].body.rotation = this.obj.body.rotation;
 		this.projectiles[0].iAngle = this.obj.body.rotation * Phaser.Math.DEG_TO_RAD;
 		this.projectiles[0].explode = () => this.explode();
+		this.sound = this.scene.sound.add('engine');
+		this.sound.setLoop(true)
+		this.sound.setVolume(0.5)
+		this.sound.play();
 	}
 
 	flip(flipped) {
@@ -101,6 +105,7 @@ export default class Missile extends Weapon {
 			explosion.destroy();
 		})
 		explosion.setDisplaySize(120, 120);
+		this.sound.stop();
 		const sound = this.scene.sound.add('explosion');
 		sound.play();
 
