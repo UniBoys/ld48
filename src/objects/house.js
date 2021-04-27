@@ -11,7 +11,7 @@ export default class House {
         this.initY = 490;
         this.radius = 400;
         this.inventory = new HouseInventory({scene, size: 1000, house: this});
-        this.upgrades = [250 - 1, 600 - 1, 350 - 1];
+        this.upgrades = [250 - 1, 400 - 1, 350 - 1];
 
         this.obj = this.scene.add.image(this.initX, this.initY, 'house');
         this.scene.physics.add.existing(this.obj);
