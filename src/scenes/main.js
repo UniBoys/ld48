@@ -450,14 +450,14 @@ export default class MainScene extends Scene {
             {x: 780, y: 1227, must: false},
             {x: 1440, y: 1024, must: false},
             {x: 2650, y: 1245, must: false},
-        ], 3, 120000, this.resources, (x, y, disposing) => new Plank(this, x, y, disposing)))
+        ], 3, 10000, this.resources, (x, y, disposing) => new Plank(this, x, y, disposing)))
 
         // Wood
         this.spawners.push(new Spawner(this, [
             {x: 3045, y: 1075, must: true},
             {x: 1950, y: 1438, must: false},
             {x: 1215, y: 1533, must: false},
-        ], 2, 120000, this.resources, (x, y, disposing) => new Wood(this, x, y, disposing)))
+        ], 2, 10000, this.resources, (x, y, disposing) => new Wood(this, x, y, disposing)))
 
         // Iron
         this.spawners.push(new Spawner(this, [
@@ -476,7 +476,7 @@ export default class MainScene extends Scene {
             {x: 2400, y: 4210, must: false},
             {x: 3210, y: 4240, must: false},
             {x: 3980, y: 4474, must: false},
-        ], 10, 45000, this.resources, (x, y, disposing) => new Iron(this, x, y, disposing)))
+        ], 12, 10000, this.resources, (x, y, disposing) => new Iron(this, x, y, disposing)))
 
         // Chests
         this.spawners.push(new Spawner(this, [
