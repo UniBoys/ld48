@@ -231,6 +231,8 @@ export default class MainScene extends Scene {
 
         this.setupSpawners();
 
+        this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,E,U");
+
 		this.deathScreenStart = 0;
 		this.deathScreen = this.add.image(0, 0, 'death-screen');
 		this.deathScreen.setScrollFactor(0)
