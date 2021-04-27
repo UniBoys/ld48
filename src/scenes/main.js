@@ -398,7 +398,7 @@ export default class MainScene extends Scene {
             this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
                 if(enemy instanceof Queen) return;
 
-                this.submarine.damage(30);
+                this.submarine.damage(15);
                 enemy.damage(1)
             })
         })
@@ -419,7 +419,7 @@ export default class MainScene extends Scene {
             {x: 1350, y: 2000, must: false},
             {x: 500, y: 2200, must: false},
             {x: 500, y: 3300, must: false},
-        ], 6, 10000, this.enemies, (x, y, disposing) => new Squid(this, x, y, disposing)));
+        ], 6, 30000, this.enemies, (x, y, disposing) => new Squid(this, x, y, disposing)));
 
         // Sharks
         this.spawners.push(new Spawner(this, [
@@ -428,7 +428,7 @@ export default class MainScene extends Scene {
             {x: 460, y: 2160, must: false},
             {x: 4610, y: 2783, must: false},
             {x: 2410, y: 1930, must: false},
-        ], 3, 10000, this.enemies, (x, y, disposing) => new Shark(this, x, y, disposing)));
+        ], 3, 60000, this.enemies, (x, y, disposing) => new Shark(this, x, y, disposing)));
 
         // Lanter Fish
         this.spawners.push(new Spawner(this, [
@@ -437,7 +437,7 @@ export default class MainScene extends Scene {
             {x: 4131, y: 5522, must: true},
             {x: 1592, y: 5382, must: true},
             {x: 1892, y: 5382, must: true},
-        ], 5, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
+        ], 5, 120000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
 
         // Queen
         this.spawners.push(new Spawner(this, [
