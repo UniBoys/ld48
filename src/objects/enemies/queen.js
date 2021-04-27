@@ -67,6 +67,25 @@ export default class Queen extends Enemy {
             duration: 5000,
             onUpdate: (tween) => {
                 this.queen.y = startY - tween.getValue()
+            },
+            onComplete: () => {
+                const backScreen = this.scene.add.rectangle(0, 0, 0, 0, 0x000000);
+		        backScreen.setScrollFactor(0)
+		        backScreen.setDisplaySize(1600/.8, 900/.8);
+		        backScreen.setPosition(800, 450);
+		        backScreen.depth = layers.UI_SCREEN_BACK;
+
+                const endScreen = this.scene.add.image(0, 0, 'end-screen');
+		        endScreen.setScrollFactor(0)
+		        endScreen.setDisplaySize(900/.8, 900/.8);
+		        endScreen.setPosition(800, 450);
+		        endScreen.depth = layers.UI_SCREENS;
+
+                const endText = this.scene.add.text(700, 670, `${Math.round(this.time/1000)} seconds`, {fontFamily: 'Amatic SC', fontSize: 60});
+		        endText.setScrollFactor(0);
+		        endText.depth = layers.UI_SCREENS_TEXT;
+
+                this.scene.game.scene.pause(this.scene);
             }
         })
 
@@ -92,5 +111,6 @@ export default class Queen extends Enemy {
     update(time, delta) {
         super.update(time, delta);
         this.obj.setPosition(this.x, this.y)
+        this.time = time;
     }
 }

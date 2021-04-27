@@ -14,7 +14,7 @@ export default class Resource extends Spawnable {
         this.partWidth = 30;
         this.partHeight = 30;
         this.freeFloatTime = 1000;
-        this.partSpeed = 6;
+        this.partSpeed = 8;
         this.partRotateSpeed = 0.04;
         this.amount = 50;
         this.name = "";
@@ -80,6 +80,7 @@ export default class Resource extends Spawnable {
             this.scene.submarine.inventory.add(this.addName, this.amount / 3);
 
             const sound = this.scene.sound.add('pickup');
+            sound.setVolume(0.5);
             sound.play();
         })
     }

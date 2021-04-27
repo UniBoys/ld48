@@ -23,12 +23,12 @@ export default class Cannon extends Weapon {
 		this.reloadTime = 1000;
 		this.reloadFrames = 15;
 		this.reloadY = 45;
-		this.shootVelocity = 200;
+		this.shootVelocity = 350;
 		this.rotateSpeed = 5;
 		this.umpD = 6;
 		this.umpFrames = 12;
 
-		this.aimAlpha = 0.02;
+		this.aimAlpha = 0.04;
 
 		this.obj = this.scene.add.image(submarine.initX + this.relativeX, submarine.initY + this.relativeY, 'cannon');
 		this.obj.setDisplaySize(this.width, this.height);

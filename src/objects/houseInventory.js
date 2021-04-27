@@ -70,7 +70,7 @@ export default class HouseInventory {
 			line = this.house.upgrades[2]/this.size;
 		}
 		else if(this.scene.submarine.stage === 4) {
-            this.text.setText('There are no upgrades left');
+            this.text.setText('Go find the queen');
         }
 
         const x = this.house.obj.body.x + 50;

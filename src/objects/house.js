@@ -11,7 +11,7 @@ export default class House {
         this.initY = 490;
         this.radius = 400;
         this.inventory = new HouseInventory({scene, size: 1000, house: this});
-        this.upgrades = [250 - 1, 750 - 1, 350 - 1];
+        this.upgrades = [250 - 1, 600 - 1, 350 - 1];
 
         this.obj = this.scene.add.image(this.initX, this.initY, 'house');
         this.scene.physics.add.existing(this.obj);
@@ -43,19 +43,24 @@ export default class House {
         if (dist < this.radius) {
             this.inventory.visible = true;
 
+            if (this.scene.keylistener.E.isUp) {
+                this.waitTillUp = false;
+            }
+
             if (this.scene.keylistener.E.isDown) {
-                console.log(this.canUpgrade());
                 if (this.scene.submarine.inventory.hasItems()) {
                     this.inventory.add('wood', this.scene.submarine.inventory.get('wood'));
                     this.inventory.add('iron', this.scene.submarine.inventory.get('iron'));
                     this.inventory.add('treasure', this.scene.submarine.inventory.get('treasure'));
                     this.scene.submarine.inventory.reset();
-                } else if (this.canUpgrade()) {
+                    this.waitTillUp = true;
+                } else if (this.canUpgrade() && !this.waitTillUp) {
                     this.removeItems();
 
                     this.scene.stageIndex++;
                     this.scene.submarine.destroy();
                     this.scene.submarine = new (this.scene.stageList[this.scene.stageIndex % this.scene.stageList.length])(this.scene);
+                    this.scene.smallSub.setTexture(`sub${this.scene.stageIndex+1}`, 0);
                     this.scene.updateColliding();
 
                     const sound = this.scene.sound.add('upgrade');

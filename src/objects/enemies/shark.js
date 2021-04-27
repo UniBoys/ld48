@@ -10,17 +10,19 @@ export default class Shark extends Enemy{
     constructor(scene, x, y, disposable) {
         super(scene, disposable, 3)
 
-        this.attackDistance = 800
+        this.attackDistance = 800;
         this.defaultAcceleration = 1;
 		this.defaultDeceleration = 3;
 		this.defaultXBonus = 1.5;
+		this.defaultYBonus = 0.7;
         this.defaultMaxSpeed = 30;
         this.changeBonus = 2;
-        this.ultRange = 400;
+        this.ultRange = 500;
         this.ultTime = 2000;
         this.ultAcceleration = 3;
         this.ultDeceleration = 6;
 		this.ultXBonus = 2;
+		this.ultYBonus = 1;
         this.ultMaxSpeed = 50;
         this.ultCooldown = 5000;
 
@@ -44,6 +46,7 @@ export default class Shark extends Enemy{
 		this.deceleration = this.defaultDeceleration;
         this.maxSpeed = this.defaultMaxSpeed;
 		this.xBonus = this.defaultXBonus;
+		this.yBonus = this.defaultYBonus;
         this.ultStart = 0;
         this.ultCooldownStart = 0;
         this.ulting = false;
@@ -85,7 +88,7 @@ export default class Shark extends Enemy{
             this.cooldown = true;
         }
 
-        const inRange = Math.abs(this.obj.x - submarine.obj.x) < this.attackDistance && Math.abs(this.obj.y - submarine.obj.y) < this.attackDistance
+        const inRange = Math.abs(this.obj.x - submarine.obj.x) < this.attackDistance && Math.abs(this.obj.y - submarine.obj.y) < this.attackDistance;
 
         // Move x
         if(inRange && submarine.obj.x < this.obj.x) {
@@ -113,18 +116,18 @@ export default class Shark extends Enemy{
         if(this.obj.body.y < this.scene.minY) {
 			this.obj.body.setAccelerationY(100)
 		} else if(inRange && subY < this.obj.y) {
-            this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1))
+            this.obj.body.setAccelerationY(-delta * this.acceleration * (this.obj.body.velocity.y > 0 ? this.changeBonus : 1) * this.yBonus)
 
             this.limitMaxSpeed()
         } else if(inRange && subY > this.obj.y) {
-            this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1))
+            this.obj.body.setAccelerationY(delta * this.acceleration * (this.obj.body.velocity.y < 0 ? this.changeBonus : 1) * this.yBonus)
 
             this.limitMaxSpeed()
         } else {
             if(this.obj.body.velocity.y > this.deceleration*2) {
-                this.obj.body.setAccelerationY(-delta * this.deceleration)
+                this.obj.body.setAccelerationY(-delta * this.deceleration * this.yBonus)
             } else if(this.obj.body.velocity.y <-this.deceleration*2) {
-                this.obj.body.setAccelerationY(delta * this.deceleration)
+                this.obj.body.setAccelerationY(delta * this.deceleration * this.yBonus)
             } else {
                 this.obj.body.setAccelerationY(0)
                 this.obj.body.setVelocityY(0)

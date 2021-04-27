@@ -43,7 +43,7 @@ export default class Iron extends Resource {
 
 	sound() {
 		const sound = this.scene.sound.add('chest');
-		sound.setVolume(.2)
+		sound.setVolume(.5)
 		sound.play();
 	}
 }

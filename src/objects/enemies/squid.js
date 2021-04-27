@@ -10,7 +10,7 @@ export default class Squid extends Enemy {
     constructor(scene, x, y, disposable) {
         super(scene, disposable, 2)
 
-        this.attackDistance = 600
+        this.attackDistance = 700;
         this.defaultAcceleration = 1;
 		this.defaultDeceleration = 3;
         this.defaultMaxSpeed = 30;

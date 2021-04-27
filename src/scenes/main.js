@@ -12,6 +12,8 @@ import Gold from "@/objects/resources/gold";
 import Missile from "@/objects/weapons/missile";
 
 import Background1 from "@/../resources/img/background-1.png";
+import Background2 from "@/../resources/img/background-2.png";
+import Background3 from "@/../resources/img/background-3.png";
 import Sub1Sprite from '@/../resources/sprites/sub-1.png'
 import Sub2Sprite from '@/../resources/sprites/sub-2.png'
 import Sub3Sprite from '@/../resources/sprites/sub-3.png'
@@ -19,6 +21,7 @@ import Sub4Sprite from '@/../resources/sprites/sub-4.png'
 import SquidSprite from '@/../resources/sprites/squid-sprite.png'
 import MissileSprite from '@/../resources/sprites/missile-sprite.png'
 import WaterSprite from '@/../resources/sprites/water-sprite.png'
+import GrassSprite from '@/../resources/sprites/grass-sprite.png'
 import ExplosionSprite from "@/../resources/sprites/explosion.png";
 import WaterBarSprite from '@/../resources/sprites/water-bar-sprite.png'
 import SharkSprite from '@/../resources/sprites/shark-sprite.png'
@@ -48,6 +51,7 @@ import CannonImage from '@/../resources/img/cannon.png'
 import CannonballImage from '@/../resources/img/cannonball.png'
 import SignImage from '@/../resources/img/sign.png'
 import DeathScreenImage from '@/../resources/img/death-screen.png'
+import EndScreenImage from '@/../resources/img/end-screen.png'
 import ExplosionSound from '@/../resources/audio/explosion.wav'
 import HitSound from '@/../resources/audio/hit.wav'
 import OreSound from '@/../resources/audio/ore.wav'
@@ -90,6 +94,8 @@ export default class MainScene extends Scene {
     preload() {
         preloadScene(this)
         this.load.image('background1', Background1);
+        this.load.image('background2', Background2);
+        this.load.image('background3', Background3);
         this.load.spritesheet('sub1', Sub1Sprite, {frameWidth: 957, frameHeight: 717});
         this.load.spritesheet('sub2', Sub2Sprite, {frameWidth: 1956, frameHeight: 995});
         this.load.spritesheet('sub3', Sub3Sprite, {frameWidth: 2048, frameHeight: 2048});
@@ -103,6 +109,7 @@ export default class MainScene extends Scene {
         this.load.spritesheet('lanternfish', LanternfishSprite, {frameWidth: 1706, frameHeight: 909});
         this.load.spritesheet('wisp-queen', WispQueenSprite, {frameWidth: 429, frameHeight: 512});
         this.load.spritesheet('queen-prison', QueenPrisonSprite, {frameWidth: 2260, frameHeight: 1584});
+        this.load.spritesheet('grass-sprite', GrassSprite, {frameWidth: 337, frameHeight: 200});
         this.load.image('queen-prison-bg', QueenPrisonBackground);
         this.load.image('ore-wood-1', OreWood1Image);
         this.load.image('ore-wood-1', OreWood1Image);
@@ -133,6 +140,7 @@ export default class MainScene extends Scene {
 		this.load.image('wood-bar', WoodBarImage);
 		this.load.image('treasure-bar', TreasureBarImage);
 		this.load.image('death-screen', DeathScreenImage);
+		this.load.image('end-screen', EndScreenImage);
 		this.load.audio('explosion', ExplosionSound);
 		this.load.audio('hit', HitSound);
 		this.load.audio('ore', OreSound);
@@ -168,6 +176,20 @@ export default class MainScene extends Scene {
         background1.setPosition(2500, 3000);
         background1.depth = layers.BACKGROUND_MAIN;
         this.background1Texture = this.textures.get('background1');
+
+        const background2 = this.add.image(0, 0, 'background2');
+        background2.setSize(5000, 6000);
+        background2.setPosition(2500, 3000);
+        background2.depth = layers.BACKGROUND_BEFORE;
+
+        const background3 = this.add.image(0, 0, 'background3');
+        background3.setSize(5000, 6000);
+        background3.setPosition(2500, 3000);
+        background3.depth = layers.BACKGROUND_BEHIND;
+
+        this.uiGraphics = this.add.graphics(0, 0);
+		this.uiGraphics.setScrollFactor(0);
+		this.uiGraphics.depth = layers.UI_2;
 
         const graphics = this.add.graphics();
         graphics.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.2, 0.2, 0.5, 0.5);
@@ -209,14 +231,6 @@ export default class MainScene extends Scene {
 
         this.setupSpawners();
 
-        this.keylistener = this.input.keyboard.addKeys("W,A,S,D,SPACE,E,U");
-        this.keylistener.U.on('down', () => {
-            this.stageIndex++;
-            this.submarine.destroy();
-            this.submarine = new (this.stageList[this.stageIndex % this.stageList.length])(this);
-            this.updateColliding()
-        });
-
 		this.deathScreenStart = 0;
 		this.deathScreen = this.add.image(0, 0, 'death-screen');
 		this.deathScreen.setScrollFactor(0)
@@ -225,16 +239,71 @@ export default class MainScene extends Scene {
 		this.deathScreen.depth = layers.UI_SCREENS;
 		this.deathScreen.visible = false;
 
-		const theme = this.sound.add('theme');
-		theme.setLoop(true);
-		theme.setVolume(0.04)
-		theme.play();
+		this.theme = this.sound.add('theme');
+		this.theme.setLoop(true);
+		this.theme.setVolume(0.08)
+
+        this.esc = this.add.text(-170, -100, "esc", {fontFamily: 'Amatic SC', fontSize: 80});
+        this.esc.setScrollFactor(0);
+        this.esc.depth = layers.UI_2;
+
+        this.introScreen = this.add.rectangle(800/.8-200, 450/.8-113, 1600/.8, 900/.8+2, 0x000000);
+        this.introScreen.setScrollFactor(0);
+        this.introScreen.depth = layers.UI_SCREENS;
+
+        this.introTextA = this.add.text(800/.8*0.5, 450/.8*.5+100, "as one will travel down,", {fontFamily: 'Amatic SC', fontSize: 80});
+        this.introTextA.setScrollFactor(0);
+        this.introTextA.depth = layers.UI_SCREENS;
+
+        this.introTextB = this.add.text(800/.8*0.5+30, 450/.8*.5+190, "thy will find the crown", {fontFamily: 'Amatic SC', fontSize: 80});
+        this.introTextB.setScrollFactor(0);
+        this.introTextB.depth = layers.UI_SCREENS;
+        this.introSteps = 0;
+
+        this.depthLines = 10;
+        this.smallSub = this.add.image(0, 0, 'sub1', 0);
+        this.smallSub.setScrollFactor(0);
+        this.smallSub.depth = layers.UI_3;
     }
 
     update(time, delta) {
         this.darkenMask.clear();
+		this.uiGraphics.clear();
         this.submarine.update(time, delta);
         this.house.update(time, delta);
+
+        this.uiGraphics.lineStyle(3, 0xffffff, 1)
+		this.uiGraphics.lineBetween(1600+165, 50, 1600+165, 50+800);
+        this.uiGraphics.lineBetween(1600+115, 50 + 2, 1600+164, 50 + 1);
+
+        for(let i = 1; i < this.depthLines; i++) {
+            const y = 6000 / this.depthLines * i;
+
+            if(this.shouldBeRed(y)) {
+                this.uiGraphics.lineStyle(2, 0xff0000, 1)
+            }
+            else {
+                this.uiGraphics.lineStyle(2, 0xffffff, 1)
+            }
+
+            this.uiGraphics.lineBetween(1600+130, 50 + i * (800 / this.depthLines), 1600+164, 50 + i * (800 / this.depthLines));
+        }
+
+        this.smallSub.setDisplaySize(50, this.smallSub.height / this.smallSub.width * 50);
+        this.smallSub.setPosition(1600+115+25, 50 + (800 / 6000) * this.submarine.obj.body.y);
+
+        this.uiGraphics.lineStyle(2, 0xff0000, 1)
+        this.uiGraphics.lineBetween(1600+115, 50 + 800 - 1, 1600+164, 50 + 800 - 1);
+
+        if(this.introSteps < 200) {
+            this.introSteps++;
+        }
+        else if(this.introScreen.visible) {
+            this.introScreen.visible = false;
+            this.introTextA.visible = false;
+            this.introTextB.visible = false;
+            this.theme.play();
+        }
 
         if (this.corstText) this.corstText.setText(`x: ${this.input.mousePointer.worldX.toFixed(0)}, y: ${this.input.mousePointer.worldY.toFixed(0)}`)
 
@@ -260,6 +329,12 @@ export default class MainScene extends Scene {
         });
     }
 
+    shouldBeRed(y) {
+        for(const damage of this.submarine.depthDamage) {
+            if(damage.y1 < y && damage.y2 > y && damage.amount > 1) return true;
+        }
+    }
+
     respawn(time) {
         this.submarine.destroy();
         this.submarine = new (this.stageList[this.stageIndex % this.stageList.length])(this);
@@ -282,7 +357,8 @@ export default class MainScene extends Scene {
                 sound.setVolume(0.3)
                 sound.play();
             }
-            projectile.explode();
+            const undef = projectile.explode();
+            if(undef && projectile.body) projectile.destroy();
         }
     }
 
@@ -303,7 +379,7 @@ export default class MainScene extends Scene {
             })
 
             this.physics.add.overlap(this.enemies.map(enemy => enemy.obj), newProjectile, (object1, object2) => {
-                const amount = this.stageIndex === 3 ? 2 : 1;
+                const amount = this.stageIndex === 3 ? 1.5 : 1;
 
                 if (object1.damage) object1.damage(amount);
                 if (object2.explode) object2.explode();
@@ -313,6 +389,21 @@ export default class MainScene extends Scene {
 
             this.projectiles.push(newProjectile);
         }
+    }
+
+    updateColliding() {
+        this.enemies.filter((e) => e !== undefined).forEach((enemy) => {
+            this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
+                if(enemy instanceof Queen) return;
+
+                this.submarine.damage(30);
+                enemy.damage(1)
+            })
+        })
+
+        this.gatheringResources.filter((r) => r !== undefined).forEach((resource) => {
+            resource.updateCollider()
+        });
     }
 
     setupSpawners() {
@@ -343,7 +434,8 @@ export default class MainScene extends Scene {
             {x: 4400, y: 3900, must: false},
             {x: 4131, y: 5522, must: true},
             {x: 1592, y: 5382, must: true},
-        ], 4, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
+            {x: 1892, y: 5382, must: true},
+        ], 5, 10000, this.enemies, (x, y, disposing) => new Lanternfish(this, x, y, disposing)));
 
         // Queen
         this.spawners.push(new Spawner(this, [
@@ -382,7 +474,7 @@ export default class MainScene extends Scene {
             {x: 2400, y: 4210, must: false},
             {x: 3210, y: 4240, must: false},
             {x: 3980, y: 4474, must: false},
-        ], 10, 120000, this.resources, (x, y, disposing) => new Iron(this, x, y, disposing)))
+        ], 10, 45000, this.resources, (x, y, disposing) => new Iron(this, x, y, disposing)))
 
         // Chests
         this.spawners.push(new Spawner(this, [
@@ -392,20 +484,6 @@ export default class MainScene extends Scene {
             {x: 627, y: 4540, must: false},
             {x: 4480, y: 4210, must: false},
         ], 5, 10000000, this.resources, (x, y, disposing) => new Gold(this, x, y, disposing)))
-    }
-
-    updateColliding() {
-        this.enemies.filter((e) => e !== undefined).forEach((enemy) => {
-            this.physics.add.collider(this.submarine.obj, enemy.obj, (object1, object2) => {
-                this.submarine.damage(30);
-                enemy.damage(1)
-            })
-        })
-
-
-        this.gatheringResources.filter((r) => r !== undefined).forEach((resource) => {
-            resource.updateCollider()
-        })
     }
 
     animations() {
@@ -580,6 +658,13 @@ export default class MainScene extends Scene {
             key: 'prison-break',
             frames: this.anims.generateFrameNumbers('queen-prison', {frames: [0, 1, 2, 3, 4, 5]}),
             frameRate: 6,
+            repeat: 0,
+        });
+
+        this.anims.create({
+            key: 'grass',
+            frames: this.anims.generateFrameNumbers('grass-sprite', {frames: [0, 1, 2, 3, 4, 3, 2, 1 ]}),
+            frameRate: 10,
             repeat: 0,
         });
     }

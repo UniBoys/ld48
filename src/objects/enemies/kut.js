@@ -10,7 +10,7 @@ export default class Lanternfish extends Enemy{
 	 constructor(scene, x, y, disposable) {
         super(scene, disposable, 4)
 
-        this.attackDistance = 800
+        this.attackDistance = 1000
 		this.acceleration = 1;
 		this.deceleration = 3;
         this.maxSpeed = 30;

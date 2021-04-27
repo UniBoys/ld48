@@ -18,10 +18,6 @@ export default class Inventory {
 		this.fastWarnAmount = 0.2;
 		this.fastWarnCooldown = 1000;
 
-		this.bar = this.scene.add.graphics(0, 0);
-		this.bar.setScrollFactor(0);
-		this.bar.depth = layers.UI_2;
-
 		for(const item of this.map) {
 			if(item.key === 'water') {
 				item.obj = this.scene.add.sprite(0, 0);
@@ -43,16 +39,15 @@ export default class Inventory {
 	
 	update(time, delta) {
 		let sum = 50;
-		this.bar.clear();
 
-		this.bar.lineStyle(3, 0xffffff, 1)
-		this.bar.strokeRect(-100, 50, 50, 800);
+		this.scene.uiGraphics.lineStyle(3, 0xffffff, 1)
+		this.scene.uiGraphics.strokeRect(-165, 50, 50, 800);
 
 		for(const item of this.map) {
 			const height = (item.amount/this.size) * 800;
 			
 			item.obj.setCrop(0, 0, 50, height);
-			item.obj.setPosition(-75, sum + 800 / 2);
+			item.obj.setPosition(-165+25, sum + 800 / 2);
 			item.sum = sum;
 
 			sum += height;
@@ -82,8 +77,8 @@ export default class Inventory {
 			const item = this.getItem('oxygen')
 			const height = (item.amount/this.size) * 800;
 
-			this.bar.fillStyle(0xff0000, 0.4)
-			this.bar.fillRect(-100 +2, item.sum, 50-4, height);
+			this.scene.uiGraphics.fillStyle(0xff0000, 0.4)
+			this.scene.uiGraphics.fillRect(-165 +2, item.sum, 50-4, height);
 		}
 		else if(this.flash && this.flashStep === this.flashFrames) {
 			this.flash = false;

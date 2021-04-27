@@ -24,15 +24,15 @@ export default class Spear1 extends Weapon {
 		this.reloadTime = 3000;
 		this.reloadFrames = 15;
 		this.reloadY = 45;
-		this.shootVelocity = 200;
-		this.rotateSpeed = 5;
+		this.shootVelocity = 300;
+		this.rotateSpeed = 8;
 
 		this.supportLeft = 10;
 		this.supportWidth = 5;
 		this.supportSpeed = 9;
 		this.supportOffset = 25;
 
-		this.aimAlpha = 0.02;
+		this.aimAlpha = 0.04;
 
 		this.obj = this.scene.add.image(submarine.initX + this.relativeX, submarine.initY + this.relativeY, 'spear');
 		this.obj.setDisplaySize(this.width, this.height);
@@ -103,6 +103,7 @@ export default class Spear1 extends Weapon {
 		this.projectiles[0].explode = () => this.explode();
 
 		const sound = this.scene.sound.add('spear');
+		sound.setVolume(.2)
 		sound.play();
 	}
 
@@ -131,10 +132,12 @@ export default class Spear1 extends Weapon {
 	}
 
 	explode() {
-		if(this.projectiles[0] === undefined) return;
+		if(this.projectiles[0] === undefined) return true;
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();
+
+		return false;
 	}
 
 	update(time, delta) {
@@ -197,10 +200,10 @@ export default class Spear1 extends Weapon {
 			this.aimLeft.fillAlpha = this.aimAlpha;
 			this.resetStart = 0;
 
-			if(deg-oldRotation > 1) {
+			if(deg-oldRotation > 2) {
 				this.obj.body.angularVelocity = this.rotateSpeed * delta;
 			}
-			else if(deg-oldRotation < -1) {
+			else if(deg-oldRotation < -2) {
 				this.obj.body.angularVelocity = -this.rotateSpeed * delta;
 			}
 			else {
@@ -217,10 +220,10 @@ export default class Spear1 extends Weapon {
 		else {
 			this.aimRight.fillAlpha = 0;
 			this.aimLeft.fillAlpha = 0;
-			if(this.defaultAngle-oldRotation > 1) {
+			if(this.defaultAngle-oldRotation > 2) {
 				this.obj.body.angularVelocity = this.rotateSpeed * delta;
 			}
-			else if(this.defaultAngle-oldRotation < -1) {
+			else if(this.defaultAngle-oldRotation < -2) {
 				this.obj.body.angularVelocity = -this.rotateSpeed * delta;
 			}
 			else {

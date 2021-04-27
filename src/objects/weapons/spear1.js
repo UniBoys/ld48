@@ -24,8 +24,8 @@ export default class Spear1 extends Weapon {
 		this.reloadTime = 3000;
 		this.reloadFrames = 10;
 		this.reloadY = 50;
-		this.shootVelocity = 200;
-		this.aimAlpha = 0.02;
+		this.shootVelocity = 250;
+		this.aimAlpha = 0.04;
 
 		this.obj = this.scene.add.image(submarine.initX + this.relativeX, submarine.initY + this.relativeY, 'spear');
 		this.obj.setDisplaySize(this.width, this.height);
@@ -94,10 +94,12 @@ export default class Spear1 extends Weapon {
 	}
 
 	explode() {
-		if(this.projectiles[0] === undefined) return;
+		if(this.projectiles[0] === undefined) return true;
 
 		this.projectiles[0].destroy();
 		this.projectiles.pop();
+
+		return false;
 	}
 
 	flip(flipped) {

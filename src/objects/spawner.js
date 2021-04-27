@@ -78,7 +78,8 @@ export class Spawner {
                 const left = this.spawns
                     .filter((spawn) => {
                         const sub = this.scene.submarine.obj.body
-                        return (Math.abs(spawn.x - sub.x) > 2000 || Math.abs(spawn.y - sub.y) > 1500) && !this.spawned.some((s) => (s?.x ?? s?.obj?.x) === spawn.x && (s?.y || s?.obj?.y) === spawn.y)
+                        return (Math.abs(spawn.x - sub.x) > 2000 || Math.abs(spawn.y - sub.y) > 1500) 
+                            && !this.spawned.some((s) => (s?.x ?? s?.obj?.x) === spawn.x && (s?.y ?? s?.obj?.y) === spawn.y)
                     });
 
                 shuffleArray(left)
