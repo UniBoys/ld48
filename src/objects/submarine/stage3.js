@@ -15,8 +15,8 @@ export default class SubmarineStage3 extends Submarine {
         this.hitboxOffsetX = 0;
         this.hitboxOffsetY = 380;
 
-        this.acceleration = 8;
-        this.deceleration = 7;
+        this.acceleration = 9;
+        this.deceleration = 8;
         this.changeBonus = 1.5;
         this.maxSpeedX = 140;
         this.maxSpeedY = 105;

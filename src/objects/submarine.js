@@ -9,8 +9,8 @@ export default class Submarine {
         this.scene = scene;
         this.stage = stage;
 
-        this.acceleration = 7;
-        this.deceleration = 5;
+        this.acceleration = 8;
+        this.deceleration = 6;
         this.changeBonus = 1.2;
         this.bobbing = {
             delayX: 1000,
